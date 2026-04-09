@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIMBALL</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #2d6a4f;
+    --green-light: #52b788;
+    --green-pale: #b7e4c7;
+    --dirt: #c9a96e;
+    --dirt-dark: #8b6914;
+    --chalk: #f5f0e8;
+    --night: #0d1117;
+    --night-card: #1c2330;
+    --night-border: #2d3748;
+    --red: #e63946;
+    --yellow: #f4c430;
+    --text-main: #e8e0d0;
+    --text-dim: #8b949e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--night);
+    color: var(--text-main);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(45,106,79,0.25) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 40px,
+        rgba(255,255,255,0.012) 40px, rgba(255,255,255,0.012) 41px);
+  }
+
+  header {
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+    border-bottom: 1px solid var(--night-border);
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 5rem);
+    letter-spacing: 0.15em;
+    color: var(--chalk);
+    text-shadow: 0 0 40px rgba(82,183,136,0.4), 3px 3px 0 var(--green);
+    line-height: 1;
+  }
+
+  .tagline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--green-light);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 0.4rem;
+  }
+
+  .header-meta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    flex-wrap: wrap;
+  }
+
+  .score-display {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    color: var(--yellow);
+    letter-spacing: 0.1em;
+  }
+
+  /* MODE TOGGLE */
+  .mode-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .toggle-track {
+    width: 40px;
+    height: 20px;
+    background: var(--night-border);
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+
+  .toggle-track.on { background: var(--green); }
+
+  .toggle-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    background: var(--chalk);
+    border-radius: 50%;
+    transition: transform 0.2s;
+  }
+
+  .toggle-track.on .toggle-thumb { transform: translateX(20px); }
+
+  .mode-label-daily    { color: var(--text-dim); }
+  .mode-label-unlim    { color: var(--text-dim); }
+  .mode-label-daily.active  { color: var(--green-light); }
+  .mode-label-unlim.active  { color: var(--green-light); }
+
+  main {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 4rem;
+  }
+
+  /* ERA PANEL */
+  .era-panel {
+    background: var(--night-card);
+    border: 1px solid var(--night-border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .era-panel label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+
+  .era-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .era-row input[type=number] {
+    width: 78px;
+    background: var(--night);
+    border: 1px solid var(--night-border);
+    border-radius: 4px;
+    color: var(--text-main);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.5rem;
+    text-align: center;
+  }
+
+  .era-row span { color: var(--text-dim); font-size: 0.85rem; }
+
+  .era-btn {
+    background: var(--green);
+    border: none;
+    border-radius: 4px;
+    color: var(--chalk);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .era-btn:hover { background: var(--green-light); color: var(--night); }
+
+  .giveup-btn {
+    background: transparent;
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: #777;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-left: auto;
+  }
+  .giveup-btn:hover { border-color: var(--red); color: var(--red); }
+
+  /* GUESS INPUT */
+  .guess-area { position: relative; margin-bottom: 1rem; }
+  .guess-input-wrap { display: flex; gap: 0.5rem; }
+
+  #guessInput {
+    flex: 1;
+    background: var(--night-card);
+    border: 2px solid var(--night-border);
+    border-radius: 6px;
+    color: var(--text-main);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 1rem;
+    padding: 0.65rem 1rem;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  #guessInput:focus { border-color: var(--green-light); }
+
+  #guessBtn {
+    background: var(--green);
+    border: none;
+    border-radius: 6px;
+    color: var(--chalk);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    padding: 0 1.5rem;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  #guessBtn:hover { background: var(--green-light); color: var(--night); }
+  #guessBtn:active { transform: scale(0.97); }
+
+  .autocomplete-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 60px;
+    background: var(--night-card);
+    border: 1px solid var(--green-light);
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    z-index: 100;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+
+  .autocomplete-list div {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--night-border);
+    transition: background 0.1s;
+  }
+  .autocomplete-list div:hover,
+  .autocomplete-list div.active { background: var(--green); color: var(--chalk); }
+
+  .role-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    margin-left: 0.5rem;
+    text-transform: uppercase;
+  }
+  .autocomplete-list div:hover .role-tag,
+  .autocomplete-list div.active .role-tag { color: var(--green-pale); }
+
+  /* HINTS */
+  .hints-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .hint-btn {
+    background: var(--night-card);
+    border: 1px solid var(--dirt-dark);
+    border-radius: 5px;
+    color: var(--dirt);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+  .hint-btn:hover:not(:disabled) { background: var(--dirt-dark); color: var(--chalk); }
+  .hint-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .hint-btn.revealed { background: var(--dirt-dark); color: var(--chalk); border-color: var(--dirt); cursor: default; }
+
+  .hint-cost {
+    font-size: 0.6rem;
+    opacity: 0.7;
+    margin-left: 0.3rem;
+  }
+
+  .hint-display {
+    background: var(--night-card);
+    border: 1px solid var(--dirt-dark);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+    font-family: 'IBM Plex Mono', monospace;
+    display: none;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .hint-display.visible { display: flex; }
+
+  .hint-item { display: flex; flex-direction: column; gap: 0.2rem; }
+  .hint-item .hl { color: var(--text-dim); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; }
+  .hint-item .hv { color: var(--dirt); font-size: 1rem; font-weight: 600; }
+
+  /* STATUS */
+  .status-msg {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--red);
+    min-height: 1.2rem;
+    margin-bottom: 0.5rem;
+    padding-left: 0.25rem;
+  }
+
+  /* GUESS LOG */
+  .guess-log { display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .guess-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--night-card);
+    border: 1px solid var(--night-border);
+    border-radius: 6px;
+    padding: 0.6rem 1rem;
+    animation: slideIn 0.2s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .guess-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    width: 1.5rem;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .guess-name { flex: 1; font-size: 0.95rem; font-weight: 500; }
+
+  .sim-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    min-width: 3.5rem;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .sim-bar-wrap {
+    width: 100px;
+    height: 6px;
+    background: var(--night-border);
+    border-radius: 3px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .sim-bar { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+
+  .score-hot  { color: #52b788; }
+  .score-warm { color: #f4c430; }
+  .score-cold { color: #e63946; }
+  .score-zero { color: #555; }
+
+  /* END PANEL */
+  .end-panel {
+    display: none;
+    background: var(--night-card);
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    animation: slideIn 0.3s ease;
+  }
+  .end-panel.visible { display: block; }
+  .end-panel.won  { border: 2px solid var(--green-light); }
+  .end-panel.lost { border: 2px solid #444; }
+
+  .end-panel h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 0.1em;
+  }
+  .end-panel.won  h2 { color: var(--green-light); }
+  .end-panel.lost h2 { color: #888; }
+
+  .end-panel .answer { font-size: 1.3rem; font-weight: 600; color: var(--chalk); margin: 0.5rem 0; }
+
+  .end-panel .final-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--yellow);
+    letter-spacing: 0.1em;
+  }
+
+  .end-panel .sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-top: 0.25rem;
+  }
+
+  .share-btn {
+    margin-top: 1rem;
+    background: var(--green);
+    border: none;
+    border-radius: 6px;
+    color: var(--chalk);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    padding: 0.6rem 1.5rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .share-btn:hover { background: var(--green-light); color: var(--night); }
+
+  .no-data-msg {
+    text-align: center;
+    padding: 3rem;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--night); }
+  ::-webkit-scrollbar-thumb { background: var(--night-border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">SIMBALL</div>
+  <div class="tagline">Guess the player by similarity score</div>
+  <div class="header-meta">
+    <span id="dateDisplay"></span>
+    <div class="mode-toggle">
+      <span class="mode-label-daily active" id="labelDaily">Daily</span>
+      <div class="toggle-track" id="modeToggle">
+        <div class="toggle-thumb"></div>
+      </div>
+      <span class="mode-label-unlim" id="labelUnlim">Unlimited</span>
+    </div>
+    <span>Score: <span class="score-display" id="scoreDisplay">101</span></span>
+    <span id="guessCount">0 guesses</span>
+  </div>
+</header>
+
+<main>
+  <div id="loadingMsg" class="no-data-msg">Loading player data...</div>
+  <div id="gameArea" style="display:none">
+
+    <!-- ERA PANEL -->
+    <div class="era-panel">
+      <label>Era filter &mdash; secret player's career must overlap this range</label>
+      <div class="era-row">
+        <input type="number" id="eraStart" value="1920" min="1871" max="2025">
+        <span>to</span>
+        <input type="number" id="eraEnd" value="2025" min="1871" max="2025">
+        <button class="era-btn" id="newGameBtn">New Game</button>
+        <button class="giveup-btn" id="giveUpBtn">Give Up</button>
+      </div>
+    </div>
+
+    <!-- END PANEL -->
+    <div class="end-panel" id="endPanel">
+      <h2 id="endTitle"></h2>
+      <div class="answer" id="endName"></div>
+      <div class="final-score" id="endScore"></div>
+      <div class="sub" id="endSub"></div>
+      <button class="share-btn" id="shareBtn">Copy Result</button>
+    </div>
+
+    <!-- GUESS INPUT -->
+    <div class="guess-area" id="guessArea">
+      <div class="guess-input-wrap">
+        <input type="text" id="guessInput" placeholder="Type a player name..." autocomplete="off">
+        <button id="guessBtn">Guess</button>
+      </div>
+      <div class="autocomplete-list" id="acList"></div>
+    </div>
+
+    <div class="status-msg" id="statusMsg"></div>
+
+    <!-- HINTS -->
+    <div class="hints-row">
+      <button class="hint-btn" id="hintPos"  data-hint="pos">Position <span class="hint-cost">-20</span></button>
+      <button class="hint-btn" id="hintYear" data-hint="year">Birth Year <span class="hint-cost">-20</span></button>
+      <button class="hint-btn" id="hintWAR"  data-hint="war">Career WAR <span class="hint-cost">-20</span></button>
+      <button class="hint-btn" id="hintTeam" data-hint="team">Primary Team <span class="hint-cost">-20</span></button>
+    </div>
+    <div class="hint-display" id="hintDisplay"></div>
+
+    <!-- GUESS LOG -->
+    <div class="guess-log" id="guessLog"></div>
+
+  </div>
+</main>
+
+<script>
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let ALL_PLAYERS = [];
+let secretPlayer = null;
+let guesses = [];       // {player, simScore} sorted descending by simScore
+let score = 101;
+let hintsUsed = [];
+let gameOver = false;
+let won = false;
+let dailyMode = true;
+let eraStart = 1920;
+let eraEnd = 2025;
+let acIndex = -1;
+
+// ── LOAD ──────────────────────────────────────────────────────────────────────
+async function loadPlayers() {
+  try {
+    const resp = await fetch('players.json');
+    ALL_PLAYERS = await resp.json();
+    document.getElementById('loadingMsg').style.display = 'none';
+    document.getElementById('gameArea').style.display = 'block';
+    initGame();
+  } catch(e) {
+    document.getElementById('loadingMsg').textContent =
+      'Could not load players.json -- make sure it is in the same folder as index.html.';
+  }
+}
+
+// ── ERA FILTER ────────────────────────────────────────────────────────────────
+function playerOverlapsEra(p, start, end) {
+  if (!p.birthYear) return true;
+  const cs = p.birthYear + 18;
+  const ce = p.birthYear + 45;
+  return cs <= end && ce >= start;
+}
+
+// ── SEEDED RNG ────────────────────────────────────────────────────────────────
+function todaySeed() {
+  const d = new Date();
+  return d.getFullYear() * 10000 + (d.getMonth()+1) * 100 + d.getDate();
+}
+
+function seededRandom(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    return (s >>> 0) / 0xffffffff;
+  };
+}
+
+function pickSecretPlayer(forceRandom) {
+  const pool = ALL_PLAYERS.filter(p => playerOverlapsEra(p, eraStart, eraEnd));
+  if (!pool.length) return null;
+  if (!forceRandom && dailyMode) {
+    const seed = todaySeed() ^ (eraStart * 31) ^ (eraEnd * 17);
+    const rng  = seededRandom(seed);
+    return pool[Math.floor(rng() * pool.length)];
+  }
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+// ── SIMILARITY SCORE ──────────────────────────────────────────────────────────
+function simScore(guess, secret) {
+  const gPos = guess.role === 'position';
+  const sPos = secret.role === 'position';
+  if (gPos !== sPos) return 0;
+
+  let penalty = 0;
+  const diff = (a, b, d) => (a == null || b == null) ? 0 : Math.abs(a - b) / d;
+
+  if (gPos) {
+    penalty += diff(guess.G,   secret.G,   20);
+    penalty += diff(guess.AB,  secret.AB,  75);
+    penalty += diff(guess.R,   secret.R,   10);
+    penalty += diff(guess.H,   secret.H,   15);
+    penalty += diff(guess.D,   secret.D,    5);
+    penalty += diff(guess.T,   secret.T,    4);
+    penalty += diff(guess.HR,  secret.HR,   2);
+    penalty += diff(guess.RBI, secret.RBI, 10);
+    penalty += diff(guess.BB,  secret.BB,  25);
+    penalty += diff(guess.SO,  secret.SO, 150);
+    penalty += diff(guess.SB,  secret.SB,  20);
+    if (guess.BA  != null && secret.BA  != null) penalty += Math.abs(guess.BA  - secret.BA)  * 1000;
+    if (guess.SLG != null && secret.SLG != null) penalty += Math.abs(guess.SLG - secret.SLG) * 500;
+  } else {
+    penalty += diff(guess.W,      secret.W,       1);
+    penalty += diff(guess.L,      secret.L,       1);
+    penalty += diff(guess.SV,     secret.SV,      1);
+    penalty += diff(guess.IP,     secret.IP,     20);
+    penalty += diff(guess.SO_pit, secret.SO_pit, 15);
+    if (guess.ERA != null && secret.ERA != null) penalty += Math.abs(guess.ERA - secret.ERA) / 0.02;
+  }
+
+  return Math.max(0, Math.round(1000 - penalty));
+}
+
+// ── SCORE HELPERS ─────────────────────────────────────────────────────────────
+function scoreClass(s) {
+  if (s === 0)  return 'score-zero';
+  if (s >= 700) return 'score-hot';
+  if (s >= 400) return 'score-warm';
+  return 'score-cold';
+}
+function barColor(s) {
+  if (s >= 700) return '#52b788';
+  if (s >= 400) return '#f4c430';
+  return '#e63946';
+}
+
+// ── INIT GAME ─────────────────────────────────────────────────────────────────
+function initGame(forceRandom) {
+  eraStart = parseInt(document.getElementById('eraStart').value) || 1920;
+  eraEnd   = parseInt(document.getElementById('eraEnd').value)   || 2025;
+
+  secretPlayer = pickSecretPlayer(forceRandom);
+  guesses   = [];
+  score     = 101;
+  hintsUsed = [];
+  gameOver  = false;
+  won       = false;
+  acIndex   = -1;
+
+  document.getElementById('guessLog').innerHTML    = '';
+  document.getElementById('guessInput').value      = '';
+  document.getElementById('acList').innerHTML      = '';
+  document.getElementById('statusMsg').textContent = '';
+  document.getElementById('hintDisplay').classList.remove('visible');
+  document.getElementById('hintDisplay').innerHTML = '';
+  document.getElementById('endPanel').className    = 'end-panel';
+  document.getElementById('guessArea').style.display = 'block';
+  document.getElementById('guessInput').disabled   = false;
+  document.getElementById('guessBtn').disabled     = false;
+  updateScoreDisplay();
+  document.getElementById('guessCount').textContent = '0 guesses';
+
+  document.querySelectorAll('.hint-btn').forEach(b => {
+    b.disabled = false;
+    b.classList.remove('revealed');
+  });
+
+  const d = new Date();
+  document.getElementById('dateDisplay').textContent =
+    d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+
+  if (!secretPlayer) {
+    document.getElementById('statusMsg').textContent =
+      'No players found for this era. Try adjusting the range.';
+  }
+}
+
+function updateScoreDisplay() {
+  document.getElementById('scoreDisplay').textContent = Math.max(0, score);
+}
+
+// ── MODE TOGGLE ───────────────────────────────────────────────────────────────
+document.getElementById('modeToggle').addEventListener('click', function() {
+  dailyMode = !dailyMode;
+  this.classList.toggle('on', !dailyMode);
+  document.getElementById('labelDaily').classList.toggle('active',  dailyMode);
+  document.getElementById('labelUnlim').classList.toggle('active', !dailyMode);
+  initGame(!dailyMode);
+});
+
+// ── AUTOCOMPLETE ──────────────────────────────────────────────────────────────
+function buildAC(query) {
+  const list = document.getElementById('acList');
+  list.innerHTML = '';
+  acIndex = -1;
+  if (!query || query.length < 2) return;
+  const q = query.toLowerCase();
+  const matches = ALL_PLAYERS.filter(p => p.name.toLowerCase().includes(q)).slice(0, 12);
+  matches.forEach(p => {
+    const div = document.createElement('div');
+    div.innerHTML = p.name + '<span class="role-tag">' + p.primaryPos + '</span>';
+    div.addEventListener('mousedown', e => { e.preventDefault(); selectAC(p); });
+    list.appendChild(div);
+  });
+  list._matches = matches;
+}
+
+function selectAC(p) {
+  document.getElementById('guessInput').value = p.name;
+  document.getElementById('acList').innerHTML = '';
+  document.getElementById('guessInput').dataset.selectedId = p.id;
+}
+
+document.getElementById('guessInput').addEventListener('input', function() {
+  delete this.dataset.selectedId;
+  buildAC(this.value);
+});
+
+document.getElementById('guessInput').addEventListener('keydown', function(e) {
+  const list  = document.getElementById('acList');
+  const items = list.querySelectorAll('div');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    acIndex = Math.min(acIndex + 1, items.length - 1);
+    items.forEach((el, i) => el.classList.toggle('active', i === acIndex));
+    if (items[acIndex] && list._matches) {
+      this.value = list._matches[acIndex].name;
+      this.dataset.selectedId = list._matches[acIndex].id;
+    }
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    acIndex = Math.max(acIndex - 1, -1);
+    items.forEach((el, i) => el.classList.toggle('active', i === acIndex));
+  } else if (e.key === 'Enter') {
+    submitGuess();
+  } else if (e.key === 'Escape') {
+    list.innerHTML = '';
+  }
+});
+
+document.getElementById('guessInput').addEventListener('blur', function() {
+  setTimeout(() => { document.getElementById('acList').innerHTML = ''; }, 150);
+});
+
+// ── SUBMIT GUESS ──────────────────────────────────────────────────────────────
+function submitGuess() {
+  if (gameOver || !secretPlayer) return;
+  const input  = document.getElementById('guessInput');
+  const status = document.getElementById('statusMsg');
+  status.textContent = '';
+
+  let guessPlayer;
+  const selectedId = input.dataset.selectedId;
+
+  if (selectedId) {
+    guessPlayer = ALL_PLAYERS.find(p => p.id === selectedId);
+  } else {
+    const q = input.value.trim().toLowerCase();
+    const matches = ALL_PLAYERS.filter(p => p.name.toLowerCase() === q);
+    if (matches.length === 1) guessPlayer = matches[0];
+    else if (matches.length > 1) { status.textContent = 'Multiple players match -- use the dropdown.'; return; }
+  }
+
+  if (!guessPlayer) { status.textContent = 'Player not found. Try the dropdown.'; return; }
+  if (guesses.some(g => g.player.id === guessPlayer.id)) { status.textContent = 'Already guessed that player.'; return; }
+
+  const sim = simScore(guessPlayer, secretPlayer);
+  guesses.push({ player: guessPlayer, sim, guessNum: guesses.length + 1 });
+
+  // Deduct point for this guess (floor at 0)
+  score = Math.max(0, score - 1);
+  updateScoreDisplay();
+
+  // Sort descending by sim score, re-render entire log
+  guesses.sort((a, b) => b.sim - a.sim);
+  renderGuessLog();
+
+  document.getElementById('guessCount').textContent =
+    guesses.length + ' guess' + (guesses.length !== 1 ? 'es' : '');
+
+  input.value = '';
+  delete input.dataset.selectedId;
+
+  if (sim === 1000) endGame(true);
+}
+
+function renderGuessLog() {
+  const log = document.getElementById('guessLog');
+  log.innerHTML = '';
+  guesses.forEach((g, i) => {
+    const row = document.createElement('div');
+    row.className = 'guess-row';
+    const pct = g.sim / 10;
+    const cls = scoreClass(g.sim);
+    const bc  = barColor(g.sim);
+    row.innerHTML =
+      '<span class="guess-num">' + g.guessNum + '</span>' +
+      '<span class="guess-name">' + g.player.name + '</span>' +
+      '<div class="sim-bar-wrap"><div class="sim-bar" style="width:' + pct + '%;background:' + bc + '"></div></div>' +
+      '<span class="sim-score ' + cls + '">' + g.sim + '</span>';
+    log.appendChild(row);
+  });
+}
+
+// ── HINTS ─────────────────────────────────────────────────────────────────────
+document.querySelectorAll('.hint-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    if (gameOver || !secretPlayer) return;
+    const hint = this.dataset.hint;
+    if (hintsUsed.includes(hint)) return;
+    hintsUsed.push(hint);
+    score = Math.max(0, score - 20);
+    updateScoreDisplay();
+    this.classList.add('revealed');
+    this.disabled = true;
+    renderHints();
+  });
+});
+
+function renderHints() {
+  const display = document.getElementById('hintDisplay');
+  display.innerHTML = '';
+  display.classList.add('visible');
+
+  const defs = [
+    { key: 'pos',  label: 'Position',    val: () => secretPlayer.primaryPos || 'Unknown' },
+    { key: 'year', label: 'Birth Year',  val: () => secretPlayer.birthYear   || 'Unknown' },
+    { key: 'war',  label: 'Career WAR',  val: () => secretPlayer.WAR != null ? Number(secretPlayer.WAR).toFixed(1) : 'N/A' },
+    { key: 'team', label: 'Primary Team',val: () => secretPlayer.primaryTeam || 'Unknown' },
+  ];
+
+  defs.filter(d => hintsUsed.includes(d.key)).forEach(d => {
+    const div = document.createElement('div');
+    div.className = 'hint-item';
+    div.innerHTML = '<span class="hl">' + d.label + '</span><span class="hv">' + d.val() + '</span>';
+    display.appendChild(div);
+  });
+}
+
+// ── END GAME ──────────────────────────────────────────────────────────────────
+function endGame(didWin) {
+  gameOver = true;
+  won = didWin;
+  document.getElementById('guessArea').style.display = 'none';
+  document.querySelectorAll('.hint-btn').forEach(b => b.disabled = true);
+
+  const panel = document.getElementById('endPanel');
+  panel.classList.add('visible', didWin ? 'won' : 'lost');
+  document.getElementById('endTitle').textContent = didWin ? 'You got it!' : 'Better luck tomorrow';
+  document.getElementById('endName').textContent  = secretPlayer.name;
+
+  if (didWin) {
+    document.getElementById('endScore').textContent = Math.max(0, score);
+    document.getElementById('endSub').textContent =
+      guesses.length + ' guess' + (guesses.length !== 1 ? 'es' : '') +
+      ' \u00b7 ' + hintsUsed.length + ' hint' + (hintsUsed.length !== 1 ? 's' : '') + ' used';
+  } else {
+    document.getElementById('endScore').textContent = '';
+    document.getElementById('endSub').textContent =
+      guesses.length + ' guess' + (guesses.length !== 1 ? 'es' : '') + ' \u00b7 no score';
+  }
+}
+
+// ── GIVE UP ───────────────────────────────────────────────────────────────────
+document.getElementById('giveUpBtn').addEventListener('click', function() {
+  if (gameOver || !secretPlayer) return;
+  if (!confirm('Give up and reveal the answer?')) return;
+  endGame(false);
+});
+
+// ── SHARE ─────────────────────────────────────────────────────────────────────
+document.getElementById('shareBtn').addEventListener('click', function() {
+  const d = new Date();
+  const dateStr = d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+  const lines = [
+    'SIMBALL ' + (dailyMode ? dateStr : 'Unlimited'),
+    secretPlayer.name,
+    won
+      ? 'Score: ' + Math.max(0, score) + ' | ' + guesses.length + ' guesses | ' + hintsUsed.length + ' hints'
+      : 'Gave up after ' + guesses.length + ' guesses',
+    ''
+  ];
+
+  // Show in guess order (guessNum) for share
+  [...guesses].sort((a,b) => a.guessNum - b.guessNum).forEach(g => {
+    const s = g.sim;
+    const e = s === 1000 ? '\uD83D\uDFE2' : s >= 700 ? '\uD83D\uDFE1' : s >= 400 ? '\uD83D\uDFE0' : '\uD83D\uDD34';
+    lines.push(e + ' ' + s);
+  });
+
+  navigator.clipboard.writeText(lines.join('\n')).then(() => {
+    this.textContent = 'Copied!';
+    setTimeout(() => { this.textContent = 'Copy Result'; }, 2000);
+  });
+});
+
+// ── EVENTS ────────────────────────────────────────────────────────────────────
+document.getElementById('guessBtn').addEventListener('click', submitGuess);
+document.getElementById('newGameBtn').addEventListener('click', () => initGame(!dailyMode));
+
+// ── START ─────────────────────────────────────────────────────────────────────
+loadPlayers();
+</script>
+</body>
+</html>
