@@ -39,6 +39,7 @@
     text-align: center;
     padding: 2rem 1rem 1rem;
     border-bottom: 1px solid var(--night-border);
+    position: relative;
   }
 
   .logo {
@@ -78,6 +79,27 @@
     letter-spacing: 0.1em;
   }
 
+  .help-btn {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--night-border);
+    background: var(--night-card);
+    color: var(--text-dim);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .help-btn:hover { border-color: var(--green-light); color: var(--green-light); }
+
   /* MODE TOGGLE */
   .mode-toggle {
     display: flex;
@@ -100,26 +122,17 @@
     transition: background 0.2s;
     flex-shrink: 0;
   }
-
   .toggle-track.on { background: var(--green); }
-
   .toggle-thumb {
     position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 14px;
-    height: 14px;
+    top: 3px; left: 3px;
+    width: 14px; height: 14px;
     background: var(--chalk);
     border-radius: 50%;
     transition: transform 0.2s;
   }
-
   .toggle-track.on .toggle-thumb { transform: translateX(20px); }
-
-  .mode-label-daily    { color: var(--text-dim); }
-  .mode-label-unlim    { color: var(--text-dim); }
-  .mode-label-daily.active  { color: var(--green-light); }
-  .mode-label-unlim.active  { color: var(--green-light); }
+  .mode-label-daily.active, .mode-label-unlim.active { color: var(--green-light); }
 
   main {
     max-width: 700px;
@@ -135,7 +148,6 @@
     padding: 1rem 1.25rem;
     margin-bottom: 1.5rem;
   }
-
   .era-panel label {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.7rem;
@@ -145,14 +157,12 @@
     display: block;
     margin-bottom: 0.6rem;
   }
-
   .era-row {
     display: flex;
     align-items: center;
     gap: 0.6rem;
     flex-wrap: wrap;
   }
-
   .era-row input[type=number] {
     width: 78px;
     background: var(--night);
@@ -164,9 +174,7 @@
     padding: 0.4rem 0.5rem;
     text-align: center;
   }
-
   .era-row span { color: var(--text-dim); font-size: 0.85rem; }
-
   .era-btn {
     background: var(--green);
     border: none;
@@ -180,7 +188,6 @@
     transition: background 0.15s;
   }
   .era-btn:hover { background: var(--green-light); color: var(--night); }
-
   .giveup-btn {
     background: transparent;
     border: 1px solid #444;
@@ -199,7 +206,6 @@
   /* GUESS INPUT */
   .guess-area { position: relative; margin-bottom: 1rem; }
   .guess-input-wrap { display: flex; gap: 0.5rem; }
-
   #guessInput {
     flex: 1;
     background: var(--night-card);
@@ -213,7 +219,6 @@
     transition: border-color 0.15s;
   }
   #guessInput:focus { border-color: var(--green-light); }
-
   #guessBtn {
     background: var(--green);
     border: none;
@@ -242,7 +247,6 @@
     max-height: 220px;
     overflow-y: auto;
   }
-
   .autocomplete-list div {
     padding: 0.5rem 1rem;
     cursor: pointer;
@@ -252,16 +256,14 @@
   }
   .autocomplete-list div:hover,
   .autocomplete-list div.active { background: var(--green); color: var(--chalk); }
-
-  .role-tag {
+  .ac-meta {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.65rem;
     color: var(--text-dim);
     margin-left: 0.5rem;
-    text-transform: uppercase;
   }
-  .autocomplete-list div:hover .role-tag,
-  .autocomplete-list div.active .role-tag { color: var(--green-pale); }
+  .autocomplete-list div:hover .ac-meta,
+  .autocomplete-list div.active .ac-meta { color: var(--green-pale); }
 
   /* HINTS */
   .hints-row {
@@ -270,7 +272,6 @@
     margin-bottom: 1.25rem;
     flex-wrap: wrap;
   }
-
   .hint-btn {
     background: var(--night-card);
     border: 1px solid var(--dirt-dark);
@@ -287,12 +288,7 @@
   .hint-btn:hover:not(:disabled) { background: var(--dirt-dark); color: var(--chalk); }
   .hint-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .hint-btn.revealed { background: var(--dirt-dark); color: var(--chalk); border-color: var(--dirt); cursor: default; }
-
-  .hint-cost {
-    font-size: 0.6rem;
-    opacity: 0.7;
-    margin-left: 0.3rem;
-  }
+  .hint-cost { font-size: 0.6rem; opacity: 0.7; margin-left: 0.3rem; }
 
   .hint-display {
     background: var(--night-card);
@@ -306,7 +302,6 @@
     flex-wrap: wrap;
   }
   .hint-display.visible { display: flex; }
-
   .hint-item { display: flex; flex-direction: column; gap: 0.2rem; }
   .hint-item .hl { color: var(--text-dim); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; }
   .hint-item .hv { color: var(--dirt); font-size: 1rem; font-weight: 600; }
@@ -323,7 +318,6 @@
 
   /* GUESS LOG */
   .guess-log { display: flex; flex-direction: column; gap: 0.5rem; }
-
   .guess-row {
     display: flex;
     align-items: center;
@@ -334,12 +328,10 @@
     padding: 0.6rem 1rem;
     animation: slideIn 0.2s ease;
   }
-
   @keyframes slideIn {
     from { opacity: 0; transform: translateY(-8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-
   .guess-num {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.7rem;
@@ -348,9 +340,7 @@
     text-align: right;
     flex-shrink: 0;
   }
-
   .guess-name { flex: 1; font-size: 0.95rem; font-weight: 500; }
-
   .sim-score {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.5rem;
@@ -359,17 +349,14 @@
     text-align: right;
     flex-shrink: 0;
   }
-
   .sim-bar-wrap {
-    width: 100px;
-    height: 6px;
+    width: 100px; height: 6px;
     background: var(--night-border);
     border-radius: 3px;
     overflow: hidden;
     flex-shrink: 0;
   }
   .sim-bar { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
-
   .score-hot  { color: #52b788; }
   .score-warm { color: #f4c430; }
   .score-cold { color: #e63946; }
@@ -388,7 +375,6 @@
   .end-panel.visible { display: block; }
   .end-panel.won  { border: 2px solid var(--green-light); }
   .end-panel.lost { border: 2px solid #444; }
-
   .end-panel h2 {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 2.5rem;
@@ -396,23 +382,19 @@
   }
   .end-panel.won  h2 { color: var(--green-light); }
   .end-panel.lost h2 { color: #888; }
-
   .end-panel .answer { font-size: 1.3rem; font-weight: 600; color: var(--chalk); margin: 0.5rem 0; }
-
   .end-panel .final-score {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 3rem;
     color: var(--yellow);
     letter-spacing: 0.1em;
   }
-
   .end-panel .sub {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.75rem;
     color: var(--text-dim);
     margin-top: 0.25rem;
   }
-
   .share-btn {
     margin-top: 1rem;
     background: var(--green);
@@ -427,6 +409,79 @@
     transition: background 0.15s;
   }
   .share-btn:hover { background: var(--green-light); color: var(--night); }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-overlay.visible { display: flex; }
+  .modal {
+    background: var(--night-card);
+    border: 1px solid var(--night-border);
+    border-radius: 10px;
+    padding: 2rem;
+    max-width: 520px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+  }
+  .modal h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+    color: var(--green-light);
+    margin-bottom: 1.25rem;
+  }
+  .modal h3 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--dirt);
+    margin: 1.25rem 0 0.5rem;
+  }
+  .modal p, .modal li {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-main);
+  }
+  .modal ul { padding-left: 1.25rem; }
+  .modal li { margin-bottom: 0.3rem; }
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 1.4rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .modal-close:hover { color: var(--chalk); }
+  .venmo-link {
+    display: inline-block;
+    margin-top: 1rem;
+    background: #3D95CE;
+    color: white;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+  .venmo-link:hover { opacity: 0.85; }
 
   .no-data-msg {
     text-align: center;
@@ -450,15 +505,51 @@
     <span id="dateDisplay"></span>
     <div class="mode-toggle">
       <span class="mode-label-daily active" id="labelDaily">Daily</span>
-      <div class="toggle-track" id="modeToggle">
-        <div class="toggle-thumb"></div>
-      </div>
+      <div class="toggle-track" id="modeToggle"><div class="toggle-thumb"></div></div>
       <span class="mode-label-unlim" id="labelUnlim">Unlimited</span>
     </div>
     <span>Score: <span class="score-display" id="scoreDisplay">101</span></span>
     <span id="guessCount">0 guesses</span>
   </div>
+  <button class="help-btn" id="helpBtn">?</button>
 </header>
+
+<!-- HELP MODAL -->
+<div class="modal-overlay" id="helpModal">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <h2>How to Play</h2>
+    <p>A secret MLB player has been chosen. Guess players by name and you'll get back a <strong>similarity score</strong> (0-1000) comparing your guess to the secret player. The higher the score, the more similar the careers. 1000 means you got it.</p>
+
+    <h3>Scoring</h3>
+    <p>You start with 101 points. Each guess costs 1 point. Each hint costs 20 points. Score floors at 0 but you can keep guessing. A correct answer scores whatever points remain -- so a perfect game is 100.</p>
+
+    <h3>Hints</h3>
+    <p>You can reveal up to 5 hints at any time, each costing 20 points: primary position, birth year, career WAR, primary team, and country of birth.</p>
+
+    <h3>Cross-Role Guesses</h3>
+    <p>If the secret player is a pitcher and you guess a position player (or vice versa), you'll get a score of 0. Use that as a signal to switch sides.</p>
+
+    <h3>Similarity Score Formula</h3>
+    <p>For position players, career stats compared include G, AB, R, H, 2B, 3B, HR, RBI, BB, SO, SB, BA, and SLG. For pitchers: W, L, SV, IP, K, and ERA. Based on the Baseball Reference similarity score methodology.</p>
+
+    <h3>Player Pool</h3>
+    <p>The pool includes players who had meaningful MLB careers:</p>
+    <ul>
+      <li>Position players: 500+ career games</li>
+      <li>Starting pitchers: 100+ career starts, majority of appearances as starter</li>
+      <li>Relief pitchers: 300+ career appearances, majority in relief</li>
+    </ul>
+    <p style="margin-top:0.5rem">The era filter lets you narrow the secret player's era by the years their career overlapped.</p>
+
+    <h3>Daily vs. Unlimited</h3>
+    <p>Daily mode picks the same player for everyone on a given day (like Wordle). Unlimited mode picks a new random player each game.</p>
+
+    <h3>Support SIMBALL</h3>
+    <p>If you enjoy the game, feel free to buy me a coffee!</p>
+    <a class="venmo-link" href="https://venmo.com/u/djsimons" target="_blank" rel="noopener">@djsimons on Venmo</a>
+  </div>
+</div>
 
 <main>
   <div id="loadingMsg" class="no-data-msg">Loading player data...</div>
@@ -498,10 +589,11 @@
 
     <!-- HINTS -->
     <div class="hints-row">
-      <button class="hint-btn" id="hintPos"  data-hint="pos">Position <span class="hint-cost">-20</span></button>
-      <button class="hint-btn" id="hintYear" data-hint="year">Birth Year <span class="hint-cost">-20</span></button>
-      <button class="hint-btn" id="hintWAR"  data-hint="war">Career WAR <span class="hint-cost">-20</span></button>
-      <button class="hint-btn" id="hintTeam" data-hint="team">Primary Team <span class="hint-cost">-20</span></button>
+      <button class="hint-btn" id="hintPos"     data-hint="pos">Position <span class="hint-cost">-20</span></button>
+      <button class="hint-btn" id="hintYear"    data-hint="year">Birth Year <span class="hint-cost">-20</span></button>
+      <button class="hint-btn" id="hintWAR"     data-hint="war">Career WAR <span class="hint-cost">-20</span></button>
+      <button class="hint-btn" id="hintTeam"    data-hint="team">Primary Team <span class="hint-cost">-20</span></button>
+      <button class="hint-btn" id="hintCountry" data-hint="country">Country <span class="hint-cost">-20</span></button>
     </div>
     <div class="hint-display" id="hintDisplay"></div>
 
@@ -515,7 +607,7 @@
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let ALL_PLAYERS = [];
 let secretPlayer = null;
-let guesses = [];       // {player, simScore} sorted descending by simScore
+let guesses = [];
 let score = 101;
 let hintsUsed = [];
 let gameOver = false;
@@ -674,6 +766,17 @@ document.getElementById('modeToggle').addEventListener('click', function() {
   initGame(!dailyMode);
 });
 
+// ── HELP MODAL ────────────────────────────────────────────────────────────────
+document.getElementById('helpBtn').addEventListener('click', function() {
+  document.getElementById('helpModal').classList.add('visible');
+});
+document.getElementById('modalClose').addEventListener('click', function() {
+  document.getElementById('helpModal').classList.remove('visible');
+});
+document.getElementById('helpModal').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('visible');
+});
+
 // ── AUTOCOMPLETE ──────────────────────────────────────────────────────────────
 function buildAC(query) {
   const list = document.getElementById('acList');
@@ -684,7 +787,8 @@ function buildAC(query) {
   const matches = ALL_PLAYERS.filter(p => p.name.toLowerCase().includes(q)).slice(0, 12);
   matches.forEach(p => {
     const div = document.createElement('div');
-    div.innerHTML = p.name + '<span class="role-tag">' + p.primaryPos + '</span>';
+    const meta = p.primaryPos + (p.birthYear ? ' \u00b7 ' + p.birthYear : '');
+    div.innerHTML = p.name + '<span class="ac-meta">' + meta + '</span>';
     div.addEventListener('mousedown', e => { e.preventDefault(); selectAC(p); });
     list.appendChild(div);
   });
@@ -753,11 +857,9 @@ function submitGuess() {
   const sim = simScore(guessPlayer, secretPlayer);
   guesses.push({ player: guessPlayer, sim, guessNum: guesses.length + 1 });
 
-  // Deduct point for this guess (floor at 0)
   score = Math.max(0, score - 1);
   updateScoreDisplay();
 
-  // Sort descending by sim score, re-render entire log
   guesses.sort((a, b) => b.sim - a.sim);
   renderGuessLog();
 
@@ -773,7 +875,7 @@ function submitGuess() {
 function renderGuessLog() {
   const log = document.getElementById('guessLog');
   log.innerHTML = '';
-  guesses.forEach((g, i) => {
+  guesses.forEach(g => {
     const row = document.createElement('div');
     row.className = 'guess-row';
     const pct = g.sim / 10;
@@ -809,10 +911,11 @@ function renderHints() {
   display.classList.add('visible');
 
   const defs = [
-    { key: 'pos',  label: 'Position',    val: () => secretPlayer.primaryPos || 'Unknown' },
-    { key: 'year', label: 'Birth Year',  val: () => secretPlayer.birthYear   || 'Unknown' },
-    { key: 'war',  label: 'Career WAR',  val: () => secretPlayer.WAR != null ? Number(secretPlayer.WAR).toFixed(1) : 'N/A' },
-    { key: 'team', label: 'Primary Team',val: () => secretPlayer.primaryTeam || 'Unknown' },
+    { key: 'pos',     label: 'Position',     val: () => secretPlayer.primaryPos    || 'Unknown' },
+    { key: 'year',    label: 'Birth Year',    val: () => secretPlayer.birthYear     || 'Unknown' },
+    { key: 'war',     label: 'Career WAR',    val: () => secretPlayer.WAR != null ? Number(secretPlayer.WAR).toFixed(1) : 'N/A' },
+    { key: 'team',    label: 'Primary Team',  val: () => secretPlayer.primaryTeam   || 'Unknown' },
+    { key: 'country', label: 'Birth Country', val: () => secretPlayer.birthCountry  || 'Unknown' },
   ];
 
   defs.filter(d => hintsUsed.includes(d.key)).forEach(d => {
@@ -867,7 +970,6 @@ document.getElementById('shareBtn').addEventListener('click', function() {
     ''
   ];
 
-  // Show in guess order (guessNum) for share
   [...guesses].sort((a,b) => a.guessNum - b.guessNum).forEach(g => {
     const s = g.sim;
     const e = s === 1000 ? '\uD83D\uDFE2' : s >= 700 ? '\uD83D\uDFE1' : s >= 400 ? '\uD83D\uDFE0' : '\uD83D\uDD34';
