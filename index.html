@@ -45,154 +45,113 @@
   .logo {
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(3rem, 8vw, 5rem);
-    letter-spacing: 0.15em;
-    color: var(--chalk);
+    letter-spacing: 0.15em; color: var(--chalk);
     text-shadow: 0 0 40px rgba(82,183,136,0.4), 3px 3px 0 var(--green);
     line-height: 1;
   }
 
   .tagline {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--green-light);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-top: 0.4rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
+    color: var(--green-light); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.4rem;
   }
 
   .header-meta {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem;
-    margin-top: 1rem;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    flex-wrap: wrap;
+    display: flex; justify-content: center; align-items: center;
+    gap: 1.5rem; margin-top: 1rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--text-dim); flex-wrap: wrap;
   }
 
-  .score-display {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem;
-    color: var(--yellow);
-    letter-spacing: 0.1em;
-  }
+  .score-display { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--yellow); letter-spacing: 0.1em; }
 
   .help-btn {
-    position: absolute;
-    top: 1.2rem;
-    right: 1.2rem;
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    border: 1px solid var(--night-border);
-    background: var(--night-card);
-    color: var(--text-dim);
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex; align-items: center; justify-content: center;
+    position: absolute; top: 1.2rem; right: 1.2rem;
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1px solid var(--night-border); background: var(--night-card); color: var(--text-dim);
+    font-family: 'IBM Plex Sans', sans-serif; font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center;
   }
   .help-btn:hover { border-color: var(--green-light); color: var(--green-light); }
 
-  /* MODE TOGGLE */
   .mode-toggle {
     display: flex; align-items: center; gap: 0.5rem;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.72rem; color: var(--text-dim);
-    letter-spacing: 0.08em; text-transform: uppercase;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
+    color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase;
   }
   .toggle-track {
-    width: 40px; height: 20px;
-    background: var(--night-border);
-    border-radius: 10px; position: relative;
-    cursor: pointer; transition: background 0.2s; flex-shrink: 0;
+    width: 40px; height: 20px; background: var(--night-border);
+    border-radius: 10px; position: relative; cursor: pointer; transition: background 0.2s; flex-shrink: 0;
   }
   .toggle-track.on { background: var(--green); }
   .toggle-thumb {
-    position: absolute; top: 3px; left: 3px;
-    width: 14px; height: 14px;
-    background: var(--chalk); border-radius: 50%;
-    transition: transform 0.2s;
+    position: absolute; top: 3px; left: 3px; width: 14px; height: 14px;
+    background: var(--chalk); border-radius: 50%; transition: transform 0.2s;
   }
   .toggle-track.on .toggle-thumb { transform: translateX(20px); }
   .mode-label-daily.active, .mode-label-unlim.active { color: var(--green-light); }
 
   main { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
 
-  /* ERA PANEL */
   .era-panel {
-    background: var(--night-card);
-    border: 1px solid var(--night-border);
+    background: var(--night-card); border: 1px solid var(--night-border);
     border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;
   }
   .era-panel label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.7rem; text-transform: uppercase;
-    letter-spacing: 0.15em; color: var(--text-dim);
-    display: block; margin-bottom: 0.6rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+    text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-dim); display: block; margin-bottom: 0.6rem;
   }
   .era-row { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
   .era-row input[type=number] {
-    width: 78px; background: var(--night);
-    border: 1px solid var(--night-border); border-radius: 4px;
-    color: var(--text-main); font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.9rem; padding: 0.4rem 0.5rem; text-align: center;
+    width: 78px; background: var(--night); border: 1px solid var(--night-border); border-radius: 4px;
+    color: var(--text-main); font-family: 'IBM Plex Mono', monospace; font-size: 0.9rem; padding: 0.4rem 0.5rem; text-align: center;
   }
   .era-row span { color: var(--text-dim); font-size: 0.85rem; }
   .era-btn {
-    background: var(--green); border: none; border-radius: 4px;
-    color: var(--chalk); font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.75rem; letter-spacing: 0.1em;
+    background: var(--green); border: none; border-radius: 4px; color: var(--chalk);
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; letter-spacing: 0.1em;
     padding: 0.4rem 0.9rem; cursor: pointer; transition: background 0.15s;
   }
   .era-btn:hover { background: var(--green-light); color: var(--night); }
   .giveup-btn {
-    background: transparent; border: 1px solid #444; border-radius: 4px;
-    color: #777; font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.75rem; letter-spacing: 0.1em;
+    background: transparent; border: 1px solid #444; border-radius: 4px; color: #777;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; letter-spacing: 0.1em;
     padding: 0.4rem 0.9rem; cursor: pointer; transition: all 0.15s; margin-left: auto;
   }
   .giveup-btn:hover { border-color: var(--red); color: var(--red); }
 
-  .era-presets {
-    display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.6rem;
-  }
+  .era-presets { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.6rem; }
   .era-preset {
-    background: transparent; border: 1px solid var(--night-border);
-    border-radius: 4px; color: var(--text-dim);
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem;
-    letter-spacing: 0.06em; padding: 0.25rem 0.6rem;
-    cursor: pointer; transition: all 0.15s;
+    background: transparent; border: 1px solid var(--night-border); border-radius: 4px; color: var(--text-dim);
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.06em;
+    padding: 0.25rem 0.6rem; cursor: pointer; transition: all 0.15s;
   }
   .era-preset:hover { border-color: var(--green-light); color: var(--green-light); }
 
-  /* GUESS INPUT */
   .guess-area { position: relative; margin-bottom: 1rem; }
   .guess-input-wrap { display: flex; gap: 0.5rem; }
   #guessInput {
-    flex: 1; background: var(--night-card);
-    border: 2px solid var(--night-border); border-radius: 6px;
-    color: var(--text-main); font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 1rem; padding: 0.65rem 1rem; outline: none; transition: border-color 0.15s;
+    flex: 1; background: var(--night-card); border: 2px solid var(--night-border); border-radius: 6px;
+    color: var(--text-main); font-family: 'IBM Plex Sans', sans-serif; font-size: 1rem;
+    padding: 0.65rem 1rem; outline: none; transition: border-color 0.15s;
   }
   #guessInput:focus { border-color: var(--green-light); }
   #guessBtn {
-    background: var(--green); border: none; border-radius: 6px;
-    color: var(--chalk); font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.2rem; letter-spacing: 0.1em; padding: 0 1.5rem;
-    cursor: pointer; transition: background 0.15s, transform 0.1s;
+    background: var(--green); border: none; border-radius: 6px; color: var(--chalk);
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.1em;
+    padding: 0 1.5rem; cursor: pointer; transition: background 0.15s, transform 0.1s;
   }
   #guessBtn:hover { background: var(--green-light); color: var(--night); }
   #guessBtn:active { transform: scale(0.97); }
+  #randomBtn {
+    background: var(--night-card); border: 1px solid var(--night-border); border-radius: 6px; color: var(--text-dim);
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.06em;
+    padding: 0 0.75rem; cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  }
+  #randomBtn:hover { border-color: var(--green-light); color: var(--green-light); }
 
   .autocomplete-list {
-    position: absolute; top: 100%; left: 0; right: 60px;
+    position: absolute; top: 100%; left: 0; right: 130px;
     background: var(--night-card); border: 1px solid var(--green-light);
-    border-top: none; border-radius: 0 0 6px 6px;
-    z-index: 100; max-height: 220px; overflow-y: auto;
+    border-top: none; border-radius: 0 0 6px 6px; z-index: 100; max-height: 220px; overflow-y: auto;
   }
   .autocomplete-list div {
     padding: 0.5rem 1rem; cursor: pointer; font-size: 0.9rem;
@@ -200,227 +159,120 @@
   }
   .autocomplete-list div:hover,
   .autocomplete-list div.active { background: var(--green); color: var(--chalk); }
-  .ac-meta {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
-    color: var(--text-dim); margin-left: 0.5rem;
-  }
+  .ac-meta { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--text-dim); margin-left: 0.5rem; }
   .autocomplete-list div:hover .ac-meta,
   .autocomplete-list div.active .ac-meta { color: var(--green-pale); }
 
   /* HINTS */
-  .hints-row { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+  .hints-section { margin-bottom: 1.25rem; }
+  .hints-header { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-dim); margin-bottom: 0.4rem; }
+  .hints-row { display: flex; gap: 0.35rem; flex-wrap: wrap; }
   .hint-btn {
-    background: var(--night-card); border: 1px solid var(--dirt-dark);
-    border-radius: 5px; color: var(--dirt); font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.72rem; letter-spacing: 0.08em; padding: 0.4rem 0.8rem;
-    cursor: pointer; transition: all 0.15s; text-transform: uppercase;
+    background: var(--night-card); border: 1px solid var(--night-border); border-radius: 5px; color: var(--text-dim);
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em;
+    padding: 0.3rem 0.65rem; cursor: pointer; transition: all 0.15s; text-transform: uppercase;
   }
-  .hint-btn:hover:not(:disabled) { background: var(--dirt-dark); color: var(--chalk); }
-  .hint-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .hint-btn:hover:not(:disabled) { border-color: var(--dirt); color: var(--dirt); }
+  .hint-btn:disabled { opacity: 0.35; cursor: not-allowed; }
   .hint-btn.revealed { background: var(--dirt-dark); color: var(--chalk); border-color: var(--dirt); cursor: default; }
-  .hint-cost { font-size: 0.6rem; opacity: 0.7; margin-left: 0.3rem; }
 
   .hint-display {
-    background: var(--night-card); border: 1px solid var(--dirt-dark);
-    border-radius: 6px; padding: 0.75rem 1rem; margin-bottom: 1.25rem;
-    font-family: 'IBM Plex Mono', monospace; display: none; gap: 1.5rem; flex-wrap: wrap;
+    background: var(--night-card); border: 1px solid var(--dirt-dark); border-radius: 6px;
+    padding: 0.6rem 1rem; margin-top: 0.5rem;
+    font-family: 'IBM Plex Mono', monospace; display: none; gap: 1.25rem; flex-wrap: wrap;
   }
   .hint-display.visible { display: flex; }
-  .hint-item { display: flex; flex-direction: column; gap: 0.2rem; }
-  .hint-item .hl { color: var(--text-dim); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; }
-  .hint-item .hv { color: var(--dirt); font-size: 1rem; font-weight: 600; }
+  .hint-item { display: flex; flex-direction: column; gap: 0.15rem; }
+  .hint-item .hl { color: var(--text-dim); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; }
+  .hint-item .hv { color: var(--dirt); font-size: 0.95rem; font-weight: 600; }
 
-  .status-msg {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--red);
-    min-height: 1.2rem; margin-bottom: 0.5rem; padding-left: 0.25rem;
-  }
+  .status-msg { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--red); min-height: 1.2rem; margin-bottom: 0.5rem; padding-left: 0.25rem; }
 
   /* GUESS LOG */
   .guess-log { display: flex; flex-direction: column; gap: 0.75rem; }
 
   .guess-card {
-    background: var(--night-card);
-    border: 1px solid var(--night-border);
-    border-radius: 8px;
-    overflow: hidden;
-    animation: slideIn 0.2s ease;
+    background: var(--night-card); border: 1px solid var(--night-border);
+    border-radius: 8px; overflow: hidden; animation: slideIn 0.2s ease;
   }
-
   @keyframes slideIn {
     from { opacity: 0; transform: translateY(-8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  .guess-main {
-    display: flex; align-items: center; gap: 0.75rem;
-    padding: 0.6rem 1rem;
-  }
-
-  .guess-num {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
-    color: var(--text-dim); width: 1.5rem; text-align: right; flex-shrink: 0;
-  }
-
-  .guess-name { font-size: 0.95rem; font-weight: 500; flex-shrink: 0; }
-
-  .guess-badges {
-    display: flex; gap: 0.3rem; flex-wrap: wrap; flex: 1;
-  }
+  .guess-main { display: flex; align-items: center; gap: 0.65rem; padding: 0.55rem 0.75rem; }
+  .guess-num { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--text-dim); width: 1.2rem; text-align: right; flex-shrink: 0; }
+  .guess-thumb { width: 36px; height: 36px; border-radius: 5px; object-fit: cover; flex-shrink: 0; background: var(--night-border); }
+  .guess-thumb-placeholder { width: 36px; height: 36px; border-radius: 5px; flex-shrink: 0; background: var(--night-border); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: var(--text-dim); }
+  .guess-name { font-size: 0.9rem; font-weight: 500; flex-shrink: 0; min-width: 100px; max-width: 155px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .guess-badges { display: flex; gap: 0.25rem; flex-wrap: wrap; flex: 1; }
 
   .badge {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
-    padding: 0.15rem 0.4rem; border-radius: 3px;
-    border: 1px solid var(--night-border); color: var(--text-dim);
-    white-space: nowrap;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem;
+    padding: 0.12rem 0.35rem; border-radius: 3px;
+    border: 1px solid var(--night-border); color: var(--text-dim); white-space: nowrap; line-height: 1.4;
   }
-  .badge.match { border-color: var(--green); color: var(--green-light); background: rgba(45,106,79,0.15); }
-  .badge.close { border-color: var(--yellow); color: var(--yellow); background: rgba(244,196,48,0.1); }
+  .badge.green { border-color: var(--green-light); color: var(--green-light); background: rgba(82,183,136,0.12); }
+  .badge.yellow { border-color: var(--yellow); color: var(--yellow); background: rgba(244,196,48,0.1); }
 
-  .sim-score {
-    font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem;
-    letter-spacing: 0.05em; min-width: 3.5rem; text-align: right; flex-shrink: 0;
-  }
-  .sim-bar-wrap {
-    width: 80px; height: 5px; background: var(--night-border);
-    border-radius: 3px; overflow: hidden; flex-shrink: 0;
-  }
-  .sim-bar { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
-
+  .sim-wrap { display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
+  .sim-bar-wrap { width: 60px; height: 4px; background: var(--night-border); border-radius: 2px; overflow: hidden; }
+  .sim-bar { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+  .sim-score { font-family: 'Bebas Neue', sans-serif; font-size: 1.35rem; letter-spacing: 0.05em; min-width: 3rem; text-align: right; }
   .score-hot  { color: #52b788; }
   .score-warm { color: #f4c430; }
   .score-cold { color: #e63946; }
   .score-zero { color: #555; }
 
-  /* GUESS DETAIL ROW */
-  .guess-detail {
-    display: flex; gap: 1rem; flex-wrap: wrap;
-    padding: 0.5rem 1rem 0.6rem 3rem;
-    border-top: 1px solid var(--night-border);
-    background: rgba(0,0,0,0.15);
-  }
-
-  .detail-item { display: flex; flex-direction: column; gap: 0.1rem; }
-  .detail-item .dl { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
-  .detail-item .dv { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--text-main); }
-
-  /* SIMILARITY BREAKDOWN */
   .sim-breakdown {
-    padding: 0.5rem 1rem 0.6rem 3rem;
-    border-top: 1px solid var(--night-border);
-    display: flex; gap: 1.5rem; flex-wrap: wrap;
+    padding: 0.35rem 0.75rem 0.45rem 3.5rem; border-top: 1px solid var(--night-border);
+    display: flex; gap: 1.5rem; flex-wrap: wrap; background: rgba(0,0,0,0.12);
   }
-  .sim-best, .sim-worst {
-    display: flex; flex-direction: column; gap: 0.2rem;
-  }
-  .sim-best .sl, .sim-worst .sl {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
-    text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim);
-  }
-  .sim-best .sv { color: var(--green-light); font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; }
-  .sim-worst .sv { color: var(--red); font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; }
+  .sim-best, .sim-worst { display: flex; flex-direction: column; gap: 0.1rem; }
+  .sim-best .sl, .sim-worst .sl { font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); }
+  .sim-best .sv { color: var(--green-light); font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; }
+  .sim-worst .sv { color: var(--red); font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; }
 
   /* END PANEL */
-  .end-panel {
-    display: none; background: var(--night-card); border-radius: 10px;
-    padding: 2rem; text-align: center; margin-bottom: 1.5rem; animation: slideIn 0.3s ease;
-  }
+  .end-panel { display: none; background: var(--night-card); border-radius: 10px; padding: 2rem; text-align: center; margin-bottom: 1.5rem; animation: slideIn 0.3s ease; }
   .end-panel.visible { display: block; }
   .end-panel.won  { border: 2px solid var(--green-light); }
   .end-panel.lost { border: 2px solid #444; }
 
-  /* PLAYER CARD */
-  .player-card {
-    display: flex; gap: 1.5rem; align-items: flex-start;
-    margin: 1.25rem 0; text-align: left;
-  }
-  .player-photo {
-    width: 90px; height: 90px; border-radius: 8px;
-    object-fit: cover; flex-shrink: 0;
-    background: var(--night-border);
-    border: 2px solid var(--night-border);
-  }
-  .player-photo-placeholder {
-    width: 90px; height: 90px; border-radius: 8px; flex-shrink: 0;
-    background: var(--night-border); border: 2px solid var(--night-border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 2rem; color: var(--text-dim);
-  }
+  .player-card { display: flex; gap: 1.25rem; align-items: flex-start; margin: 1.25rem 0; text-align: left; }
+  .player-photo { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; flex-shrink: 0; border: 2px solid var(--night-border); background: var(--night-border); }
+  .player-photo-placeholder { width: 80px; height: 80px; border-radius: 8px; flex-shrink: 0; background: var(--night-border); border: 2px solid var(--night-border); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: var(--text-dim); }
   .player-card-info { flex: 1; }
-  .player-card-name { font-size: 1.2rem; font-weight: 600; color: var(--chalk); margin-bottom: 0.4rem; }
-  .player-card-meta {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
-    color: var(--text-dim); margin-bottom: 0.6rem;
-  }
-  .player-card-stats {
-    display: flex; flex-wrap: wrap; gap: 0.75rem;
-  }
+  .player-card-name { font-size: 1.15rem; font-weight: 600; color: var(--chalk); margin-bottom: 0.3rem; }
+  .player-card-meta { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.5rem; }
+  .player-card-stats { display: flex; flex-wrap: wrap; gap: 0.6rem; }
   .stat-chip { display: flex; flex-direction: column; gap: 0.1rem; }
-  .stat-chip .sc-l { font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
-  .stat-chip .sc-v { font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: var(--chalk); font-weight: 600; }
+  .stat-chip .sc-l { font-family: 'IBM Plex Mono', monospace; font-size: 0.56rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+  .stat-chip .sc-v { font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; color: var(--chalk); font-weight: 600; }
 
-  .end-panel h2 {
-    font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 0.1em;
-  }
+  .end-panel h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 0.1em; }
   .end-panel.won  h2 { color: var(--green-light); }
   .end-panel.lost h2 { color: #888; }
-  .end-panel .final-score {
-    font-family: 'Bebas Neue', sans-serif; font-size: 3rem;
-    color: var(--yellow); letter-spacing: 0.1em;
-  }
-  .end-panel .sub {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--text-dim); margin-top: 0.25rem;
-  }
-  .share-btn {
-    margin-top: 1rem; background: var(--green); border: none; border-radius: 6px;
-    color: var(--chalk); font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.8rem; letter-spacing: 0.1em; padding: 0.6rem 1.5rem;
-    cursor: pointer; transition: background 0.15s;
-  }
+  .end-panel .final-score { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; color: var(--yellow); letter-spacing: 0.1em; }
+  .end-panel .sub { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--text-dim); margin-top: 0.25rem; }
+  .share-btn { margin-top: 1rem; background: var(--green); border: none; border-radius: 6px; color: var(--chalk); font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; letter-spacing: 0.1em; padding: 0.6rem 1.5rem; cursor: pointer; transition: background 0.15s; }
   .share-btn:hover { background: var(--green-light); color: var(--night); }
 
   /* MODAL */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7); z-index: 1000;
-    align-items: center; justify-content: center; padding: 1rem;
-  }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
   .modal-overlay.visible { display: flex; }
-  .modal {
-    background: var(--night-card); border: 1px solid var(--night-border);
-    border-radius: 10px; padding: 2rem; max-width: 520px; width: 100%;
-    max-height: 85vh; overflow-y: auto; position: relative;
-  }
-  .modal h2 {
-    font-family: 'Bebas Neue', sans-serif; font-size: 2rem;
-    letter-spacing: 0.1em; color: var(--green-light); margin-bottom: 1.25rem;
-  }
-  .modal h3 {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
-    text-transform: uppercase; letter-spacing: 0.15em; color: var(--dirt);
-    margin: 1.25rem 0 0.5rem;
-  }
+  .modal { background: var(--night-card); border: 1px solid var(--night-border); border-radius: 10px; padding: 2rem; max-width: 520px; width: 100%; max-height: 85vh; overflow-y: auto; position: relative; }
+  .modal h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.1em; color: var(--green-light); margin-bottom: 1.25rem; }
+  .modal h3 { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--dirt); margin: 1.25rem 0 0.5rem; }
   .modal p, .modal li { font-size: 0.9rem; line-height: 1.6; color: var(--text-main); }
   .modal ul { padding-left: 1.25rem; }
   .modal li { margin-bottom: 0.3rem; }
-  .modal-close {
-    position: absolute; top: 1rem; right: 1rem;
-    background: none; border: none; color: var(--text-dim);
-    font-size: 1.4rem; cursor: pointer; line-height: 1;
-  }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-dim); font-size: 1.4rem; cursor: pointer; line-height: 1; }
   .modal-close:hover { color: var(--chalk); }
-  .venmo-link {
-    display: inline-block; margin-top: 1rem; background: #3D95CE;
-    color: white; font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem;
-    font-weight: 600; letter-spacing: 0.08em; padding: 0.5rem 1.25rem;
-    border-radius: 6px; text-decoration: none; transition: opacity 0.15s;
-  }
+  .venmo-link { display: inline-block; margin-top: 1rem; background: #3D95CE; color: white; font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; padding: 0.5rem 1.25rem; border-radius: 6px; text-decoration: none; transition: opacity 0.15s; }
   .venmo-link:hover { opacity: 0.85; }
 
-  .no-data-msg {
-    text-align: center; padding: 3rem; font-family: 'IBM Plex Mono', monospace;
-    color: var(--text-dim); font-size: 0.85rem;
-  }
-
+  .no-data-msg { text-align: center; padding: 3rem; font-family: 'IBM Plex Mono', monospace; color: var(--text-dim); font-size: 0.85rem; }
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--night); }
   ::-webkit-scrollbar-thumb { background: var(--night-border); border-radius: 3px; }
@@ -449,22 +301,35 @@
   <div class="modal">
     <button class="modal-close" id="modalClose">&times;</button>
     <h2>How to Play</h2>
-    <p>A secret MLB player has been chosen. Guess players by name and you'll get back a similarity score (0-1000) comparing your guess to the secret player. The higher the score, the more similar the careers. 1000 means you got it.</p>
+    <p>A secret MLB player has been chosen. Guess players by name and you will get back a similarity score (0-1000) comparing your guess to the secret player. The higher the score, the more similar the careers. 1000 means you got it.</p>
 
     <h3>Scoring</h3>
     <p>You start with 101 points. Each guess costs 1 point. Each hint costs 20 points. Score floors at 0 but you can keep guessing. A correct answer scores whatever points remain, so a perfect game is 100.</p>
 
     <h3>Hints</h3>
-    <p>You can reveal up to 5 hints at any time, each costing 20 points: primary position, birth year, career WAR, primary team, and country of birth.</p>
+    <p>Six hints are available in the order shown, each costing 20 points: POS (primary position), BORN (birth year), WAR (career WAR), TEAM (primary team), COUNTRY (birth country), and INITIALS.</p>
 
     <h3>Guess Badges</h3>
-    <p>Each guess shows green or yellow badges when your guessed player is close to the secret player. Green means an exact match (same position or same primary team). Yellow means close (birth year within 5, or WAR within 10).</p>
+    <p>Each guess row shows five badges comparing your guess to the secret player, in the same order as the hints. Badge colors:</p>
+    <ul>
+      <li>Green = exact match</li>
+      <li>Yellow = close but not exact</li>
+      <li>No color = far off</li>
+    </ul>
+    <p style="margin-top:0.5rem">Badge logic for each field:</p>
+    <ul>
+      <li>POS: green if same primary position, yellow if the guessed player played 10 or more games at the secret player's position</li>
+      <li>TEAM: green if same primary team, yellow if both teams are in the same 2025 MLB division</li>
+      <li>BORN: green if exact, yellow if within 5 years</li>
+      <li>WAR: green if within 2, yellow if within 10</li>
+      <li>COUNTRY: green if exact match only</li>
+    </ul>
 
     <h3>Similarity Breakdown</h3>
-    <p>Each guess also shows which stat was most similar and which was least similar to the secret player, to help you narrow your search.</p>
+    <p>Each guess shows which stat was most similar and which was least similar to the secret player.</p>
 
     <h3>Cross-Role Guesses</h3>
-    <p>If the secret player is a pitcher and you guess a position player (or vice versa), you'll get a score of 0. Use that as a signal to switch sides.</p>
+    <p>If the secret player is a pitcher and you guess a position player (or vice versa), you will get a score of 0. Use that as a signal to switch sides.</p>
 
     <h3>Similarity Score Formula</h3>
     <p>For position players, career stats compared include G, AB, R, H, 2B, 3B, HR, RBI, BB, SO, SB, BA, and SLG. For pitchers: W, L, SV, IP, K, and ERA. Based on the Baseball Reference similarity score methodology. All stats are as of Opening Day 2026.</p>
@@ -478,10 +343,10 @@
     </ul>
 
     <h3>Year Range</h3>
-    <p>The year range filter controls which players can be chosen as the secret player. A player is included if their estimated career window (age 18 to 45 based on birth year) overlaps with the selected range. You can narrow it to a specific decade or even a single year to focus on a particular era.</p>
+    <p>The year range filter controls which players can be chosen as the secret player. It uses each player's actual first and last year in the majors. A player is included if their career overlaps with the selected range at all. Use the preset buttons or enter custom years.</p>
 
     <h3>Daily vs. Unlimited</h3>
-    <p>Daily mode picks the same player for everyone on a given day (like Wordle). Unlimited mode picks a new random player each game.</p>
+    <p>Daily mode picks the same player for everyone on a given day. Unlimited mode picks a new random player each game.</p>
 
     <h3>Support SIMBALL</h3>
     <p>If you enjoy the game, feel free to buy me a coffee!</p>
@@ -493,7 +358,6 @@
   <div id="loadingMsg" class="no-data-msg">Loading player data...</div>
   <div id="gameArea" style="display:none">
 
-    <!-- ERA PANEL -->
     <div class="era-panel">
       <label>Year Range</label>
       <div class="era-row">
@@ -504,19 +368,20 @@
         <button class="giveup-btn" id="giveUpBtn">Give Up</button>
       </div>
       <div class="era-presets">
+        <button class="era-preset" data-start="1871" data-end="2025">All Time</button>
+        <button class="era-preset" data-start="1920" data-end="2025">Modern (1920+)</button>
+        <button class="era-preset" data-start="1947" data-end="2025">Integration Era</button>
+        <button class="era-preset" data-start="1994" data-end="2025">Wild Card Era</button>
+        <button class="era-preset" data-start="2000" data-end="2025">2000s+</button>
+        <button class="era-preset" data-start="2015" data-end="2025">2015+</button>
         <button class="era-preset" data-start="2025" data-end="2025">2025</button>
-        <button class="era-preset" data-start="1995" data-end="1995">1995</button>
         <button class="era-preset" data-start="1990" data-end="1999">1990s</button>
         <button class="era-preset" data-start="1980" data-end="1989">1980s</button>
         <button class="era-preset" data-start="1970" data-end="1979">1970s</button>
-        <button class="era-preset" data-start="1947" data-end="2025">Integration Era</button>
-        <button class="era-preset" data-start="1920" data-end="1946">Pre-Integration</button>
         <button class="era-preset" data-start="1871" data-end="1919">Deadball</button>
-        <button class="era-preset" data-start="1920" data-end="2025">All (1920+)</button>
       </div>
     </div>
 
-    <!-- END PANEL -->
     <div class="end-panel" id="endPanel">
       <h2 id="endTitle"></h2>
       <div id="playerCard"></div>
@@ -525,10 +390,10 @@
       <button class="share-btn" id="shareBtn">Copy Result</button>
     </div>
 
-    <!-- GUESS INPUT -->
     <div class="guess-area" id="guessArea">
       <div class="guess-input-wrap">
         <input type="text" id="guessInput" placeholder="Type a player name..." autocomplete="off">
+        <button id="randomBtn">Random</button>
         <button id="guessBtn">Guess</button>
       </div>
       <div class="autocomplete-list" id="acList"></div>
@@ -536,23 +401,77 @@
 
     <div class="status-msg" id="statusMsg"></div>
 
-    <!-- HINTS -->
-    <div class="hints-row">
-      <button class="hint-btn" id="hintPos"     data-hint="pos">Position <span class="hint-cost">-20</span></button>
-      <button class="hint-btn" id="hintYear"    data-hint="year">Birth Year <span class="hint-cost">-20</span></button>
-      <button class="hint-btn" id="hintWAR"     data-hint="war">Career WAR <span class="hint-cost">-20</span></button>
-      <button class="hint-btn" id="hintTeam"    data-hint="team">Primary Team <span class="hint-cost">-20</span></button>
-      <button class="hint-btn" id="hintCountry" data-hint="country">Country <span class="hint-cost">-20</span></button>
+    <div class="hints-section">
+      <div class="hints-header">Hints (20 pts each)</div>
+      <div class="hints-row">
+        <button class="hint-btn" id="hintPos"      data-hint="pos">POS</button>
+        <button class="hint-btn" id="hintYear"     data-hint="year">BORN</button>
+        <button class="hint-btn" id="hintWAR"      data-hint="war">WAR</button>
+        <button class="hint-btn" id="hintTeam"     data-hint="team">TEAM</button>
+        <button class="hint-btn" id="hintCountry"  data-hint="country">COUNTRY</button>
+        <button class="hint-btn" id="hintInitials" data-hint="initials">INITIALS</button>
+      </div>
+      <div class="hint-display" id="hintDisplay"></div>
     </div>
-    <div class="hint-display" id="hintDisplay"></div>
 
-    <!-- GUESS LOG -->
     <div class="guess-log" id="guessLog"></div>
 
   </div>
 </main>
 
 <script>
+// ── 2025 MLB DIVISIONS ────────────────────────────────────────────────────────
+const DIVISIONS = {
+  "AL East":   ["New York Yankees","Boston Red Sox","Toronto Blue Jays","Tampa Bay Rays","Baltimore Orioles"],
+  "AL Central":["Chicago White Sox","Cleveland Guardians","Detroit Tigers","Kansas City Royals","Minnesota Twins"],
+  "AL West":   ["Houston Astros","Los Angeles Angels","Oakland Athletics","Seattle Mariners","Texas Rangers"],
+  "NL East":   ["Atlanta Braves","Miami Marlins","New York Mets","Philadelphia Phillies","Washington Nationals"],
+  "NL Central":["Chicago Cubs","Cincinnati Reds","Milwaukee Brewers","Pittsburgh Pirates","St. Louis Cardinals"],
+  "NL West":   ["Arizona Diamondbacks","Colorado Rockies","Los Angeles Dodgers","San Diego Padres","San Francisco Giants"],
+};
+
+function sameDivision(a, b) {
+  if (!a || !b || a === b) return false;
+  for (const div of Object.values(DIVISIONS))
+    if (div.includes(a) && div.includes(b)) return true;
+  return false;
+}
+
+// ── TEAM ABBREVIATIONS ────────────────────────────────────────────────────────
+const TEAM_ABBR = {
+  "New York Yankees":"NYY","New York Mets":"NYM","Boston Red Sox":"BOS",
+  "Chicago Cubs":"CHC","Chicago White Sox":"CWS","Los Angeles Dodgers":"LAD",
+  "Los Angeles Angels":"LAA","San Francisco Giants":"SF","San Diego Padres":"SD",
+  "St. Louis Cardinals":"STL","Atlanta Braves":"ATL","Philadelphia Phillies":"PHI",
+  "Houston Astros":"HOU","Texas Rangers":"TEX","Seattle Mariners":"SEA",
+  "Oakland Athletics":"OAK","Minnesota Twins":"MIN","Detroit Tigers":"DET",
+  "Cleveland Guardians":"CLE","Kansas City Royals":"KC","Toronto Blue Jays":"TOR",
+  "Baltimore Orioles":"BAL","Tampa Bay Rays":"TB","Washington Nationals":"WSH",
+  "Miami Marlins":"MIA","Milwaukee Brewers":"MIL","Pittsburgh Pirates":"PIT",
+  "Cincinnati Reds":"CIN","Colorado Rockies":"COL","Arizona Diamondbacks":"ARI",
+  // Historical
+  "Cleveland Indians":"CLE","Florida Marlins":"FLA","Montreal Expos":"MON",
+  "Anaheim Angels":"ANA","California Angels":"CAL","Washington Senators":"WSH",
+  "Brooklyn Dodgers":"BRO","New York Giants":"NYG","St. Louis Browns":"STL",
+  "Philadelphia Athletics":"PHI","Boston Braves":"BOS","Cincinnati Redlegs":"CIN",
+  "Kansas City Athletics":"KC","Milwaukee Braves":"MIL","Seattle Pilots":"SEA",
+};
+
+function abbr(teamName) {
+  if (!teamName) return '?';
+  if (TEAM_ABBR[teamName]) return TEAM_ABBR[teamName];
+  // Fallback: last word, max 4 chars
+  return teamName.split(' ').pop().slice(0, 4).toUpperCase();
+}
+
+// ── FORMAT STATS (no leading zero) ───────────────────────────────────────────
+function fmtRate(val) {
+  if (val == null) return null;
+  const n = Number(val);
+  if (isNaN(n)) return null;
+  return (n >= 1 ? n.toFixed(3) : '.' + n.toFixed(3).split('.')[1]);
+}
+
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let ALL_PLAYERS = [];
 let secretPlayer = null;
@@ -575,15 +494,16 @@ async function loadPlayers() {
     document.getElementById('gameArea').style.display = 'block';
     initGame();
   } catch(e) {
-    document.getElementById('loadingMsg').textContent =
-      'Could not load players.json -- make sure it is in the same folder as index.html.';
+    document.getElementById('loadingMsg').textContent = 'Could not load players.json.';
   }
 }
 
-// ── ERA FILTER ────────────────────────────────────────────────────────────────
+// ── ERA FILTER (uses actual firstYear/lastYear) ────────────────────────────────
 function playerOverlapsEra(p, start, end) {
-  if (!p.birthYear) return true;
-  return (p.birthYear + 18) <= end && (p.birthYear + 45) >= start;
+  const fy = p.firstYear;
+  const ly = p.lastYear;
+  if (fy == null || ly == null) return true;
+  return fy <= end && ly >= start;
 }
 
 // ── SEEDED RNG ────────────────────────────────────────────────────────────────
@@ -608,7 +528,7 @@ function pickSecretPlayer(forceRandom) {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
-// ── SIMILARITY SCORE ──────────────────────────────────────────────────────────
+// ── SIMILARITY ────────────────────────────────────────────────────────────────
 function simDetails(guess, secret) {
   const gPos = guess.role === 'position';
   const sPos = secret.role === 'position';
@@ -625,35 +545,32 @@ function simDetails(guess, secret) {
     addP('AB',  guess.AB,  secret.AB,  75);
     addP('R',   guess.R,   secret.R,   10);
     addP('H',   guess.H,   secret.H,   15);
-    addP('2B',  guess.D,   secret.D,   5);
-    addP('3B',  guess.T,   secret.T,   4);
-    addP('HR',  guess.HR,  secret.HR,  2);
+    addP('2B',  guess.D,   secret.D,    5);
+    addP('3B',  guess.T,   secret.T,    4);
+    addP('HR',  guess.HR,  secret.HR,   2);
     addP('RBI', guess.RBI, secret.RBI, 10);
     addP('BB',  guess.BB,  secret.BB,  25);
-    addP('SO',  guess.SO,  secret.SO,  150);
+    addP('SO',  guess.SO,  secret.SO, 150);
     addP('SB',  guess.SB,  secret.SB,  20);
-    if (guess.BA  != null && secret.BA  != null) penalties.push({ label: 'BA',  p: Math.abs(guess.BA  - secret.BA)  * 1000 });
-    if (guess.SLG != null && secret.SLG != null) penalties.push({ label: 'SLG', p: Math.abs(guess.SLG - secret.SLG) * 500  });
+    if (guess.BA  != null && secret.BA  != null) penalties.push({ label:'BA',  p: Math.abs(guess.BA  - secret.BA)  * 1000 });
+    if (guess.SLG != null && secret.SLG != null) penalties.push({ label:'SLG', p: Math.abs(guess.SLG - secret.SLG) * 500  });
   } else {
-    addP('W',   guess.W,      secret.W,      1);
-    addP('L',   guess.L,      secret.L,      1);
-    addP('SV',  guess.SV,     secret.SV,     1);
-    addP('IP',  guess.IP,     secret.IP,     20);
-    addP('K',   guess.SO_pit, secret.SO_pit, 15);
-    if (guess.ERA != null && secret.ERA != null) penalties.push({ label: 'ERA', p: Math.abs(guess.ERA - secret.ERA) / 0.02 });
+    addP('W',  guess.W,      secret.W,       1);
+    addP('L',  guess.L,      secret.L,       1);
+    addP('SV', guess.SV,     secret.SV,      1);
+    addP('IP', guess.IP,     secret.IP,      20);
+    addP('K',  guess.SO_pit, secret.SO_pit,  15);
+    if (guess.ERA != null && secret.ERA != null) penalties.push({ label:'ERA', p: Math.abs(guess.ERA - secret.ERA) / 0.02 });
   }
 
   const total = penalties.reduce((s, x) => s + x.p, 0);
   const sim   = Math.max(0, Math.round(1000 - total));
-
   penalties.sort((a, b) => a.p - b.p);
-  const best  = penalties.length ? penalties[0].label  : null;
-  const worst = penalties.length ? penalties[penalties.length - 1].label : null;
-
-  return { score: sim, crossRole: false, best, worst };
+  return { score: sim, crossRole: false,
+    best:  penalties.length ? penalties[0].label : null,
+    worst: penalties.length ? penalties[penalties.length-1].label : null };
 }
 
-// ── SCORE HELPERS ─────────────────────────────────────────────────────────────
 function scoreClass(s) {
   if (s === 0)  return 'score-zero';
   if (s >= 700) return 'score-hot';
@@ -666,7 +583,69 @@ function barColor(s) {
   return '#e63946';
 }
 
-// ── INIT GAME ─────────────────────────────────────────────────────────────────
+// ── BADGES (order: POS, TEAM, BORN, WAR, COUNTRY) ───────────────────────────
+function buildBadges(guess, secret) {
+  const badges = [];
+
+  // POS
+  if (guess.primaryPos === secret.primaryPos) {
+    badges.push({ text: guess.primaryPos || '?', level: 'green' });
+  } else if (secret.primaryPos && guess.positionsPlayed && guess.positionsPlayed.includes(secret.primaryPos)) {
+    badges.push({ text: guess.primaryPos || '?', level: 'yellow' });
+  } else {
+    badges.push({ text: guess.primaryPos || '?', level: '' });
+  }
+
+  // TEAM
+  const gt = guess.primaryTeam, st = secret.primaryTeam;
+  if (gt && st && gt === st) {
+    badges.push({ text: abbr(gt), level: 'green' });
+  } else if (sameDivision(gt, st)) {
+    badges.push({ text: abbr(gt), level: 'yellow' });
+  } else {
+    badges.push({ text: abbr(gt), level: '' });
+  }
+
+  // BORN
+  if (guess.birthYear != null && secret.birthYear != null) {
+    const diff = Math.abs(guess.birthYear - secret.birthYear);
+    badges.push({ text: String(guess.birthYear), level: diff === 0 ? 'green' : diff <= 5 ? 'yellow' : '' });
+  } else {
+    badges.push({ text: String(guess.birthYear || '?'), level: '' });
+  }
+
+  // WAR
+  if (guess.WAR != null && secret.WAR != null) {
+    const diff = Math.abs(Number(guess.WAR) - Number(secret.WAR));
+    badges.push({ text: 'WAR\u00a0' + Number(guess.WAR).toFixed(1), level: diff <= 2 ? 'green' : diff <= 10 ? 'yellow' : '' });
+  } else {
+    badges.push({ text: 'WAR ?', level: '' });
+  }
+
+  // COUNTRY
+  const gc = guess.birthCountry, sc2 = secret.birthCountry;
+  badges.push({ text: gc || '?', level: (gc && sc2 && gc === sc2) ? 'green' : '' });
+
+  return badges;
+}
+
+// ── PHOTO ─────────────────────────────────────────────────────────────────────
+function thumbHtml(p, size) {
+  const url = p.mlbID
+    ? 'https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/' + p.mlbID + '/headshot/67/current'
+    : null;
+  const isSmall = size <= 36;
+  const cls  = isSmall ? 'guess-thumb' : 'player-photo';
+  const pcls = isSmall ? 'guess-thumb-placeholder' : 'player-photo-placeholder';
+  if (url) {
+    return '<img class="' + cls + '" src="' + url + '" alt="' + p.name + '" width="' + size + '" height="' + size + '"' +
+      ' onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">' +
+      '<div class="' + pcls + '" style="display:none">&#9918;</div>';
+  }
+  return '<div class="' + pcls + '">&#9918;</div>';
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
 function initGame(forceRandom) {
   eraStart = parseInt(document.getElementById('eraStart').value) || 1920;
   eraEnd   = parseInt(document.getElementById('eraEnd').value)   || 2025;
@@ -684,6 +663,7 @@ function initGame(forceRandom) {
   document.getElementById('guessArea').style.display = 'block';
   document.getElementById('guessInput').disabled   = false;
   document.getElementById('guessBtn').disabled     = false;
+  document.getElementById('randomBtn').disabled    = false;
   updateScoreDisplay();
   document.getElementById('guessCount').textContent = '0 guesses';
   document.querySelectorAll('.hint-btn').forEach(b => { b.disabled = false; b.classList.remove('revealed'); });
@@ -693,7 +673,7 @@ function initGame(forceRandom) {
     d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
 
   if (!secretPlayer)
-    document.getElementById('statusMsg').textContent = 'No players found for this era. Try adjusting the range.';
+    document.getElementById('statusMsg').textContent = 'No players found for this range.';
 }
 
 function updateScoreDisplay() {
@@ -723,8 +703,7 @@ function buildAC(query) {
   const matches = ALL_PLAYERS.filter(p => p.name.toLowerCase().includes(q)).slice(0, 12);
   matches.forEach(p => {
     const div = document.createElement('div');
-    const meta = (p.primaryPos || '?') + ' \u00b7 ' + (p.birthYear || '?');
-    div.innerHTML = p.name + '<span class="ac-meta">' + meta + '</span>';
+    div.innerHTML = p.name + '<span class="ac-meta">' + (p.primaryPos || '?') + ' \u00b7 ' + (p.birthYear || '?') + '</span>';
     div.addEventListener('mousedown', e => { e.preventDefault(); selectAC(p); });
     list.appendChild(div);
   });
@@ -757,38 +736,17 @@ document.getElementById('guessInput').addEventListener('blur', function() {
   setTimeout(() => { document.getElementById('acList').innerHTML = ''; }, 150);
 });
 
-// ── BADGES ────────────────────────────────────────────────────────────────────
-function buildBadges(guess, secret) {
-  const badges = [];
-  if (guess.primaryPos === secret.primaryPos)
-    badges.push({ text: guess.primaryPos, cls: 'match' });
-  else
-    badges.push({ text: guess.primaryPos || '?', cls: '' });
-
-  if (guess.primaryTeam === secret.primaryTeam)
-    badges.push({ text: guess.primaryTeam || '?', cls: 'match' });
-  else
-    badges.push({ text: guess.primaryTeam || '?', cls: '' });
-
-  if (guess.birthYear != null && secret.birthYear != null) {
-    const diff = Math.abs(guess.birthYear - secret.birthYear);
-    badges.push({ text: String(guess.birthYear), cls: diff === 0 ? 'match' : diff <= 5 ? 'close' : '' });
-  } else {
-    badges.push({ text: guess.birthYear || '?', cls: '' });
-  }
-
-  if (guess.WAR != null && secret.WAR != null) {
-    const diff = Math.abs(guess.WAR - secret.WAR);
-    badges.push({ text: 'WAR ' + Number(guess.WAR).toFixed(1), cls: diff <= 10 ? 'close' : '' });
-  } else {
-    badges.push({ text: 'WAR ?', cls: '' });
-  }
-
-  if (guess.birthCountry)
-    badges.push({ text: guess.birthCountry, cls: guess.birthCountry === secret.birthCountry ? 'match' : '' });
-
-  return badges;
-}
+// ── RANDOM GUESS ──────────────────────────────────────────────────────────────
+document.getElementById('randomBtn').addEventListener('click', function() {
+  if (gameOver || !secretPlayer) return;
+  const already = new Set(guesses.map(g => g.player.id));
+  const pool = ALL_PLAYERS.filter(p => !already.has(p.id));
+  if (!pool.length) return;
+  const p = pool[Math.floor(Math.random() * pool.length)];
+  document.getElementById('guessInput').value = p.name;
+  document.getElementById('guessInput').dataset.selectedId = p.id;
+  submitGuess();
+});
 
 // ── SUBMIT GUESS ──────────────────────────────────────────────────────────────
 function submitGuess() {
@@ -832,43 +790,52 @@ function renderGuessLog() {
   guesses.forEach(g => {
     const card = document.createElement('div');
     card.className = 'guess-card';
-
     const sim = g.det.score;
     const cls = scoreClass(sim);
     const bc  = barColor(sim);
     const pct = sim / 10;
-
     const badges = buildBadges(g.player, secretPlayer);
     const badgeHtml = badges.map(b =>
-      '<span class="badge ' + b.cls + '">' + b.text + '</span>'
+      '<span class="badge ' + b.level + '">' + b.text + '</span>'
     ).join('');
-
-    // Main row
     const main = document.createElement('div');
     main.className = 'guess-main';
     main.innerHTML =
       '<span class="guess-num">' + g.guessNum + '</span>' +
+      thumbHtml(g.player, 36) +
       '<span class="guess-name">' + g.player.name + '</span>' +
       '<div class="guess-badges">' + badgeHtml + '</div>' +
-      '<div class="sim-bar-wrap"><div class="sim-bar" style="width:' + pct + '%;background:' + bc + '"></div></div>' +
-      '<span class="sim-score ' + cls + '">' + sim + '</span>';
+      '<div class="sim-wrap">' +
+        '<div class="sim-bar-wrap"><div class="sim-bar" style="width:' + pct + '%;background:' + bc + '"></div></div>' +
+        '<span class="sim-score ' + cls + '">' + sim + '</span>' +
+      '</div>';
     card.appendChild(main);
-
-    // Similarity breakdown
     if (!g.det.crossRole && g.det.best) {
-      const breakdown = document.createElement('div');
-      breakdown.className = 'sim-breakdown';
-      breakdown.innerHTML =
+      const bd = document.createElement('div');
+      bd.className = 'sim-breakdown';
+      bd.innerHTML =
         '<div class="sim-best"><span class="sl">Most similar</span><span class="sv">' + g.det.best + '</span></div>' +
         '<div class="sim-worst"><span class="sl">Least similar</span><span class="sv">' + g.det.worst + '</span></div>';
-      card.appendChild(breakdown);
+      card.appendChild(bd);
     }
-
     log.appendChild(card);
   });
 }
 
 // ── HINTS ─────────────────────────────────────────────────────────────────────
+// Order must match badge order: pos, team, year, war, country, initials
+const HINT_DEFS = [
+  { key: 'pos',      label: 'Position',     val: p => p.primaryPos || 'Unknown' },
+  { key: 'year',     label: 'Birth Year',   val: p => p.birthYear  || 'Unknown' },
+  { key: 'war',      label: 'Career WAR',   val: p => p.WAR != null ? Number(p.WAR).toFixed(1) : 'N/A' },
+  { key: 'team',     label: 'Primary Team', val: p => p.primaryTeam || 'Unknown' },
+  { key: 'country',  label: 'Country',      val: p => p.birthCountry || 'Unknown' },
+  { key: 'initials', label: 'Initials',     val: p => {
+    const parts = p.name.trim().split(/\s+/);
+    return parts.map(w => w[0].toUpperCase()).join('.');
+  }},
+];
+
 document.querySelectorAll('.hint-btn').forEach(btn => {
   btn.addEventListener('click', function() {
     if (gameOver || !secretPlayer) return;
@@ -886,17 +853,10 @@ document.querySelectorAll('.hint-btn').forEach(btn => {
 function renderHints() {
   const display = document.getElementById('hintDisplay');
   display.innerHTML = ''; display.classList.add('visible');
-  const defs = [
-    { key: 'pos',     label: 'Position',     val: () => secretPlayer.primaryPos   || 'Unknown' },
-    { key: 'year',    label: 'Birth Year',   val: () => secretPlayer.birthYear    || 'Unknown' },
-    { key: 'war',     label: 'Career WAR',   val: () => secretPlayer.WAR != null ? Number(secretPlayer.WAR).toFixed(1) : 'N/A' },
-    { key: 'team',    label: 'Primary Team', val: () => secretPlayer.primaryTeam  || 'Unknown' },
-    { key: 'country', label: 'Birth Country',val: () => secretPlayer.birthCountry || 'Unknown' },
-  ];
-  defs.filter(d => hintsUsed.includes(d.key)).forEach(d => {
+  HINT_DEFS.filter(d => hintsUsed.includes(d.key)).forEach(d => {
     const div = document.createElement('div');
     div.className = 'hint-item';
-    div.innerHTML = '<span class="hl">' + d.label + '</span><span class="hv">' + d.val() + '</span>';
+    div.innerHTML = '<span class="hl">' + d.label + '</span><span class="hv">' + d.val(secretPlayer) + '</span>';
     display.appendChild(div);
   });
 }
@@ -904,53 +864,45 @@ function renderHints() {
 // ── PLAYER CARD ───────────────────────────────────────────────────────────────
 function buildPlayerCard(p) {
   const isPos = p.role === 'position';
-  const photoUrl = p.mlbID
-    ? 'https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/' + p.mlbID + '/headshot/67/current'
-    : null;
-
-  const photoHtml = photoUrl
-    ? '<img class="player-photo" src="' + photoUrl + '" alt="' + p.name + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
-      + '<div class="player-photo-placeholder" style="display:none">&#9918;</div>'
-    : '<div class="player-photo-placeholder">&#9918;</div>';
+  const photo = thumbHtml(p, 80);
 
   let statsHtml = '';
   if (isPos) {
-    statsHtml = [
-      { l: 'G',   v: p.G },
-      { l: 'AB',  v: p.AB },
-      { l: 'HR',  v: p.HR },
-      { l: 'RBI', v: p.RBI },
-      { l: 'BA',  v: p.BA != null ? p.BA.toFixed(3) : null },
-      { l: 'SLG', v: p.SLG != null ? p.SLG.toFixed(3) : null },
-      { l: 'SB',  v: p.SB },
-      { l: 'WAR', v: p.WAR != null ? Number(p.WAR).toFixed(1) : null },
-    ].filter(x => x.v != null).map(x =>
-      '<div class="stat-chip"><span class="sc-l">' + x.l + '</span><span class="sc-v">' + x.v + '</span></div>'
-    ).join('');
+    [
+      { l:'G',   v: p.G },
+      { l:'AB',  v: p.AB },
+      { l:'HR',  v: p.HR },
+      { l:'RBI', v: p.RBI },
+      { l:'BA',  v: fmtRate(p.BA) },
+      { l:'SLG', v: fmtRate(p.SLG) },
+      { l:'SB',  v: p.SB },
+      { l:'WAR', v: p.WAR != null ? Number(p.WAR).toFixed(1) : null },
+    ].filter(x => x.v != null).forEach(x => {
+      statsHtml += '<div class="stat-chip"><span class="sc-l">' + x.l + '</span><span class="sc-v">' + x.v + '</span></div>';
+    });
   } else {
-    statsHtml = [
-      { l: 'W',   v: p.W },
-      { l: 'L',   v: p.L },
-      { l: 'SV',  v: p.SV },
-      { l: 'IP',  v: p.IP },
-      { l: 'K',   v: p.SO_pit },
-      { l: 'ERA', v: p.ERA != null ? Number(p.ERA).toFixed(2) : null },
-      { l: 'WAR', v: p.WAR != null ? Number(p.WAR).toFixed(1) : null },
-    ].filter(x => x.v != null).map(x =>
-      '<div class="stat-chip"><span class="sc-l">' + x.l + '</span><span class="sc-v">' + x.v + '</span></div>'
-    ).join('');
+    [
+      { l:'W',   v: p.W },
+      { l:'L',   v: p.L },
+      { l:'GS',  v: p.GS_pit },
+      { l:'GR',  v: p.GR },
+      { l:'SV',  v: p.SV },
+      { l:'IP',  v: p.IP },
+      { l:'K',   v: p.SO_pit },
+      { l:'ERA', v: p.ERA != null ? Number(p.ERA).toFixed(2) : null },
+      { l:'WAR', v: p.WAR != null ? Number(p.WAR).toFixed(1) : null },
+    ].filter(x => x.v != null).forEach(x => {
+      statsHtml += '<div class="stat-chip"><span class="sc-l">' + x.l + '</span><span class="sc-v">' + x.v + '</span></div>';
+    });
   }
 
-  const meta = [p.primaryPos, p.primaryTeam, p.birthYear, p.birthCountry].filter(Boolean).join(' / ');
-
-  return '<div class="player-card">' +
-    photoHtml +
+  const meta = [p.primaryPos, abbr(p.primaryTeam), p.birthYear, p.birthCountry].filter(Boolean).join(' / ');
+  return '<div class="player-card">' + photo +
     '<div class="player-card-info">' +
       '<div class="player-card-name">' + p.name + '</div>' +
       '<div class="player-card-meta">' + meta + '</div>' +
       '<div class="player-card-stats">' + statsHtml + '</div>' +
-    '</div>' +
-  '</div>';
+    '</div></div>';
 }
 
 // ── END GAME ──────────────────────────────────────────────────────────────────
@@ -1009,7 +961,6 @@ document.getElementById('shareBtn').addEventListener('click', function() {
 // ── EVENTS ────────────────────────────────────────────────────────────────────
 document.getElementById('guessBtn').addEventListener('click', submitGuess);
 document.getElementById('newGameBtn').addEventListener('click', () => initGame(!dailyMode));
-
 document.querySelectorAll('.era-preset').forEach(btn => {
   btn.addEventListener('click', function() {
     document.getElementById('eraStart').value = this.dataset.start;
@@ -1018,7 +969,6 @@ document.querySelectorAll('.era-preset').forEach(btn => {
   });
 });
 
-// ── START ─────────────────────────────────────────────────────────────────────
 loadPlayers();
 </script>
 </body>
