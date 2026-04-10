@@ -308,15 +308,7 @@
     <p>You start with 101 points. Each guess costs 1 point. Each hint costs 20 points. Score floors at 0 but you can keep guessing. A correct answer scores whatever points remain, so a perfect game is 100.</p>
 
     <h3>Hints</h3>
-    <p>Six hints are available, each with a different point cost based on how much they narrow the search:</p>
-    <ul>
-      <li>INITIALS: 5 pts</li>
-      <li>BORN (birth year): 10 pts</li>
-      <li>COUNTRY: 10 pts</li>
-      <li>POS (primary position): 15 pts</li>
-      <li>WAR (career WAR): 15 pts</li>
-      <li>TEAM (primary team): 20 pts</li>
-    </ul>
+    <p>Six hints are available, each costing 10 points: POS (primary position), BORN (birth year), WAR (career WAR), TEAM (primary team, shown as 3-letter code), HOME (birth country), and INIT (initials).</p>
 
     <h3>Guess Badges</h3>
     <p>Each guess row shows five badges comparing your guess to the secret player, in the same order as the hints. Badge colors:</p>
@@ -412,14 +404,14 @@
     <div class="status-msg" id="statusMsg"></div>
 
     <div class="hints-section">
-      <div class="hints-header">Hints</div>
+      <div class="hints-header">Hints (10 pts each)</div>
       <div class="hints-row">
-        <button class="hint-btn" id="hintPos"      data-hint="pos"      data-cost="15">POS <span class="hint-cost">-15</span></button>
-        <button class="hint-btn" id="hintYear"     data-hint="year"     data-cost="10">BORN <span class="hint-cost">-10</span></button>
-        <button class="hint-btn" id="hintWAR"      data-hint="war"      data-cost="15">WAR <span class="hint-cost">-15</span></button>
-        <button class="hint-btn" id="hintTeam"     data-hint="team"     data-cost="20">TEAM <span class="hint-cost">-20</span></button>
-        <button class="hint-btn" id="hintCountry"  data-hint="country"  data-cost="10">COUNTRY <span class="hint-cost">-10</span></button>
-        <button class="hint-btn" id="hintInitials" data-hint="initials" data-cost="5">INITIALS <span class="hint-cost">-5</span></button>
+        <button class="hint-btn" id="hintPos"      data-hint="pos"      data-cost="10">POS</button>
+        <button class="hint-btn" id="hintYear"     data-hint="year"     data-cost="10">BORN</button>
+        <button class="hint-btn" id="hintWAR"      data-hint="war"      data-cost="10">WAR</button>
+        <button class="hint-btn" id="hintTeam"     data-hint="team"     data-cost="10">TEAM</button>
+        <button class="hint-btn" id="hintCountry"  data-hint="country"  data-cost="10">HOME</button>
+        <button class="hint-btn" id="hintInitials" data-hint="initials" data-cost="10">INIT</button>
       </div>
       <div class="hint-display" id="hintDisplay"></div>
     </div>
@@ -430,6 +422,101 @@
 </main>
 
 <script>
+// ── FRANCHISE MAPPING (all historical names -> current franchise name) ────────
+const FRANCHISE_MAP = {
+  // AL East
+  "New York Highlanders":"New York Yankees",
+  // AL Central
+  "Cleveland Indians":"Cleveland Guardians","Cleveland Naps":"Cleveland Guardians",
+  "Cleveland Blues":"Cleveland Guardians","Cleveland Spiders":"Cleveland Guardians",
+  "Milwaukee Brewers":"Milwaukee Brewers",
+  // AL West
+  "California Angels":"Los Angeles Angels","Anaheim Angels":"Los Angeles Angels",
+  "Los Angeles Angels of Anaheim":"Los Angeles Angels",
+  "Kansas City Athletics":"Oakland Athletics","Philadelphia Athletics":"Oakland Athletics",
+  "Washington Senators":"Texas Rangers","Houston Colt .45's":"Houston Astros",
+  "Seattle Pilots":"Milwaukee Brewers",
+  // NL East
+  "Montreal Expos":"Washington Nationals",
+  "Florida Marlins":"Miami Marlins",
+  "Brooklyn Dodgers":"Los Angeles Dodgers","Brooklyn Robins":"Los Angeles Dodgers",
+  "Brooklyn Superbas":"Los Angeles Dodgers","Brooklyn Bridegrooms":"Los Angeles Dodgers",
+  "Brooklyn Grays":"Los Angeles Dodgers","Brooklyn Grooms":"Los Angeles Dodgers",
+  "New York Giants":"San Francisco Giants",
+  // NL Central
+  "Boston Braves":"Atlanta Braves","Milwaukee Braves":"Atlanta Braves",
+  "Boston Bees":"Atlanta Braves","Boston Doves":"Atlanta Braves",
+  "Boston Rustlers":"Atlanta Braves","Boston Beaneaters":"Atlanta Braves",
+  "Boston Red Caps":"Atlanta Braves","Boston Red Stockings":"Atlanta Braves",
+  "Cincinnati Redlegs":"Cincinnati Reds","Cincinnati Red Stockings":"Cincinnati Reds",
+  "Chicago Colts":"Chicago Cubs","Chicago Orphans":"Chicago Cubs",
+  "Chicago White Stockings":"Chicago Cubs",
+  "Houston Astros":"Houston Astros",
+  // NL West
+  "San Diego Padres":"San Diego Padres",
+  // AL misc
+  "St. Louis Browns":"Baltimore Orioles",
+  "Philadelphia Blue Jays":"Philadelphia Phillies",
+  "Philadelphia Quakers":"Philadelphia Phillies",
+  "Tampa Bay Devil Rays":"Tampa Bay Rays",
+  "Kansas City Royals":"Kansas City Royals",
+  // Pre-AL/NL and Negro Leagues -- map to closest current franchise by city
+  "Boston Americans":"Boston Red Sox",
+  "Pittsburgh Alleghenys":"Pittsburgh Pirates",
+  "Pittsburg Alleghenys":"Pittsburgh Pirates",
+  "St. Louis Maroons":"St. Louis Cardinals",
+  "St. Louis Terriers":"St. Louis Cardinals",
+  "St. Louis Stars":"St. Louis Cardinals",
+  "New York Metropolitans":"New York Mets",
+  "New York Mutuals":"New York Yankees",
+  "Detroit Wolverines":"Detroit Tigers",
+  "Detroit Stars":"Detroit Tigers",
+  "Providence Grays":"Boston Red Sox",
+  "Hartford Dark Blues":"New York Yankees",
+  "Troy Trojans":"New York Yankees",
+  "Worcester Ruby Legs":"Boston Red Sox",
+  "Louisville Colonels":"Cincinnati Reds",
+  "Louisville Eclipse":"Cincinnati Reds",
+  "Louisville Grays":"Cincinnati Reds",
+  "Indianapolis Hoosiers":"Cincinnati Reds",
+  "Indianapolis ABCs":"Cincinnati Reds",
+  "Columbus Buckeyes":"Cincinnati Reds",
+  "Columbus Solons":"Cincinnati Reds",
+  "Kansas City Cowboys":"Kansas City Royals",
+  "Kansas City Monarchs":"Kansas City Royals",
+  "Kansas City Packers":"Kansas City Royals",
+  "Buffalo Bisons":"Toronto Blue Jays",
+  "Buffalo Blues":"Toronto Blue Jays",
+  "Newark Pepper":"New York Yankees",
+  "Rochester Broncos":"Minnesota Twins",
+  "Syracuse Stars":"Toronto Blue Jays",
+  "Chicago Whales":"Chicago Cubs",
+  "Chicago American Giants":"Chicago White Sox",
+  "Chicago/Pittsburgh (Union League)":"Chicago Cubs",
+  // Negro Leagues by city
+  "Homestead Grays":"Pittsburgh Pirates",
+  "Pittsburgh Crawfords":"Pittsburgh Pirates",
+  "Philadelphia Stars":"Philadelphia Phillies",
+  "Baltimore Elite Giants":"Baltimore Orioles",
+  "Baltimore Black Sox":"Baltimore Orioles",
+  "Brooklyn Royal Giants":"New York Mets",
+  "New York Black Yankees":"New York Yankees",
+  "New York Cubans":"New York Mets",
+  "New York Lincoln Giants":"New York Yankees",
+  "Cuban Stars East":"Miami Marlins",
+  "Cuban Stars West":"Los Angeles Dodgers",
+  "Atlantic City Bacharach Giants":"Philadelphia Phillies",
+  "Harrisburg Giants":"Washington Nationals",
+  "Birmingham Black Barons":"Atlanta Braves",
+  "Memphis Red Sox":"St. Louis Cardinals",
+  "Hilldale Club":"Philadelphia Phillies",
+};
+
+function currentFranchise(name) {
+  if (!name) return null;
+  return FRANCHISE_MAP[name] || name;
+}
+
 // ── 2025 MLB DIVISIONS ────────────────────────────────────────────────────────
 const DIVISIONS = {
   "AL East":   ["New York Yankees","Boston Red Sox","Toronto Blue Jays","Tampa Bay Rays","Baltimore Orioles"],
@@ -441,9 +528,12 @@ const DIVISIONS = {
 };
 
 function sameDivision(a, b) {
-  if (!a || !b || a === b) return false;
+  if (!a || !b) return false;
+  const ca = currentFranchise(a);
+  const cb = currentFranchise(b);
+  if (ca === cb) return false; // exact match handled by green badge
   for (const div of Object.values(DIVISIONS))
-    if (div.includes(a) && div.includes(b)) return true;
+    if (div.includes(ca) && div.includes(cb)) return true;
   return false;
 }
 
@@ -608,7 +698,7 @@ function buildBadges(guess, secret) {
 
   // TEAM
   const gt = guess.primaryTeam, st = secret.primaryTeam;
-  if (gt && st && gt === st) {
+  if (gt && st && currentFranchise(gt) === currentFranchise(st)) {
     badges.push({ text: abbr(gt), level: 'green' });
   } else if (sameDivision(gt, st)) {
     badges.push({ text: abbr(gt), level: 'yellow' });
@@ -837,14 +927,14 @@ function renderGuessLog() {
 // ── HINTS ─────────────────────────────────────────────────────────────────────
 // Order must match badge order: pos, team, year, war, country, initials
 const HINT_DEFS = [
-  { key: 'pos',      label: 'POS',      val: p => p.primaryPos || 'Unknown' },
-  { key: 'year',     label: 'BORN',     val: p => p.birthYear  || 'Unknown' },
-  { key: 'war',      label: 'WAR',      val: p => p.WAR != null ? Number(p.WAR).toFixed(1) : 'N/A' },
-  { key: 'team',     label: 'TEAM',     val: p => abbr(p.primaryTeam) || 'Unknown' },
-  { key: 'country',  label: 'COUNTRY',  val: p => p.birthCountry || 'Unknown' },
-  { key: 'initials', label: 'INITIALS', val: p => {
+  { key: 'pos',      label: 'POS',     val: p => p.primaryPos || 'Unknown' },
+  { key: 'year',     label: 'BORN',    val: p => p.birthYear  || 'Unknown' },
+  { key: 'war',      label: 'WAR',     val: p => p.WAR != null ? Number(p.WAR).toFixed(1) : 'N/A' },
+  { key: 'team',     label: 'TEAM',    val: p => abbr(p.primaryTeam) || 'Unknown' },
+  { key: 'country',  label: 'HOME',    val: p => p.birthCountry || 'Unknown' },
+  { key: 'initials', label: 'INIT',    val: p => {
     const parts = p.name.trim().split(/\s+/);
-    return parts.map(w => w[0].toUpperCase()).join('.');
+    return parts.map(w => w[0].toUpperCase()).join('');
   }},
 ];
 
