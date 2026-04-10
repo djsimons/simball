@@ -305,38 +305,38 @@
     <p>A secret MLB player has been chosen. Guess players by name and you will get back a similarity score (0-1000) comparing your guess to the secret player. The higher the score, the more similar the careers. 1000 means you got it.</p>
 
     <h3>Scoring</h3>
-    <p>You start with 101 points. Each guess costs 1 point. Each hint costs 20 points. Score floors at 0 but you can keep guessing. A correct answer scores whatever points remain, so a perfect game is 100.</p>
+    <p>You start with 101 points. Each guess costs 1 point. Each hint costs 10 points. Score floors at 0 but you can keep guessing. A correct answer scores whatever points remain, so a perfect game is 100.</p>
 
     <h3>Hints</h3>
-    <p>Six hints are available, each costing 10 points: POS (primary position), BORN (birth year), WAR (career WAR), TEAM (primary team, shown as 3-letter code), HOME (birth country), and INIT (initials).</p>
+    <p>Six hints are available, each costing 10 points: Primary position, Birth year, Career WAR, Primary team, Birth country, and Initials.</p>
 
     <h3>Guess Badges</h3>
-    <p>Each guess row shows five badges comparing your guess to the secret player, in the same order as the hints. Badge colors:</p>
+    <p>Each guess row shows five badges comparing your guess to the secret player, in the same order as the hints. Colors:</p>
     <ul>
-      <li>Green = exact match</li>
+      <li>Green = exact match (or very close)</li>
       <li>Yellow = close but not exact</li>
       <li>No color = far off</li>
     </ul>
-    <p style="margin-top:0.5rem">Badge logic for each field:</p>
+    <p style="margin-top:0.5rem">Badge logic:</p>
     <ul>
-      <li>POS: green if same primary position, yellow if the guessed player played 10 or more games at the secret player's position</li>
-      <li>TEAM: green if same primary team, yellow if both teams are in the same 2025 MLB division</li>
-      <li>BORN: green if exact, yellow if within 5 years</li>
-      <li>WAR: green if within 2, yellow if within 10</li>
-      <li>COUNTRY: green if exact match only</li>
+      <li>POS: green if same primary position, yellow if the guessed player played 10+ games at the secret player's position</li>
+      <li>TEAM: green if same franchise, yellow if both teams are in the same 2025 MLB division (historical teams are mapped to their current franchise)</li>
+      <li>BORN: green if exact birth year, yellow if within 5 years</li>
+      <li>WAR: green if within 2.0, yellow if within 10.0</li>
+      <li>HOME: green if same birth country only</li>
     </ul>
 
-    <h3>Similarity Breakdown</h3>
-    <p>Each guess shows which stat was most similar and which was least similar to the secret player.</p>
+    <h3>Hot / Cold</h3>
+    <p>Each guess shows which stat was most similar (Hot) and least similar (Cold) to the secret player, drawn from the stats most meaningful for that position.</p>
 
     <h3>Cross-Role Guesses</h3>
     <p>If the secret player is a pitcher and you guess a position player (or vice versa), you will get a score of 0. Use that as a signal to switch sides.</p>
 
     <h3>Similarity Score Formula</h3>
-    <p>For position players, career stats compared include G, AB, R, H, 2B, 3B, HR, RBI, BB, SO, SB, BA, and SLG. For pitchers: W, L, SV, IP, K, and ERA. Based on the Baseball Reference similarity score methodology. All stats are as of Opening Day 2026.</p>
+    <p>Scores are based on the <a href="https://www.baseball-reference.com/about/similarity.shtml" target="_blank" rel="noopener" style="color:var(--green-light)">Baseball Reference similarity score methodology</a>. For position players, career stats compared include G, AB, R, H, 2B, 3B, HR, RBI, BB, SO, SB, BA, and SLG. For pitchers: W, L, SV, IP, K, and ERA. Our scores may differ slightly from those on Baseball Reference, as their exact formula is proprietary. All stats are as of Opening Day 2026.</p>
 
     <h3>Player Pool</h3>
-    <p>The pool includes players who had meaningful MLB careers:</p>
+    <p>The pool includes players with:</p>
     <ul>
       <li>Position players: 500 or more career games</li>
       <li>Starting pitchers: 100 or more career starts, with the majority of appearances as a starter</li>
