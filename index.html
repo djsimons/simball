@@ -175,6 +175,7 @@
   .hint-btn:hover:not(:disabled) { border-color: var(--dirt); color: var(--dirt); }
   .hint-btn:disabled { opacity: 0.35; cursor: not-allowed; }
   .hint-btn.revealed { background: var(--dirt-dark); color: var(--chalk); border-color: var(--dirt); cursor: default; }
+  .hint-cost { font-size: 0.58rem; opacity: 0.6; margin-left: 0.2rem; }
 
   .hint-display {
     background: var(--night-card); border: 1px solid var(--dirt-dark); border-radius: 6px;
@@ -307,7 +308,15 @@
     <p>You start with 101 points. Each guess costs 1 point. Each hint costs 20 points. Score floors at 0 but you can keep guessing. A correct answer scores whatever points remain, so a perfect game is 100.</p>
 
     <h3>Hints</h3>
-    <p>Six hints are available in the order shown, each costing 20 points: POS (primary position), BORN (birth year), WAR (career WAR), TEAM (primary team), COUNTRY (birth country), and INITIALS.</p>
+    <p>Six hints are available, each with a different point cost based on how much they narrow the search:</p>
+    <ul>
+      <li>INITIALS: 5 pts</li>
+      <li>BORN (birth year): 10 pts</li>
+      <li>COUNTRY: 10 pts</li>
+      <li>POS (primary position): 15 pts</li>
+      <li>WAR (career WAR): 15 pts</li>
+      <li>TEAM (primary team): 20 pts</li>
+    </ul>
 
     <h3>Guess Badges</h3>
     <p>Each guess row shows five badges comparing your guess to the secret player, in the same order as the hints. Badge colors:</p>
@@ -349,7 +358,7 @@
     <p>Daily mode picks the same player for everyone on a given day. Unlimited mode picks a new random player each game.</p>
 
     <h3>Support SIMBALL</h3>
-    <p>If you enjoy the game, feel free to buy me a coffee!</p>
+    <p>If you enjoy the game, feel free to buy me a hot dog!</p>
     <a class="venmo-link" href="https://venmo.com/u/dj-simons" target="_blank" rel="noopener">@dj-simons on Venmo</a>
   </div>
 </div>
@@ -369,15 +378,16 @@
       </div>
       <div class="era-presets">
         <button class="era-preset" data-start="1871" data-end="2025">All Time</button>
-        <button class="era-preset" data-start="1920" data-end="2025">Modern (1920+)</button>
-        <button class="era-preset" data-start="1947" data-end="2025">Integration Era</button>
-        <button class="era-preset" data-start="1994" data-end="2025">Wild Card Era</button>
-        <button class="era-preset" data-start="2000" data-end="2025">2000s+</button>
+        <button class="era-preset" data-start="1920" data-end="2025">Modern</button>
+        <button class="era-preset" data-start="1947" data-end="2025">Integration</button>
+        <button class="era-preset" data-start="1969" data-end="2025">Division</button>
+        <button class="era-preset" data-start="1994" data-end="2025">Wild Card</button>
         <button class="era-preset" data-start="2015" data-end="2025">2015+</button>
         <button class="era-preset" data-start="2025" data-end="2025">2025</button>
         <button class="era-preset" data-start="1990" data-end="1999">1990s</button>
         <button class="era-preset" data-start="1980" data-end="1989">1980s</button>
         <button class="era-preset" data-start="1970" data-end="1979">1970s</button>
+        <button class="era-preset" data-start="1960" data-end="1969">1960s</button>
         <button class="era-preset" data-start="1871" data-end="1919">Deadball</button>
       </div>
     </div>
@@ -402,14 +412,14 @@
     <div class="status-msg" id="statusMsg"></div>
 
     <div class="hints-section">
-      <div class="hints-header">Hints (20 pts each)</div>
+      <div class="hints-header">Hints</div>
       <div class="hints-row">
-        <button class="hint-btn" id="hintPos"      data-hint="pos">POS</button>
-        <button class="hint-btn" id="hintYear"     data-hint="year">BORN</button>
-        <button class="hint-btn" id="hintWAR"      data-hint="war">WAR</button>
-        <button class="hint-btn" id="hintTeam"     data-hint="team">TEAM</button>
-        <button class="hint-btn" id="hintCountry"  data-hint="country">COUNTRY</button>
-        <button class="hint-btn" id="hintInitials" data-hint="initials">INITIALS</button>
+        <button class="hint-btn" id="hintPos"      data-hint="pos"      data-cost="15">POS <span class="hint-cost">-15</span></button>
+        <button class="hint-btn" id="hintYear"     data-hint="year"     data-cost="10">BORN <span class="hint-cost">-10</span></button>
+        <button class="hint-btn" id="hintWAR"      data-hint="war"      data-cost="15">WAR <span class="hint-cost">-15</span></button>
+        <button class="hint-btn" id="hintTeam"     data-hint="team"     data-cost="20">TEAM <span class="hint-cost">-20</span></button>
+        <button class="hint-btn" id="hintCountry"  data-hint="country"  data-cost="10">COUNTRY <span class="hint-cost">-10</span></button>
+        <button class="hint-btn" id="hintInitials" data-hint="initials" data-cost="5">INITIALS <span class="hint-cost">-5</span></button>
       </div>
       <div class="hint-display" id="hintDisplay"></div>
     </div>
@@ -740,7 +750,9 @@ document.getElementById('guessInput').addEventListener('blur', function() {
 document.getElementById('randomBtn').addEventListener('click', function() {
   if (gameOver || !secretPlayer) return;
   const already = new Set(guesses.map(g => g.player.id));
-  const pool = ALL_PLAYERS.filter(p => !already.has(p.id));
+  const pool = ALL_PLAYERS.filter(p =>
+    !already.has(p.id) && playerOverlapsEra(p, eraStart, eraEnd)
+  );
   if (!pool.length) return;
   const p = pool[Math.floor(Math.random() * pool.length)];
   document.getElementById('guessInput').value = p.name;
@@ -825,12 +837,12 @@ function renderGuessLog() {
 // ── HINTS ─────────────────────────────────────────────────────────────────────
 // Order must match badge order: pos, team, year, war, country, initials
 const HINT_DEFS = [
-  { key: 'pos',      label: 'Position',     val: p => p.primaryPos || 'Unknown' },
-  { key: 'year',     label: 'Birth Year',   val: p => p.birthYear  || 'Unknown' },
-  { key: 'war',      label: 'Career WAR',   val: p => p.WAR != null ? Number(p.WAR).toFixed(1) : 'N/A' },
-  { key: 'team',     label: 'Primary Team', val: p => p.primaryTeam || 'Unknown' },
-  { key: 'country',  label: 'Country',      val: p => p.birthCountry || 'Unknown' },
-  { key: 'initials', label: 'Initials',     val: p => {
+  { key: 'pos',      label: 'POS',      val: p => p.primaryPos || 'Unknown' },
+  { key: 'year',     label: 'BORN',     val: p => p.birthYear  || 'Unknown' },
+  { key: 'war',      label: 'WAR',      val: p => p.WAR != null ? Number(p.WAR).toFixed(1) : 'N/A' },
+  { key: 'team',     label: 'TEAM',     val: p => abbr(p.primaryTeam) || 'Unknown' },
+  { key: 'country',  label: 'COUNTRY',  val: p => p.birthCountry || 'Unknown' },
+  { key: 'initials', label: 'INITIALS', val: p => {
     const parts = p.name.trim().split(/\s+/);
     return parts.map(w => w[0].toUpperCase()).join('.');
   }},
@@ -841,8 +853,9 @@ document.querySelectorAll('.hint-btn').forEach(btn => {
     if (gameOver || !secretPlayer) return;
     const hint = this.dataset.hint;
     if (hintsUsed.includes(hint)) return;
-    hintsUsed.push(hint);
-    score = Math.max(0, score - 20);
+    const cost = parseInt(this.dataset.cost) || 10;
+    hintsUsed.push({ key: hint, cost });
+    score = Math.max(0, score - cost);
     updateScoreDisplay();
     this.classList.add('revealed');
     this.disabled = true;
@@ -853,7 +866,7 @@ document.querySelectorAll('.hint-btn').forEach(btn => {
 function renderHints() {
   const display = document.getElementById('hintDisplay');
   display.innerHTML = ''; display.classList.add('visible');
-  HINT_DEFS.filter(d => hintsUsed.includes(d.key)).forEach(d => {
+  HINT_DEFS.filter(d => hintsUsed.some(h => h.key === d.key)).forEach(d => {
     const div = document.createElement('div');
     div.className = 'hint-item';
     div.innerHTML = '<span class="hl">' + d.label + '</span><span class="hv">' + d.val(secretPlayer) + '</span>';
