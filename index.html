@@ -157,6 +157,18 @@
   }
   .giveup-btn:hover { border-color: var(--red); color: var(--red); }
 
+  .era-presets {
+    display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.6rem;
+  }
+  .era-preset {
+    background: transparent; border: 1px solid var(--night-border);
+    border-radius: 4px; color: var(--text-dim);
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem;
+    letter-spacing: 0.06em; padding: 0.25rem 0.6rem;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .era-preset:hover { border-color: var(--green-light); color: var(--green-light); }
+
   /* GUESS INPUT */
   .guess-area { position: relative; margin-bottom: 1rem; }
   .guess-input-wrap { display: flex; gap: 0.5rem; }
@@ -490,6 +502,17 @@
         <input type="number" id="eraEnd" value="2025" min="1871" max="2025">
         <button class="era-btn" id="newGameBtn">New Game</button>
         <button class="giveup-btn" id="giveUpBtn">Give Up</button>
+      </div>
+      <div class="era-presets">
+        <button class="era-preset" data-start="2025" data-end="2025">2025</button>
+        <button class="era-preset" data-start="1995" data-end="1995">1995</button>
+        <button class="era-preset" data-start="1990" data-end="1999">1990s</button>
+        <button class="era-preset" data-start="1980" data-end="1989">1980s</button>
+        <button class="era-preset" data-start="1970" data-end="1979">1970s</button>
+        <button class="era-preset" data-start="1947" data-end="2025">Integration Era</button>
+        <button class="era-preset" data-start="1920" data-end="1946">Pre-Integration</button>
+        <button class="era-preset" data-start="1871" data-end="1919">Deadball</button>
+        <button class="era-preset" data-start="1920" data-end="2025">All (1920+)</button>
       </div>
     </div>
 
@@ -986,6 +1009,14 @@ document.getElementById('shareBtn').addEventListener('click', function() {
 // ── EVENTS ────────────────────────────────────────────────────────────────────
 document.getElementById('guessBtn').addEventListener('click', submitGuess);
 document.getElementById('newGameBtn').addEventListener('click', () => initGame(!dailyMode));
+
+document.querySelectorAll('.era-preset').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.getElementById('eraStart').value = this.dataset.start;
+    document.getElementById('eraEnd').value   = this.dataset.end;
+    initGame(!dailyMode);
+  });
+});
 
 // ── START ─────────────────────────────────────────────────────────────────────
 loadPlayers();
