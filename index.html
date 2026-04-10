@@ -390,6 +390,7 @@
       <div class="final-score" id="endScore"></div>
       <div class="sub" id="endSub"></div>
       <button class="share-btn" id="shareBtn">Copy Result</button>
+      <button class="share-btn" id="challengeFromEndBtn" style="background:var(--dirt-dark);margin-left:0.5rem">Challenge a Friend</button>
     </div>
 
     <div class="guess-area" id="guessArea">
@@ -418,8 +419,33 @@
 
     <div class="guess-log" id="guessLog"></div>
 
+    <div style="margin-top:1.5rem;text-align:center">
+      <button class="era-preset" id="challengeBtn" style="font-size:0.75rem;padding:0.4rem 1rem;border-color:var(--dirt-dark);color:var(--dirt)">&#127381; Challenge a Friend</button>
+    </div>
+
   </div>
 </main>
+
+<!-- CHALLENGE MODAL -->
+<div class="modal-overlay" id="challengeModal">
+  <div class="modal" style="max-width:420px">
+    <button class="modal-close" id="challengeModalClose">&times;</button>
+    <h2>Challenge a Friend</h2>
+    <p style="margin-bottom:1rem">Pick any player and send your friend a link. They'll have to guess who it is.</p>
+    <div style="position:relative;margin-bottom:0.75rem">
+      <input type="text" id="challengeInput" placeholder="Type a player name..." autocomplete="off"
+        style="width:100%;background:var(--night);border:2px solid var(--night-border);border-radius:6px;color:var(--text-main);font-family:'IBM Plex Sans',sans-serif;font-size:0.95rem;padding:0.6rem 0.9rem;outline:none">
+      <div class="autocomplete-list" id="challengeAcList" style="right:0"></div>
+    </div>
+    <div id="challengeSelected" style="font-family:'IBM Plex Mono',monospace;font-size:0.8rem;color:var(--green-light);min-height:1.2rem;margin-bottom:0.75rem"></div>
+    <button id="generateChallengeBtn" class="share-btn" style="width:100%">Generate Link</button>
+    <div id="challengeLinkBox" style="display:none;margin-top:0.75rem">
+      <input id="challengeLinkInput" readonly
+        style="width:100%;background:var(--night);border:1px solid var(--night-border);border-radius:5px;color:var(--text-dim);font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:0.5rem 0.75rem;outline:none">
+      <button id="copyChallengeBtn" class="share-btn" style="width:100%;margin-top:0.5rem">Copy Link</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ── FRANCHISE MAPPING (all historical names -> current franchise name) ────────
@@ -592,7 +618,9 @@ async function loadPlayers() {
     ALL_PLAYERS = await resp.json();
     document.getElementById('loadingMsg').style.display = 'none';
     document.getElementById('gameArea').style.display = 'block';
-    initGame();
+    if (!checkChallengeParam()) {
+      initGame();
+    }
   } catch(e) {
     document.getElementById('loadingMsg').textContent = 'Could not load players.json.';
   }
@@ -654,21 +682,40 @@ function simDetails(guess, secret) {
     addP('SB',  guess.SB,  secret.SB,  20);
     if (guess.BA  != null && secret.BA  != null) penalties.push({ label:'BA',  p: Math.abs(guess.BA  - secret.BA)  * 1000 });
     if (guess.SLG != null && secret.SLG != null) penalties.push({ label:'SLG', p: Math.abs(guess.SLG - secret.SLG) * 500  });
+    // OBP approximation: (H + BB) / (AB + BB)
+    const gOBP = (guess.H != null && guess.BB != null && guess.AB != null && (guess.AB + guess.BB) > 0)
+      ? (guess.H + guess.BB) / (guess.AB + guess.BB) : null;
+    const sOBP = (secret.H != null && secret.BB != null && secret.AB != null && (secret.AB + secret.BB) > 0)
+      ? (secret.H + secret.BB) / (secret.AB + secret.BB) : null;
+    if (gOBP != null && sOBP != null) penalties.push({ label:'OBP', p: Math.abs(gOBP - sOBP) * 1000 });
+
+    // Curated list for Hot/Cold display (exclude noise stats)
+    const curatedPos = ['HR','RBI','H','2B','BA','SLG','OBP','SB','BB'];
+    const posPenalties = penalties.filter(x => curatedPos.includes(x.label));
+    posPenalties.sort((a,b) => a.p - b.p);
+    var bestLabel  = posPenalties.length ? posPenalties[0].label : null;
+    var worstLabel = posPenalties.length ? posPenalties[posPenalties.length-1].label : null;
   } else {
     addP('W',  guess.W,      secret.W,       1);
     addP('L',  guess.L,      secret.L,       1);
     addP('SV', guess.SV,     secret.SV,      1);
     addP('IP', guess.IP,     secret.IP,      20);
     addP('K',  guess.SO_pit, secret.SO_pit,  15);
+    addP('BB', guess.BB,     secret.BB,      25);
     if (guess.ERA != null && secret.ERA != null) penalties.push({ label:'ERA', p: Math.abs(guess.ERA - secret.ERA) / 0.02 });
+
+    // Curated: starters exclude SV, relievers include it
+    const isStarter = guess.role === 'starter';
+    const curatedPit = isStarter ? ['W','L','IP','K','BB','ERA'] : ['SV','W','L','IP','K','ERA'];
+    const pitPenalties = penalties.filter(x => curatedPit.includes(x.label));
+    pitPenalties.sort((a,b) => a.p - b.p);
+    var bestLabel  = pitPenalties.length ? pitPenalties[0].label : null;
+    var worstLabel = pitPenalties.length ? pitPenalties[pitPenalties.length-1].label : null;
   }
 
   const total = penalties.reduce((s, x) => s + x.p, 0);
   const sim   = Math.max(0, Math.round(1000 - total));
-  penalties.sort((a, b) => a.p - b.p);
-  return { score: sim, crossRole: false,
-    best:  penalties.length ? penalties[0].label : null,
-    worst: penalties.length ? penalties[penalties.length-1].label : null };
+  return { score: sim, crossRole: false, best: bestLabel, worst: worstLabel };
 }
 
 function scoreClass(s) {
@@ -916,8 +963,8 @@ function renderGuessLog() {
       const bd = document.createElement('div');
       bd.className = 'sim-breakdown';
       bd.innerHTML =
-        '<div class="sim-best"><span class="sl">Most similar</span><span class="sv">' + g.det.best + '</span></div>' +
-        '<div class="sim-worst"><span class="sl">Least similar</span><span class="sv">' + g.det.worst + '</span></div>';
+        '<div class="sim-best"><span class="sl">Hot</span><span class="sv">' + g.det.best + '</span></div>' +
+        '<div class="sim-worst"><span class="sl">Cold</span><span class="sv">' + g.det.worst + '</span></div>';
       card.appendChild(bd);
     }
     log.appendChild(card);
@@ -971,12 +1018,15 @@ function buildPlayerCard(p) {
 
   let statsHtml = '';
   if (isPos) {
+    const obp = (p.H != null && p.BB != null && p.AB != null && (p.AB + p.BB) > 0)
+      ? fmtRate((p.H + p.BB) / (p.AB + p.BB)) : null;
     [
       { l:'G',   v: p.G },
       { l:'AB',  v: p.AB },
       { l:'HR',  v: p.HR },
       { l:'RBI', v: p.RBI },
       { l:'BA',  v: fmtRate(p.BA) },
+      { l:'OBP', v: obp },
       { l:'SLG', v: fmtRate(p.SLG) },
       { l:'SB',  v: p.SB },
       { l:'WAR', v: p.WAR != null ? Number(p.WAR).toFixed(1) : null },
@@ -987,12 +1037,13 @@ function buildPlayerCard(p) {
     [
       { l:'W',   v: p.W },
       { l:'L',   v: p.L },
+      { l:'SV',  v: p.SV },
+      { l:'ERA', v: p.ERA != null ? Number(p.ERA).toFixed(2) : null },
       { l:'GS',  v: p.GS_pit },
       { l:'GR',  v: p.GR },
-      { l:'SV',  v: p.SV },
       { l:'IP',  v: p.IP },
       { l:'K',   v: p.SO_pit },
-      { l:'ERA', v: p.ERA != null ? Number(p.ERA).toFixed(2) : null },
+      { l:'BB',  v: p.BB },
       { l:'WAR', v: p.WAR != null ? Number(p.WAR).toFixed(1) : null },
     ].filter(x => x.v != null).forEach(x => {
       statsHtml += '<div class="stat-chip"><span class="sc-l">' + x.l + '</span><span class="sc-v">' + x.v + '</span></div>';
@@ -1000,23 +1051,33 @@ function buildPlayerCard(p) {
   }
 
   const meta = [p.primaryPos, abbr(p.primaryTeam), p.birthYear, p.birthCountry].filter(Boolean).join(' / ');
+  const brefUrl = 'https://www.baseball-reference.com/players/' + (p.id[0]) + '/' + p.id.replace('_alt','') + '.shtml';
   return '<div class="player-card">' + photo +
     '<div class="player-card-info">' +
-      '<div class="player-card-name">' + p.name + '</div>' +
+      '<div class="player-card-name"><a href="' + brefUrl + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px">' + p.name + '</a></div>' +
       '<div class="player-card-meta">' + meta + '</div>' +
       '<div class="player-card-stats">' + statsHtml + '</div>' +
     '</div></div>';
 }
 
 // ── END GAME ──────────────────────────────────────────────────────────────────
-function endGame(didWin) {
+function endGame(didWin, gaveUp) {
   gameOver = true; won = didWin;
   document.getElementById('guessArea').style.display = 'none';
   document.querySelectorAll('.hint-btn').forEach(b => b.disabled = true);
 
   const panel = document.getElementById('endPanel');
   panel.classList.add('visible', didWin ? 'won' : 'lost');
-  document.getElementById('endTitle').textContent = didWin ? 'You got it!' : 'Better luck tomorrow';
+
+  let title;
+  if (didWin) {
+    title = 'You got it!';
+  } else if (gaveUp) {
+    title = 'Gave Up';
+  } else {
+    title = dailyMode ? 'Better luck tomorrow' : 'Better luck next time';
+  }
+  document.getElementById('endTitle').textContent = title;
   document.getElementById('playerCard').innerHTML  = buildPlayerCard(secretPlayer);
 
   if (didWin) {
@@ -1027,7 +1088,8 @@ function endGame(didWin) {
   } else {
     document.getElementById('endScore').textContent = '';
     document.getElementById('endSub').textContent =
-      guesses.length + ' guess' + (guesses.length !== 1 ? 'es' : '') + ' \u00b7 no score';
+      guesses.length + ' guess' + (guesses.length !== 1 ? 'es' : '') +
+      (gaveUp ? ' \u00b7 Gave Up' : '');
   }
 }
 
@@ -1035,7 +1097,7 @@ function endGame(didWin) {
 document.getElementById('giveUpBtn').addEventListener('click', function() {
   if (gameOver || !secretPlayer) return;
   if (!confirm('Give up and reveal the answer?')) return;
-  endGame(false);
+  endGame(false, true);
 });
 
 // ── SHARE ─────────────────────────────────────────────────────────────────────
@@ -1061,7 +1123,130 @@ document.getElementById('shareBtn').addEventListener('click', function() {
   });
 });
 
-// ── EVENTS ────────────────────────────────────────────────────────────────────
+// ── CHALLENGE A FRIEND ────────────────────────────────────────────────────────
+const BASE_URL = 'https://djsimons.github.io/simball/';
+
+function encodeChallenge(playerId) {
+  return btoa(playerId).replace(/=/g, '');
+}
+function decodeChallenge(encoded) {
+  // Pad base64 back if needed
+  const pad = encoded.length % 4;
+  const padded = pad ? encoded + '==='.slice(pad) : encoded;
+  try { return atob(padded); } catch(e) { return null; }
+}
+
+function openChallengeModal() {
+  document.getElementById('challengeInput').value = '';
+  document.getElementById('challengeSelected').textContent = '';
+  document.getElementById('challengeLinkBox').style.display = 'none';
+  document.getElementById('challengeAcList').innerHTML = '';
+  document.getElementById('challengeInput').dataset.selectedId = '';
+  document.getElementById('challengeModal').classList.add('visible');
+  setTimeout(() => document.getElementById('challengeInput').focus(), 100);
+}
+
+document.getElementById('challengeBtn').addEventListener('click', openChallengeModal);
+document.getElementById('challengeFromEndBtn').addEventListener('click', openChallengeModal);
+document.getElementById('challengeModalClose').addEventListener('click', () => document.getElementById('challengeModal').classList.remove('visible'));
+document.getElementById('challengeModal').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('visible'); });
+
+// Challenge autocomplete
+let challengeAcIndex = -1;
+document.getElementById('challengeInput').addEventListener('input', function() {
+  delete this.dataset.selectedId;
+  document.getElementById('challengeSelected').textContent = '';
+  document.getElementById('challengeLinkBox').style.display = 'none';
+  const list = document.getElementById('challengeAcList');
+  list.innerHTML = ''; challengeAcIndex = -1;
+  const q = this.value.toLowerCase();
+  if (q.length < 2) return;
+  const matches = ALL_PLAYERS
+    .filter(p => !p.id.endsWith('_alt') && p.name.toLowerCase().includes(q))
+    .slice(0, 10);
+  matches.forEach(p => {
+    const div = document.createElement('div');
+    div.innerHTML = p.name + '<span class="ac-meta">' + (p.primaryPos || '?') + ' \u00b7 ' + (p.birthYear || '?') + '</span>';
+    div.addEventListener('mousedown', e => {
+      e.preventDefault();
+      document.getElementById('challengeInput').value = p.name;
+      document.getElementById('challengeInput').dataset.selectedId = p.id;
+      document.getElementById('challengeSelected').textContent = p.name + ' selected';
+      list.innerHTML = '';
+    });
+    list.appendChild(div);
+  });
+  list._matches = matches;
+});
+
+document.getElementById('challengeInput').addEventListener('keydown', function(e) {
+  const list = document.getElementById('challengeAcList');
+  const items = list.querySelectorAll('div');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    challengeAcIndex = Math.min(challengeAcIndex + 1, items.length - 1);
+    items.forEach((el, i) => el.classList.toggle('active', i === challengeAcIndex));
+    if (items[challengeAcIndex] && list._matches) {
+      this.value = list._matches[challengeAcIndex].name;
+      this.dataset.selectedId = list._matches[challengeAcIndex].id;
+      document.getElementById('challengeSelected').textContent = list._matches[challengeAcIndex].name + ' selected';
+    }
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    challengeAcIndex = Math.max(challengeAcIndex - 1, -1);
+    items.forEach((el, i) => el.classList.toggle('active', i === challengeAcIndex));
+  } else if (e.key === 'Escape') {
+    list.innerHTML = '';
+  }
+});
+
+document.getElementById('challengeInput').addEventListener('blur', function() {
+  setTimeout(() => { document.getElementById('challengeAcList').innerHTML = ''; }, 150);
+});
+
+document.getElementById('generateChallengeBtn').addEventListener('click', function() {
+  const selectedId = document.getElementById('challengeInput').dataset.selectedId;
+  if (!selectedId) {
+    document.getElementById('challengeSelected').textContent = 'Pick a player from the dropdown first.';
+    document.getElementById('challengeSelected').style.color = 'var(--red)';
+    return;
+  }
+  document.getElementById('challengeSelected').style.color = 'var(--green-light)';
+  const encoded = encodeChallenge(selectedId);
+  const link = BASE_URL + '?c=' + encoded;
+  document.getElementById('challengeLinkInput').value = link;
+  document.getElementById('challengeLinkBox').style.display = 'block';
+});
+
+document.getElementById('copyChallengeBtn').addEventListener('click', function() {
+  const link = document.getElementById('challengeLinkInput').value;
+  navigator.clipboard.writeText(link).then(() => {
+    this.textContent = 'Copied!';
+    setTimeout(() => { this.textContent = 'Copy Link'; }, 2000);
+  });
+});
+
+// ── CHECK FOR CHALLENGE PARAM ON LOAD ─────────────────────────────────────────
+function checkChallengeParam() {
+  const params = new URLSearchParams(window.location.search);
+  const c = params.get('c');
+  if (!c) return false;
+  const playerId = decodeChallenge(c);
+  if (!playerId) return false;
+  const player = ALL_PLAYERS.find(p => p.id === playerId);
+  if (!player) return false;
+
+  // Force unlimited mode, set secret player directly
+  dailyMode = false;
+  document.getElementById('modeToggle').classList.add('on');
+  document.getElementById('labelDaily').classList.remove('active');
+  document.getElementById('labelUnlim').classList.add('active');
+
+  secretPlayer = player;
+  // Show a banner that this is a challenge
+  document.getElementById('statusMsg').textContent = 'A friend challenged you! Good luck.';
+  return true;
+}
 document.getElementById('guessBtn').addEventListener('click', submitGuess);
 document.getElementById('newGameBtn').addEventListener('click', () => initGame(!dailyMode));
 document.querySelectorAll('.era-preset').forEach(btn => {
