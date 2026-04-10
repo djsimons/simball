@@ -83,8 +83,7 @@
     position: absolute;
     top: 1.2rem;
     right: 1.2rem;
-    width: 28px;
-    height: 28px;
+    width: 28px; height: 28px;
     border-radius: 50%;
     border: 1px solid var(--night-border);
     background: var(--night-card);
@@ -94,112 +93,67 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
   }
   .help-btn:hover { border-color: var(--green-light); color: var(--green-light); }
 
   /* MODE TOGGLE */
   .mode-toggle {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    display: flex; align-items: center; gap: 0.5rem;
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.72rem;
-    color: var(--text-dim);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: 0.72rem; color: var(--text-dim);
+    letter-spacing: 0.08em; text-transform: uppercase;
   }
-
   .toggle-track {
-    width: 40px;
-    height: 20px;
+    width: 40px; height: 20px;
     background: var(--night-border);
-    border-radius: 10px;
-    position: relative;
-    cursor: pointer;
-    transition: background 0.2s;
-    flex-shrink: 0;
+    border-radius: 10px; position: relative;
+    cursor: pointer; transition: background 0.2s; flex-shrink: 0;
   }
   .toggle-track.on { background: var(--green); }
   .toggle-thumb {
-    position: absolute;
-    top: 3px; left: 3px;
+    position: absolute; top: 3px; left: 3px;
     width: 14px; height: 14px;
-    background: var(--chalk);
-    border-radius: 50%;
+    background: var(--chalk); border-radius: 50%;
     transition: transform 0.2s;
   }
   .toggle-track.on .toggle-thumb { transform: translateX(20px); }
   .mode-label-daily.active, .mode-label-unlim.active { color: var(--green-light); }
 
-  main {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 1.5rem 1rem 4rem;
-  }
+  main { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
 
   /* ERA PANEL */
   .era-panel {
     background: var(--night-card);
     border: 1px solid var(--night-border);
-    border-radius: 8px;
-    padding: 1rem 1.25rem;
-    margin-bottom: 1.5rem;
+    border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;
   }
   .era-panel label {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--text-dim);
-    display: block;
-    margin-bottom: 0.6rem;
+    font-size: 0.7rem; text-transform: uppercase;
+    letter-spacing: 0.15em; color: var(--text-dim);
+    display: block; margin-bottom: 0.6rem;
   }
-  .era-row {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    flex-wrap: wrap;
-  }
+  .era-row { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
   .era-row input[type=number] {
-    width: 78px;
-    background: var(--night);
-    border: 1px solid var(--night-border);
-    border-radius: 4px;
-    color: var(--text-main);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.9rem;
-    padding: 0.4rem 0.5rem;
-    text-align: center;
+    width: 78px; background: var(--night);
+    border: 1px solid var(--night-border); border-radius: 4px;
+    color: var(--text-main); font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem; padding: 0.4rem 0.5rem; text-align: center;
   }
   .era-row span { color: var(--text-dim); font-size: 0.85rem; }
   .era-btn {
-    background: var(--green);
-    border: none;
-    border-radius: 4px;
-    color: var(--chalk);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    padding: 0.4rem 0.9rem;
-    cursor: pointer;
-    transition: background 0.15s;
+    background: var(--green); border: none; border-radius: 4px;
+    color: var(--chalk); font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem; letter-spacing: 0.1em;
+    padding: 0.4rem 0.9rem; cursor: pointer; transition: background 0.15s;
   }
   .era-btn:hover { background: var(--green-light); color: var(--night); }
   .giveup-btn {
-    background: transparent;
-    border: 1px solid #444;
-    border-radius: 4px;
-    color: #777;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    padding: 0.4rem 0.9rem;
-    cursor: pointer;
-    transition: all 0.15s;
-    margin-left: auto;
+    background: transparent; border: 1px solid #444; border-radius: 4px;
+    color: #777; font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem; letter-spacing: 0.1em;
+    padding: 0.4rem 0.9rem; cursor: pointer; transition: all 0.15s; margin-left: auto;
   }
   .giveup-btn:hover { border-color: var(--red); color: var(--red); }
 
@@ -207,83 +161,47 @@
   .guess-area { position: relative; margin-bottom: 1rem; }
   .guess-input-wrap { display: flex; gap: 0.5rem; }
   #guessInput {
-    flex: 1;
-    background: var(--night-card);
-    border: 2px solid var(--night-border);
-    border-radius: 6px;
-    color: var(--text-main);
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 1rem;
-    padding: 0.65rem 1rem;
-    outline: none;
-    transition: border-color 0.15s;
+    flex: 1; background: var(--night-card);
+    border: 2px solid var(--night-border); border-radius: 6px;
+    color: var(--text-main); font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 1rem; padding: 0.65rem 1rem; outline: none; transition: border-color 0.15s;
   }
   #guessInput:focus { border-color: var(--green-light); }
   #guessBtn {
-    background: var(--green);
-    border: none;
-    border-radius: 6px;
-    color: var(--chalk);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.2rem;
-    letter-spacing: 0.1em;
-    padding: 0 1.5rem;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
+    background: var(--green); border: none; border-radius: 6px;
+    color: var(--chalk); font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem; letter-spacing: 0.1em; padding: 0 1.5rem;
+    cursor: pointer; transition: background 0.15s, transform 0.1s;
   }
   #guessBtn:hover { background: var(--green-light); color: var(--night); }
   #guessBtn:active { transform: scale(0.97); }
 
   .autocomplete-list {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 60px;
-    background: var(--night-card);
-    border: 1px solid var(--green-light);
-    border-top: none;
-    border-radius: 0 0 6px 6px;
-    z-index: 100;
-    max-height: 220px;
-    overflow-y: auto;
+    position: absolute; top: 100%; left: 0; right: 60px;
+    background: var(--night-card); border: 1px solid var(--green-light);
+    border-top: none; border-radius: 0 0 6px 6px;
+    z-index: 100; max-height: 220px; overflow-y: auto;
   }
   .autocomplete-list div {
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-    border-bottom: 1px solid var(--night-border);
-    transition: background 0.1s;
+    padding: 0.5rem 1rem; cursor: pointer; font-size: 0.9rem;
+    border-bottom: 1px solid var(--night-border); transition: background 0.1s;
   }
   .autocomplete-list div:hover,
   .autocomplete-list div.active { background: var(--green); color: var(--chalk); }
   .ac-meta {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--text-dim);
-    margin-left: 0.5rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+    color: var(--text-dim); margin-left: 0.5rem;
   }
   .autocomplete-list div:hover .ac-meta,
   .autocomplete-list div.active .ac-meta { color: var(--green-pale); }
 
   /* HINTS */
-  .hints-row {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1.25rem;
-    flex-wrap: wrap;
-  }
+  .hints-row { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
   .hint-btn {
-    background: var(--night-card);
-    border: 1px solid var(--dirt-dark);
-    border-radius: 5px;
-    color: var(--dirt);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    padding: 0.4rem 0.8rem;
-    cursor: pointer;
-    transition: all 0.15s;
-    text-transform: uppercase;
+    background: var(--night-card); border: 1px solid var(--dirt-dark);
+    border-radius: 5px; color: var(--dirt); font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 0.08em; padding: 0.4rem 0.8rem;
+    cursor: pointer; transition: all 0.15s; text-transform: uppercase;
   }
   .hint-btn:hover:not(:disabled) { background: var(--dirt-dark); color: var(--chalk); }
   .hint-btn:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -291,204 +209,204 @@
   .hint-cost { font-size: 0.6rem; opacity: 0.7; margin-left: 0.3rem; }
 
   .hint-display {
-    background: var(--night-card);
-    border: 1px solid var(--dirt-dark);
-    border-radius: 6px;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1.25rem;
-    font-family: 'IBM Plex Mono', monospace;
-    display: none;
-    gap: 1.5rem;
-    flex-wrap: wrap;
+    background: var(--night-card); border: 1px solid var(--dirt-dark);
+    border-radius: 6px; padding: 0.75rem 1rem; margin-bottom: 1.25rem;
+    font-family: 'IBM Plex Mono', monospace; display: none; gap: 1.5rem; flex-wrap: wrap;
   }
   .hint-display.visible { display: flex; }
   .hint-item { display: flex; flex-direction: column; gap: 0.2rem; }
   .hint-item .hl { color: var(--text-dim); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; }
   .hint-item .hv { color: var(--dirt); font-size: 1rem; font-weight: 600; }
 
-  /* STATUS */
   .status-msg {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.8rem;
-    color: var(--red);
-    min-height: 1.2rem;
-    margin-bottom: 0.5rem;
-    padding-left: 0.25rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--red);
+    min-height: 1.2rem; margin-bottom: 0.5rem; padding-left: 0.25rem;
   }
 
   /* GUESS LOG */
-  .guess-log { display: flex; flex-direction: column; gap: 0.5rem; }
-  .guess-row {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+  .guess-log { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .guess-card {
     background: var(--night-card);
     border: 1px solid var(--night-border);
-    border-radius: 6px;
-    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    overflow: hidden;
     animation: slideIn 0.2s ease;
   }
+
   @keyframes slideIn {
     from { opacity: 0; transform: translateY(-8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  .guess-num {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--text-dim);
-    width: 1.5rem;
-    text-align: right;
-    flex-shrink: 0;
+
+  .guess-main {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.6rem 1rem;
   }
-  .guess-name { flex: 1; font-size: 0.95rem; font-weight: 500; }
+
+  .guess-num {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+    color: var(--text-dim); width: 1.5rem; text-align: right; flex-shrink: 0;
+  }
+
+  .guess-name { font-size: 0.95rem; font-weight: 500; flex-shrink: 0; }
+
+  .guess-badges {
+    display: flex; gap: 0.3rem; flex-wrap: wrap; flex: 1;
+  }
+
+  .badge {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
+    padding: 0.15rem 0.4rem; border-radius: 3px;
+    border: 1px solid var(--night-border); color: var(--text-dim);
+    white-space: nowrap;
+  }
+  .badge.match { border-color: var(--green); color: var(--green-light); background: rgba(45,106,79,0.15); }
+  .badge.close { border-color: var(--yellow); color: var(--yellow); background: rgba(244,196,48,0.1); }
+
   .sim-score {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.5rem;
-    letter-spacing: 0.05em;
-    min-width: 3.5rem;
-    text-align: right;
-    flex-shrink: 0;
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem;
+    letter-spacing: 0.05em; min-width: 3.5rem; text-align: right; flex-shrink: 0;
   }
   .sim-bar-wrap {
-    width: 100px; height: 6px;
-    background: var(--night-border);
-    border-radius: 3px;
-    overflow: hidden;
-    flex-shrink: 0;
+    width: 80px; height: 5px; background: var(--night-border);
+    border-radius: 3px; overflow: hidden; flex-shrink: 0;
   }
   .sim-bar { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+
   .score-hot  { color: #52b788; }
   .score-warm { color: #f4c430; }
   .score-cold { color: #e63946; }
   .score-zero { color: #555; }
 
+  /* GUESS DETAIL ROW */
+  .guess-detail {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    padding: 0.5rem 1rem 0.6rem 3rem;
+    border-top: 1px solid var(--night-border);
+    background: rgba(0,0,0,0.15);
+  }
+
+  .detail-item { display: flex; flex-direction: column; gap: 0.1rem; }
+  .detail-item .dl { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+  .detail-item .dv { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--text-main); }
+
+  /* SIMILARITY BREAKDOWN */
+  .sim-breakdown {
+    padding: 0.5rem 1rem 0.6rem 3rem;
+    border-top: 1px solid var(--night-border);
+    display: flex; gap: 1.5rem; flex-wrap: wrap;
+  }
+  .sim-best, .sim-worst {
+    display: flex; flex-direction: column; gap: 0.2rem;
+  }
+  .sim-best .sl, .sim-worst .sl {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
+    text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim);
+  }
+  .sim-best .sv { color: var(--green-light); font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; }
+  .sim-worst .sv { color: var(--red); font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; }
+
   /* END PANEL */
   .end-panel {
-    display: none;
-    background: var(--night-card);
-    border-radius: 10px;
-    padding: 2rem;
-    text-align: center;
-    margin-bottom: 1.5rem;
-    animation: slideIn 0.3s ease;
+    display: none; background: var(--night-card); border-radius: 10px;
+    padding: 2rem; text-align: center; margin-bottom: 1.5rem; animation: slideIn 0.3s ease;
   }
   .end-panel.visible { display: block; }
   .end-panel.won  { border: 2px solid var(--green-light); }
   .end-panel.lost { border: 2px solid #444; }
+
+  /* PLAYER CARD */
+  .player-card {
+    display: flex; gap: 1.5rem; align-items: flex-start;
+    margin: 1.25rem 0; text-align: left;
+  }
+  .player-photo {
+    width: 90px; height: 90px; border-radius: 8px;
+    object-fit: cover; flex-shrink: 0;
+    background: var(--night-border);
+    border: 2px solid var(--night-border);
+  }
+  .player-photo-placeholder {
+    width: 90px; height: 90px; border-radius: 8px; flex-shrink: 0;
+    background: var(--night-border); border: 2px solid var(--night-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; color: var(--text-dim);
+  }
+  .player-card-info { flex: 1; }
+  .player-card-name { font-size: 1.2rem; font-weight: 600; color: var(--chalk); margin-bottom: 0.4rem; }
+  .player-card-meta {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
+    color: var(--text-dim); margin-bottom: 0.6rem;
+  }
+  .player-card-stats {
+    display: flex; flex-wrap: wrap; gap: 0.75rem;
+  }
+  .stat-chip { display: flex; flex-direction: column; gap: 0.1rem; }
+  .stat-chip .sc-l { font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+  .stat-chip .sc-v { font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: var(--chalk); font-weight: 600; }
+
   .end-panel h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.5rem;
-    letter-spacing: 0.1em;
+    font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 0.1em;
   }
   .end-panel.won  h2 { color: var(--green-light); }
   .end-panel.lost h2 { color: #888; }
-  .end-panel .answer { font-size: 1.3rem; font-weight: 600; color: var(--chalk); margin: 0.5rem 0; }
   .end-panel .final-score {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 3rem;
-    color: var(--yellow);
-    letter-spacing: 0.1em;
+    font-family: 'Bebas Neue', sans-serif; font-size: 3rem;
+    color: var(--yellow); letter-spacing: 0.1em;
   }
   .end-panel .sub {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    margin-top: 0.25rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--text-dim); margin-top: 0.25rem;
   }
   .share-btn {
-    margin-top: 1rem;
-    background: var(--green);
-    border: none;
-    border-radius: 6px;
-    color: var(--chalk);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    padding: 0.6rem 1.5rem;
-    cursor: pointer;
-    transition: background 0.15s;
+    margin-top: 1rem; background: var(--green); border: none; border-radius: 6px;
+    color: var(--chalk); font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem; letter-spacing: 0.1em; padding: 0.6rem 1.5rem;
+    cursor: pointer; transition: background 0.15s;
   }
   .share-btn:hover { background: var(--green-light); color: var(--night); }
 
   /* MODAL */
   .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7); z-index: 1000;
+    align-items: center; justify-content: center; padding: 1rem;
   }
   .modal-overlay.visible { display: flex; }
   .modal {
-    background: var(--night-card);
-    border: 1px solid var(--night-border);
-    border-radius: 10px;
-    padding: 2rem;
-    max-width: 520px;
-    width: 100%;
-    max-height: 85vh;
-    overflow-y: auto;
-    position: relative;
+    background: var(--night-card); border: 1px solid var(--night-border);
+    border-radius: 10px; padding: 2rem; max-width: 520px; width: 100%;
+    max-height: 85vh; overflow-y: auto; position: relative;
   }
   .modal h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2rem;
-    letter-spacing: 0.1em;
-    color: var(--green-light);
-    margin-bottom: 1.25rem;
+    font-family: 'Bebas Neue', sans-serif; font-size: 2rem;
+    letter-spacing: 0.1em; color: var(--green-light); margin-bottom: 1.25rem;
   }
   .modal h3 {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--dirt);
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
+    text-transform: uppercase; letter-spacing: 0.15em; color: var(--dirt);
     margin: 1.25rem 0 0.5rem;
   }
-  .modal p, .modal li {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: var(--text-main);
-  }
+  .modal p, .modal li { font-size: 0.9rem; line-height: 1.6; color: var(--text-main); }
   .modal ul { padding-left: 1.25rem; }
   .modal li { margin-bottom: 0.3rem; }
   .modal-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    color: var(--text-dim);
-    font-size: 1.4rem;
-    cursor: pointer;
-    line-height: 1;
+    position: absolute; top: 1rem; right: 1rem;
+    background: none; border: none; color: var(--text-dim);
+    font-size: 1.4rem; cursor: pointer; line-height: 1;
   }
   .modal-close:hover { color: var(--chalk); }
   .venmo-link {
-    display: inline-block;
-    margin-top: 1rem;
-    background: #3D95CE;
-    color: white;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    padding: 0.5rem 1.25rem;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: opacity 0.15s;
+    display: inline-block; margin-top: 1rem; background: #3D95CE;
+    color: white; font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem;
+    font-weight: 600; letter-spacing: 0.08em; padding: 0.5rem 1.25rem;
+    border-radius: 6px; text-decoration: none; transition: opacity 0.15s;
   }
   .venmo-link:hover { opacity: 0.85; }
 
   .no-data-msg {
-    text-align: center;
-    padding: 3rem;
-    font-family: 'IBM Plex Mono', monospace;
-    color: var(--text-dim);
-    font-size: 0.85rem;
+    text-align: center; padding: 3rem; font-family: 'IBM Plex Mono', monospace;
+    color: var(--text-dim); font-size: 0.85rem;
   }
 
   ::-webkit-scrollbar { width: 6px; }
@@ -519,35 +437,42 @@
   <div class="modal">
     <button class="modal-close" id="modalClose">&times;</button>
     <h2>How to Play</h2>
-    <p>A secret MLB player has been chosen. Guess players by name and you'll get back a <strong>similarity score</strong> (0-1000) comparing your guess to the secret player. The higher the score, the more similar the careers. 1000 means you got it.</p>
+    <p>A secret MLB player has been chosen. Guess players by name and you'll get back a similarity score (0-1000) comparing your guess to the secret player. The higher the score, the more similar the careers. 1000 means you got it.</p>
 
     <h3>Scoring</h3>
-    <p>You start with 101 points. Each guess costs 1 point. Each hint costs 20 points. Score floors at 0 but you can keep guessing. A correct answer scores whatever points remain -- so a perfect game is 100.</p>
+    <p>You start with 101 points. Each guess costs 1 point. Each hint costs 20 points. Score floors at 0 but you can keep guessing. A correct answer scores whatever points remain, so a perfect game is 100.</p>
 
     <h3>Hints</h3>
     <p>You can reveal up to 5 hints at any time, each costing 20 points: primary position, birth year, career WAR, primary team, and country of birth.</p>
+
+    <h3>Guess Badges</h3>
+    <p>Each guess shows green or yellow badges when your guessed player is close to the secret player. Green means an exact match (same position or same primary team). Yellow means close (birth year within 5, or WAR within 10).</p>
+
+    <h3>Similarity Breakdown</h3>
+    <p>Each guess also shows which stat was most similar and which was least similar to the secret player, to help you narrow your search.</p>
 
     <h3>Cross-Role Guesses</h3>
     <p>If the secret player is a pitcher and you guess a position player (or vice versa), you'll get a score of 0. Use that as a signal to switch sides.</p>
 
     <h3>Similarity Score Formula</h3>
-    <p>For position players, career stats compared include G, AB, R, H, 2B, 3B, HR, RBI, BB, SO, SB, BA, and SLG. For pitchers: W, L, SV, IP, K, and ERA. Based on the Baseball Reference similarity score methodology.</p>
+    <p>For position players, career stats compared include G, AB, R, H, 2B, 3B, HR, RBI, BB, SO, SB, BA, and SLG. For pitchers: W, L, SV, IP, K, and ERA. Based on the Baseball Reference similarity score methodology. All stats are as of Opening Day 2026.</p>
 
     <h3>Player Pool</h3>
     <p>The pool includes players who had meaningful MLB careers:</p>
     <ul>
-      <li>Position players: 500+ career games</li>
-      <li>Starting pitchers: 100+ career starts, majority of appearances as starter</li>
-      <li>Relief pitchers: 300+ career appearances, majority in relief</li>
-      <li>(As of Opening Day 2026)</li>
+      <li>Position players: 500 or more career games</li>
+      <li>Starting pitchers: 100 or more career starts, with the majority of appearances as a starter</li>
+      <li>Relief pitchers: 300 or more career appearances, with the majority in relief</li>
     </ul>
-    <p style="margin-top:0.5rem">The era filter lets you narrow the secret player's era by the years their career overlapped.</p>
+
+    <h3>Year Range</h3>
+    <p>The year range filter controls which players can be chosen as the secret player. A player is included if their estimated career window (age 18 to 45 based on birth year) overlaps with the selected range. You can narrow it to a specific decade or even a single year to focus on a particular era.</p>
 
     <h3>Daily vs. Unlimited</h3>
     <p>Daily mode picks the same player for everyone on a given day (like Wordle). Unlimited mode picks a new random player each game.</p>
 
     <h3>Support SIMBALL</h3>
-    <p>If you enjoy the game, feel free to buy me a hot dog!</p>
+    <p>If you enjoy the game, feel free to buy me a coffee!</p>
     <a class="venmo-link" href="https://venmo.com/u/dj-simons" target="_blank" rel="noopener">@dj-simons on Venmo</a>
   </div>
 </div>
@@ -558,7 +483,7 @@
 
     <!-- ERA PANEL -->
     <div class="era-panel">
-      <label>Era filter &mdash; secret player's career must overlap this range</label>
+      <label>Year Range</label>
       <div class="era-row">
         <input type="number" id="eraStart" value="1920" min="1871" max="2025">
         <span>to</span>
@@ -571,7 +496,7 @@
     <!-- END PANEL -->
     <div class="end-panel" id="endPanel">
       <h2 id="endTitle"></h2>
-      <div class="answer" id="endName"></div>
+      <div id="playerCard"></div>
       <div class="final-score" id="endScore"></div>
       <div class="sub" id="endSub"></div>
       <button class="share-btn" id="shareBtn">Copy Result</button>
@@ -635,9 +560,7 @@ async function loadPlayers() {
 // ── ERA FILTER ────────────────────────────────────────────────────────────────
 function playerOverlapsEra(p, start, end) {
   if (!p.birthYear) return true;
-  const cs = p.birthYear + 18;
-  const ce = p.birthYear + 45;
-  return cs <= end && ce >= start;
+  return (p.birthYear + 18) <= end && (p.birthYear + 45) >= start;
 }
 
 // ── SEEDED RNG ────────────────────────────────────────────────────────────────
@@ -645,7 +568,6 @@ function todaySeed() {
   const d = new Date();
   return d.getFullYear() * 10000 + (d.getMonth()+1) * 100 + d.getDate();
 }
-
 function seededRandom(seed) {
   let s = seed;
   return function() {
@@ -653,51 +575,59 @@ function seededRandom(seed) {
     return (s >>> 0) / 0xffffffff;
   };
 }
-
 function pickSecretPlayer(forceRandom) {
   const pool = ALL_PLAYERS.filter(p => playerOverlapsEra(p, eraStart, eraEnd));
   if (!pool.length) return null;
   if (!forceRandom && dailyMode) {
     const seed = todaySeed() ^ (eraStart * 31) ^ (eraEnd * 17);
-    const rng  = seededRandom(seed);
-    return pool[Math.floor(rng() * pool.length)];
+    return pool[Math.floor(seededRandom(seed)() * pool.length)];
   }
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
 // ── SIMILARITY SCORE ──────────────────────────────────────────────────────────
-function simScore(guess, secret) {
+function simDetails(guess, secret) {
   const gPos = guess.role === 'position';
   const sPos = secret.role === 'position';
-  if (gPos !== sPos) return 0;
+  if (gPos !== sPos) return { score: 0, crossRole: true, best: null, worst: null };
 
-  let penalty = 0;
-  const diff = (a, b, d) => (a == null || b == null) ? 0 : Math.abs(a - b) / d;
+  const penalties = [];
+  const addP = (label, a, b, denom) => {
+    if (a == null || b == null) return;
+    penalties.push({ label, p: Math.abs(a - b) / denom });
+  };
 
   if (gPos) {
-    penalty += diff(guess.G,   secret.G,   20);
-    penalty += diff(guess.AB,  secret.AB,  75);
-    penalty += diff(guess.R,   secret.R,   10);
-    penalty += diff(guess.H,   secret.H,   15);
-    penalty += diff(guess.D,   secret.D,    5);
-    penalty += diff(guess.T,   secret.T,    4);
-    penalty += diff(guess.HR,  secret.HR,   2);
-    penalty += diff(guess.RBI, secret.RBI, 10);
-    penalty += diff(guess.BB,  secret.BB,  25);
-    penalty += diff(guess.SO,  secret.SO, 150);
-    penalty += diff(guess.SB,  secret.SB,  20);
-    if (guess.BA  != null && secret.BA  != null) penalty += Math.abs(guess.BA  - secret.BA)  * 1000;
-    if (guess.SLG != null && secret.SLG != null) penalty += Math.abs(guess.SLG - secret.SLG) * 500;
+    addP('G',   guess.G,   secret.G,   20);
+    addP('AB',  guess.AB,  secret.AB,  75);
+    addP('R',   guess.R,   secret.R,   10);
+    addP('H',   guess.H,   secret.H,   15);
+    addP('2B',  guess.D,   secret.D,   5);
+    addP('3B',  guess.T,   secret.T,   4);
+    addP('HR',  guess.HR,  secret.HR,  2);
+    addP('RBI', guess.RBI, secret.RBI, 10);
+    addP('BB',  guess.BB,  secret.BB,  25);
+    addP('SO',  guess.SO,  secret.SO,  150);
+    addP('SB',  guess.SB,  secret.SB,  20);
+    if (guess.BA  != null && secret.BA  != null) penalties.push({ label: 'BA',  p: Math.abs(guess.BA  - secret.BA)  * 1000 });
+    if (guess.SLG != null && secret.SLG != null) penalties.push({ label: 'SLG', p: Math.abs(guess.SLG - secret.SLG) * 500  });
   } else {
-    penalty += diff(guess.W,      secret.W,       1);
-    penalty += diff(guess.L,      secret.L,       1);
-    penalty += diff(guess.SV,     secret.SV,      1);
-    penalty += diff(guess.IP,     secret.IP,     20);
-    penalty += diff(guess.SO_pit, secret.SO_pit, 15);
-    if (guess.ERA != null && secret.ERA != null) penalty += Math.abs(guess.ERA - secret.ERA) / 0.02;
+    addP('W',   guess.W,      secret.W,      1);
+    addP('L',   guess.L,      secret.L,      1);
+    addP('SV',  guess.SV,     secret.SV,     1);
+    addP('IP',  guess.IP,     secret.IP,     20);
+    addP('K',   guess.SO_pit, secret.SO_pit, 15);
+    if (guess.ERA != null && secret.ERA != null) penalties.push({ label: 'ERA', p: Math.abs(guess.ERA - secret.ERA) / 0.02 });
   }
 
-  return Math.max(0, Math.round(1000 - penalty));
+  const total = penalties.reduce((s, x) => s + x.p, 0);
+  const sim   = Math.max(0, Math.round(1000 - total));
+
+  penalties.sort((a, b) => a.p - b.p);
+  const best  = penalties.length ? penalties[0].label  : null;
+  const worst = penalties.length ? penalties[penalties.length - 1].label : null;
+
+  return { score: sim, crossRole: false, best, worst };
 }
 
 // ── SCORE HELPERS ─────────────────────────────────────────────────────────────
@@ -717,14 +647,8 @@ function barColor(s) {
 function initGame(forceRandom) {
   eraStart = parseInt(document.getElementById('eraStart').value) || 1920;
   eraEnd   = parseInt(document.getElementById('eraEnd').value)   || 2025;
-
   secretPlayer = pickSecretPlayer(forceRandom);
-  guesses   = [];
-  score     = 101;
-  hintsUsed = [];
-  gameOver  = false;
-  won       = false;
-  acIndex   = -1;
+  guesses = []; score = 101; hintsUsed = []; gameOver = false; won = false; acIndex = -1;
 
   document.getElementById('guessLog').innerHTML    = '';
   document.getElementById('guessInput').value      = '';
@@ -733,25 +657,20 @@ function initGame(forceRandom) {
   document.getElementById('hintDisplay').classList.remove('visible');
   document.getElementById('hintDisplay').innerHTML = '';
   document.getElementById('endPanel').className    = 'end-panel';
+  document.getElementById('playerCard').innerHTML  = '';
   document.getElementById('guessArea').style.display = 'block';
   document.getElementById('guessInput').disabled   = false;
   document.getElementById('guessBtn').disabled     = false;
   updateScoreDisplay();
   document.getElementById('guessCount').textContent = '0 guesses';
-
-  document.querySelectorAll('.hint-btn').forEach(b => {
-    b.disabled = false;
-    b.classList.remove('revealed');
-  });
+  document.querySelectorAll('.hint-btn').forEach(b => { b.disabled = false; b.classList.remove('revealed'); });
 
   const d = new Date();
   document.getElementById('dateDisplay').textContent =
     d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
 
-  if (!secretPlayer) {
-    document.getElementById('statusMsg').textContent =
-      'No players found for this era. Try adjusting the range.';
-  }
+  if (!secretPlayer)
+    document.getElementById('statusMsg').textContent = 'No players found for this era. Try adjusting the range.';
 }
 
 function updateScoreDisplay() {
@@ -768,70 +687,85 @@ document.getElementById('modeToggle').addEventListener('click', function() {
 });
 
 // ── HELP MODAL ────────────────────────────────────────────────────────────────
-document.getElementById('helpBtn').addEventListener('click', function() {
-  document.getElementById('helpModal').classList.add('visible');
-});
-document.getElementById('modalClose').addEventListener('click', function() {
-  document.getElementById('helpModal').classList.remove('visible');
-});
-document.getElementById('helpModal').addEventListener('click', function(e) {
-  if (e.target === this) this.classList.remove('visible');
-});
+document.getElementById('helpBtn').addEventListener('click', () => document.getElementById('helpModal').classList.add('visible'));
+document.getElementById('modalClose').addEventListener('click', () => document.getElementById('helpModal').classList.remove('visible'));
+document.getElementById('helpModal').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('visible'); });
 
 // ── AUTOCOMPLETE ──────────────────────────────────────────────────────────────
 function buildAC(query) {
   const list = document.getElementById('acList');
-  list.innerHTML = '';
-  acIndex = -1;
+  list.innerHTML = ''; acIndex = -1;
   if (!query || query.length < 2) return;
   const q = query.toLowerCase();
   const matches = ALL_PLAYERS.filter(p => p.name.toLowerCase().includes(q)).slice(0, 12);
   matches.forEach(p => {
     const div = document.createElement('div');
-    const meta = p.primaryPos + (p.birthYear ? ' \u00b7 ' + p.birthYear : '');
+    const meta = (p.primaryPos || '?') + ' \u00b7 ' + (p.birthYear || '?');
     div.innerHTML = p.name + '<span class="ac-meta">' + meta + '</span>';
     div.addEventListener('mousedown', e => { e.preventDefault(); selectAC(p); });
     list.appendChild(div);
   });
   list._matches = matches;
 }
-
 function selectAC(p) {
   document.getElementById('guessInput').value = p.name;
   document.getElementById('acList').innerHTML = '';
   document.getElementById('guessInput').dataset.selectedId = p.id;
 }
-
 document.getElementById('guessInput').addEventListener('input', function() {
-  delete this.dataset.selectedId;
-  buildAC(this.value);
+  delete this.dataset.selectedId; buildAC(this.value);
 });
-
 document.getElementById('guessInput').addEventListener('keydown', function(e) {
-  const list  = document.getElementById('acList');
+  const list = document.getElementById('acList');
   const items = list.querySelectorAll('div');
   if (e.key === 'ArrowDown') {
     e.preventDefault();
     acIndex = Math.min(acIndex + 1, items.length - 1);
     items.forEach((el, i) => el.classList.toggle('active', i === acIndex));
-    if (items[acIndex] && list._matches) {
-      this.value = list._matches[acIndex].name;
-      this.dataset.selectedId = list._matches[acIndex].id;
-    }
+    if (items[acIndex] && list._matches) { this.value = list._matches[acIndex].name; this.dataset.selectedId = list._matches[acIndex].id; }
   } else if (e.key === 'ArrowUp') {
     e.preventDefault();
     acIndex = Math.max(acIndex - 1, -1);
     items.forEach((el, i) => el.classList.toggle('active', i === acIndex));
-  } else if (e.key === 'Enter') {
-    submitGuess();
-  } else if (e.key === 'Escape') {
-    list.innerHTML = '';
-  }
+  } else if (e.key === 'Enter') { submitGuess(); }
+  else if (e.key === 'Escape') { list.innerHTML = ''; }
 });
-
 document.getElementById('guessInput').addEventListener('blur', function() {
   setTimeout(() => { document.getElementById('acList').innerHTML = ''; }, 150);
 });
+
+// ── BADGES ────────────────────────────────────────────────────────────────────
+function buildBadges(guess, secret) {
+  const badges = [];
+  if (guess.primaryPos === secret.primaryPos)
+    badges.push({ text: guess.primaryPos, cls: 'match' });
+  else
+    badges.push({ text: guess.primaryPos || '?', cls: '' });
+
+  if (guess.primaryTeam === secret.primaryTeam)
+    badges.push({ text: guess.primaryTeam || '?', cls: 'match' });
+  else
+    badges.push({ text: guess.primaryTeam || '?', cls: '' });
+
+  if (guess.birthYear != null && secret.birthYear != null) {
+    const diff = Math.abs(guess.birthYear - secret.birthYear);
+    badges.push({ text: String(guess.birthYear), cls: diff === 0 ? 'match' : diff <= 5 ? 'close' : '' });
+  } else {
+    badges.push({ text: guess.birthYear || '?', cls: '' });
+  }
+
+  if (guess.WAR != null && secret.WAR != null) {
+    const diff = Math.abs(guess.WAR - secret.WAR);
+    badges.push({ text: 'WAR ' + Number(guess.WAR).toFixed(1), cls: diff <= 10 ? 'close' : '' });
+  } else {
+    badges.push({ text: 'WAR ?', cls: '' });
+  }
+
+  if (guess.birthCountry)
+    badges.push({ text: guess.birthCountry, cls: guess.birthCountry === secret.birthCountry ? 'match' : '' });
+
+  return badges;
+}
 
 // ── SUBMIT GUESS ──────────────────────────────────────────────────────────────
 function submitGuess() {
@@ -842,7 +776,6 @@ function submitGuess() {
 
   let guessPlayer;
   const selectedId = input.dataset.selectedId;
-
   if (selectedId) {
     guessPlayer = ALL_PLAYERS.find(p => p.id === selectedId);
   } else {
@@ -855,39 +788,60 @@ function submitGuess() {
   if (!guessPlayer) { status.textContent = 'Player not found. Try the dropdown.'; return; }
   if (guesses.some(g => g.player.id === guessPlayer.id)) { status.textContent = 'Already guessed that player.'; return; }
 
-  const sim = simScore(guessPlayer, secretPlayer);
-  guesses.push({ player: guessPlayer, sim, guessNum: guesses.length + 1 });
+  const det = simDetails(guessPlayer, secretPlayer);
+  guesses.push({ player: guessPlayer, det, guessNum: guesses.length + 1 });
 
   score = Math.max(0, score - 1);
   updateScoreDisplay();
-
-  guesses.sort((a, b) => b.sim - a.sim);
+  guesses.sort((a, b) => b.det.score - a.det.score);
   renderGuessLog();
 
   document.getElementById('guessCount').textContent =
     guesses.length + ' guess' + (guesses.length !== 1 ? 'es' : '');
 
-  input.value = '';
-  delete input.dataset.selectedId;
-
-  if (sim === 1000) endGame(true);
+  input.value = ''; delete input.dataset.selectedId;
+  if (det.score === 1000) endGame(true);
 }
 
 function renderGuessLog() {
   const log = document.getElementById('guessLog');
   log.innerHTML = '';
   guesses.forEach(g => {
-    const row = document.createElement('div');
-    row.className = 'guess-row';
-    const pct = g.sim / 10;
-    const cls = scoreClass(g.sim);
-    const bc  = barColor(g.sim);
-    row.innerHTML =
+    const card = document.createElement('div');
+    card.className = 'guess-card';
+
+    const sim = g.det.score;
+    const cls = scoreClass(sim);
+    const bc  = barColor(sim);
+    const pct = sim / 10;
+
+    const badges = buildBadges(g.player, secretPlayer);
+    const badgeHtml = badges.map(b =>
+      '<span class="badge ' + b.cls + '">' + b.text + '</span>'
+    ).join('');
+
+    // Main row
+    const main = document.createElement('div');
+    main.className = 'guess-main';
+    main.innerHTML =
       '<span class="guess-num">' + g.guessNum + '</span>' +
       '<span class="guess-name">' + g.player.name + '</span>' +
+      '<div class="guess-badges">' + badgeHtml + '</div>' +
       '<div class="sim-bar-wrap"><div class="sim-bar" style="width:' + pct + '%;background:' + bc + '"></div></div>' +
-      '<span class="sim-score ' + cls + '">' + g.sim + '</span>';
-    log.appendChild(row);
+      '<span class="sim-score ' + cls + '">' + sim + '</span>';
+    card.appendChild(main);
+
+    // Similarity breakdown
+    if (!g.det.crossRole && g.det.best) {
+      const breakdown = document.createElement('div');
+      breakdown.className = 'sim-breakdown';
+      breakdown.innerHTML =
+        '<div class="sim-best"><span class="sl">Most similar</span><span class="sv">' + g.det.best + '</span></div>' +
+        '<div class="sim-worst"><span class="sl">Least similar</span><span class="sv">' + g.det.worst + '</span></div>';
+      card.appendChild(breakdown);
+    }
+
+    log.appendChild(card);
   });
 }
 
@@ -908,17 +862,14 @@ document.querySelectorAll('.hint-btn').forEach(btn => {
 
 function renderHints() {
   const display = document.getElementById('hintDisplay');
-  display.innerHTML = '';
-  display.classList.add('visible');
-
+  display.innerHTML = ''; display.classList.add('visible');
   const defs = [
-    { key: 'pos',     label: 'Position',     val: () => secretPlayer.primaryPos    || 'Unknown' },
-    { key: 'year',    label: 'Birth Year',    val: () => secretPlayer.birthYear     || 'Unknown' },
-    { key: 'war',     label: 'Career WAR',    val: () => secretPlayer.WAR != null ? Number(secretPlayer.WAR).toFixed(1) : 'N/A' },
-    { key: 'team',    label: 'Primary Team',  val: () => secretPlayer.primaryTeam   || 'Unknown' },
-    { key: 'country', label: 'Birth Country', val: () => secretPlayer.birthCountry  || 'Unknown' },
+    { key: 'pos',     label: 'Position',     val: () => secretPlayer.primaryPos   || 'Unknown' },
+    { key: 'year',    label: 'Birth Year',   val: () => secretPlayer.birthYear    || 'Unknown' },
+    { key: 'war',     label: 'Career WAR',   val: () => secretPlayer.WAR != null ? Number(secretPlayer.WAR).toFixed(1) : 'N/A' },
+    { key: 'team',    label: 'Primary Team', val: () => secretPlayer.primaryTeam  || 'Unknown' },
+    { key: 'country', label: 'Birth Country',val: () => secretPlayer.birthCountry || 'Unknown' },
   ];
-
   defs.filter(d => hintsUsed.includes(d.key)).forEach(d => {
     const div = document.createElement('div');
     div.className = 'hint-item';
@@ -927,17 +878,68 @@ function renderHints() {
   });
 }
 
+// ── PLAYER CARD ───────────────────────────────────────────────────────────────
+function buildPlayerCard(p) {
+  const isPos = p.role === 'position';
+  const photoUrl = p.mlbID
+    ? 'https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/' + p.mlbID + '/headshot/67/current'
+    : null;
+
+  const photoHtml = photoUrl
+    ? '<img class="player-photo" src="' + photoUrl + '" alt="' + p.name + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
+      + '<div class="player-photo-placeholder" style="display:none">&#9918;</div>'
+    : '<div class="player-photo-placeholder">&#9918;</div>';
+
+  let statsHtml = '';
+  if (isPos) {
+    statsHtml = [
+      { l: 'G',   v: p.G },
+      { l: 'AB',  v: p.AB },
+      { l: 'HR',  v: p.HR },
+      { l: 'RBI', v: p.RBI },
+      { l: 'BA',  v: p.BA != null ? p.BA.toFixed(3) : null },
+      { l: 'SLG', v: p.SLG != null ? p.SLG.toFixed(3) : null },
+      { l: 'SB',  v: p.SB },
+      { l: 'WAR', v: p.WAR != null ? Number(p.WAR).toFixed(1) : null },
+    ].filter(x => x.v != null).map(x =>
+      '<div class="stat-chip"><span class="sc-l">' + x.l + '</span><span class="sc-v">' + x.v + '</span></div>'
+    ).join('');
+  } else {
+    statsHtml = [
+      { l: 'W',   v: p.W },
+      { l: 'L',   v: p.L },
+      { l: 'SV',  v: p.SV },
+      { l: 'IP',  v: p.IP },
+      { l: 'K',   v: p.SO_pit },
+      { l: 'ERA', v: p.ERA != null ? Number(p.ERA).toFixed(2) : null },
+      { l: 'WAR', v: p.WAR != null ? Number(p.WAR).toFixed(1) : null },
+    ].filter(x => x.v != null).map(x =>
+      '<div class="stat-chip"><span class="sc-l">' + x.l + '</span><span class="sc-v">' + x.v + '</span></div>'
+    ).join('');
+  }
+
+  const meta = [p.primaryPos, p.primaryTeam, p.birthYear, p.birthCountry].filter(Boolean).join(' / ');
+
+  return '<div class="player-card">' +
+    photoHtml +
+    '<div class="player-card-info">' +
+      '<div class="player-card-name">' + p.name + '</div>' +
+      '<div class="player-card-meta">' + meta + '</div>' +
+      '<div class="player-card-stats">' + statsHtml + '</div>' +
+    '</div>' +
+  '</div>';
+}
+
 // ── END GAME ──────────────────────────────────────────────────────────────────
 function endGame(didWin) {
-  gameOver = true;
-  won = didWin;
+  gameOver = true; won = didWin;
   document.getElementById('guessArea').style.display = 'none';
   document.querySelectorAll('.hint-btn').forEach(b => b.disabled = true);
 
   const panel = document.getElementById('endPanel');
   panel.classList.add('visible', didWin ? 'won' : 'lost');
   document.getElementById('endTitle').textContent = didWin ? 'You got it!' : 'Better luck tomorrow';
-  document.getElementById('endName').textContent  = secretPlayer.name;
+  document.getElementById('playerCard').innerHTML  = buildPlayerCard(secretPlayer);
 
   if (didWin) {
     document.getElementById('endScore').textContent = Math.max(0, score);
@@ -970,13 +972,11 @@ document.getElementById('shareBtn').addEventListener('click', function() {
       : 'Gave up after ' + guesses.length + ' guesses',
     ''
   ];
-
   [...guesses].sort((a,b) => a.guessNum - b.guessNum).forEach(g => {
-    const s = g.sim;
+    const s = g.det.score;
     const e = s === 1000 ? '\uD83D\uDFE2' : s >= 700 ? '\uD83D\uDFE1' : s >= 400 ? '\uD83D\uDFE0' : '\uD83D\uDD34';
     lines.push(e + ' ' + s);
   });
-
   navigator.clipboard.writeText(lines.join('\n')).then(() => {
     this.textContent = 'Copied!';
     setTimeout(() => { this.textContent = 'Copy Result'; }, 2000);
