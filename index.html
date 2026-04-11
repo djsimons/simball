@@ -379,7 +379,7 @@
         <button class="era-preset" data-start="1990" data-end="1999">1990s</button>
         <button class="era-preset" data-start="1980" data-end="1989">1980s</button>
         <button class="era-preset" data-start="1970" data-end="1979">1970s</button>
-        <button class="era-preset" data-start="1960" data-end="1969">1960s</button>
+        <button class="era-preset" data-negro="1">Negro Lg</button>
         <button class="era-preset" data-start="1871" data-end="1919">Deadball</button>
       </div>
     </div>
@@ -581,6 +581,16 @@ const TEAM_ABBR = {
   "Brooklyn Dodgers":"BRO","New York Giants":"NYG","St. Louis Browns":"STL",
   "Philadelphia Athletics":"PHI","Boston Braves":"BOS","Cincinnati Redlegs":"CIN",
   "Kansas City Athletics":"KC","Milwaukee Braves":"MIL","Seattle Pilots":"SEA",
+  // Negro Leagues
+  "Homestead Grays":"HG","Pittsburgh Crawfords":"PC","Kansas City Monarchs":"KCM",
+  "Birmingham Black Barons":"BBB","Chicago American Giants":"CAG",
+  "Newark Eagles":"NE","Baltimore Elite Giants":"BEG","Philadelphia Stars":"PS",
+  "New York Black Yankees":"NBY","New York Cubans":"NYC","Indianapolis ABCs":"ABC",
+  "Detroit Stars":"DS","Memphis Red Sox":"MRS","Atlantic City Bacharach Giants":"ACB",
+  "Hilldale Club":"HIL","Cuban Stars East":"CSE","Cuban Stars West":"CSW",
+  "Brooklyn Royal Giants":"BRG","New York Lincoln Giants":"NLG",
+  "Columbus Buckeyes":"CBE","St. Louis Stars":"SLS","St. Louis Giants":"SLG",
+  "Harrisburg Giants":"HBG","Chicago Columbia Giants":"CCG",
 };
 
 function abbr(teamName) {
@@ -607,6 +617,7 @@ let hintsUsed = [];
 let gameOver = false;
 let won = false;
 let dailyMode = true;
+let negroLeagueMode = false;
 let eraStart = 1920;
 let eraEnd = 2025;
 let acIndex = -1;
@@ -647,10 +658,11 @@ function seededRandom(seed) {
   };
 }
 function pickSecretPlayer(forceRandom) {
-  const pool = ALL_PLAYERS.filter(p => playerOverlapsEra(p, eraStart, eraEnd));
+  let pool = ALL_PLAYERS.filter(p => playerOverlapsEra(p, eraStart, eraEnd));
+  if (negroLeagueMode) pool = pool.filter(p => p.isNegroLeague);
   if (!pool.length) return null;
   if (!forceRandom && dailyMode) {
-    const seed = todaySeed() ^ (eraStart * 31) ^ (eraEnd * 17);
+    const seed = todaySeed() ^ (eraStart * 31) ^ (eraEnd * 17) ^ (negroLeagueMode ? 999 : 0);
     return pool[Math.floor(seededRandom(seed)() * pool.length)];
   }
   return pool[Math.floor(Math.random() * pool.length)];
@@ -887,9 +899,8 @@ document.getElementById('guessInput').addEventListener('blur', function() {
 document.getElementById('randomBtn').addEventListener('click', function() {
   if (gameOver || !secretPlayer) return;
   const already = new Set(guesses.map(g => g.player.id));
-  const pool = ALL_PLAYERS.filter(p =>
-    !already.has(p.id) && playerOverlapsEra(p, eraStart, eraEnd)
-  );
+  let pool = ALL_PLAYERS.filter(p => !already.has(p.id) && playerOverlapsEra(p, eraStart, eraEnd));
+  if (negroLeagueMode) pool = pool.filter(p => p.isNegroLeague);
   if (!pool.length) return;
   const p = pool[Math.floor(Math.random() * pool.length)];
   document.getElementById('guessInput').value = p.name;
@@ -1248,11 +1259,18 @@ function checkChallengeParam() {
   return true;
 }
 document.getElementById('guessBtn').addEventListener('click', submitGuess);
-document.getElementById('newGameBtn').addEventListener('click', () => initGame(!dailyMode));
+document.getElementById('newGameBtn').addEventListener('click', () => { negroLeagueMode = false; initGame(!dailyMode); });
 document.querySelectorAll('.era-preset').forEach(btn => {
   btn.addEventListener('click', function() {
-    document.getElementById('eraStart').value = this.dataset.start;
-    document.getElementById('eraEnd').value   = this.dataset.end;
+    if (this.dataset.negro) {
+      negroLeagueMode = true;
+      document.getElementById('eraStart').value = 1871;
+      document.getElementById('eraEnd').value   = 1948;
+    } else {
+      negroLeagueMode = false;
+      document.getElementById('eraStart').value = this.dataset.start;
+      document.getElementById('eraEnd').value   = this.dataset.end;
+    }
     initGame(!dailyMode);
   });
 });
