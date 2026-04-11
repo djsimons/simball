@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SIMBALL</title>
+<meta property="og:title" content="You've been challenged!">
+<meta property="og:description" content="Can you guess the mystery MLB player? Play SIMBALL to find out.">
+<meta property="og:url" content="https://djsimons.github.io/simball/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://djsimons.github.io/simball/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="You've been challenged!">
+<meta name="twitter:description" content="Can you guess the mystery MLB player? Play SIMBALL to find out.">
+<meta name="twitter:image" content="https://djsimons.github.io/simball/preview.png">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1029,7 +1038,6 @@ function renderGuessLog() {
       '<span class="guess-name">' + g.player.name + '</span>' +
       '<div class="guess-badges">' + badgeHtml + '</div>' +
       '<div class="sim-wrap">' +
-        '<div class="sim-bar-wrap"><div class="sim-bar" style="width:' + pct + '%;background:' + bc + '"></div></div>' +
         '<span class="sim-score ' + cls + '">' + sim + '</span>' +
       '</div>';
     card.appendChild(main);
