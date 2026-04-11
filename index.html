@@ -1097,9 +1097,9 @@ function buildPlayerCard(p) {
   let statsHtml = '';
   const stats = isPos
     ? [
-        {l:'G',v:p.G},{l:'AB',v:p.AB},{l:'HR',v:p.HR},{l:'RBI',v:p.RBI},
-        {l:'BA',v:fmtRate(p.BA)},{l:'OBP',v:obp},{l:'SLG',v:fmtRate(p.SLG)},
-        {l:'SB',v:p.SB},{l:'WAR',v:p.WAR!=null?Number(p.WAR).toFixed(1):null},
+        {l:'PA',v:p.PA},{l:'H',v:p.H},{l:'HR',v:p.HR},{l:'RBI',v:p.RBI},
+        {l:'SB',v:p.SB},{l:'BA',v:fmtRate(p.BA)},{l:'OBP',v:obp},{l:'SLG',v:fmtRate(p.SLG)},
+        {l:'WAR',v:p.WAR!=null?Number(p.WAR).toFixed(1):null},
       ]
     : [
         {l:'W',v:p.W},{l:'L',v:p.L},{l:'SV',v:p.SV},
