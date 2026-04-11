@@ -212,11 +212,12 @@
   /* HINTS */
   .hints-section { margin-bottom: 1.25rem; }
   .hints-header { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-dim); margin-bottom: 0.4rem; }
-  .hints-row { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+  .hints-row { display: flex; gap: 0.35rem; flex-wrap: wrap; justify-content: flex-start; }
   .hint-btn {
     background: var(--night-card); border: 1px solid var(--night-border); border-radius: 5px; color: var(--text-dim);
     font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em;
     padding: 0.3rem 0.65rem; cursor: pointer; transition: all 0.15s; text-transform: uppercase;
+    flex: 1 1 auto; text-align: center; min-width: 52px;
   }
   .hint-btn:hover:not(:disabled) { border-color: var(--dirt); color: var(--dirt); }
   .hint-btn:disabled { opacity: 0.35; cursor: not-allowed; }
@@ -379,7 +380,7 @@
     <p>You start with 101 points. Each guess costs 1 point. Score floors at 0 but you can keep guessing. A correct answer scores whatever points remain, so a perfect game is 100.</p>
 
     <h3>Hints</h3>
-    <p>Seven hints are available. Six use an escalating cost -- the first is free, then 10, 20, 30, and 40 points each, with the sixth free since you will already be at 0: Primary position, Birth year, Career WAR, Primary team, Birth country, and Initials.</p>
+    <p>Seven hints are available. Six use an escalating cost -- the first is free, then 10, 20, 30, and 40 points each, with the sixth free since you will already be at 0: Primary position, Birth year, Career WAR, Primary team, Birth country, Initials, and Handedness (batting/throwing, e.g. BL/TR).</p>
     <p style="margin-top:0.5rem">The seventh hint, TOP 3, reveals the three players most similar to the secret player based on the similarity formula. It costs 25 points and is not available in Hard mode.</p>
 
     <h3>Difficulty</h3>
@@ -518,6 +519,7 @@
         <button class="hint-btn" id="hintTeam"     data-hint="team">TEAM</button>
         <button class="hint-btn" id="hintCountry"  data-hint="country">HOME</button>
         <button class="hint-btn" id="hintInitials" data-hint="initials">INIT</button>
+        <button class="hint-btn" id="hintHand"     data-hint="hand">HAND</button>
         <button class="hint-btn" id="hintTop3"     data-hint="top3" style="border-color:var(--green);color:var(--green-light)">TOP 3</button>
       </div>
       <div class="hint-display" id="hintDisplay"></div>
@@ -898,6 +900,7 @@ function initGame(forceRandom) {
   document.getElementById('stickyGuessCount').textContent = '0 guesses';
   document.querySelectorAll('.hint-btn').forEach(b => { b.disabled = false; b.classList.remove('revealed'); });
   document.getElementById('hintTop3').style.display = difficulty === 'hard' ? 'none' : '';
+  document.getElementById('hintHand').style.display = difficulty === 'hard' ? 'none' : '';
   updateHintsUI();
 
   if (!secretPlayer)
@@ -1109,6 +1112,7 @@ const HINT_DEFS = [
   { key: 'team',     label: 'TEAM',  val: p => abbr(p.primaryTeam) || 'Unknown' },
   { key: 'country',  label: 'HOME',  val: p => p.birthCountry || 'Unknown' },
   { key: 'initials', label: 'INIT',  val: p => p.name.trim().split(/\s+/).map(w => w[0].toUpperCase()).join('') },
+  { key: 'hand',     label: 'HAND',  val: p => p.handedness || 'Unknown' },
   { key: 'top3',     label: 'TOP 3', val: p => getTop3(p) },
 ];
 
@@ -1175,7 +1179,7 @@ function buildPlayerCard(p) {
     statsHtml += '<div class="stat-chip"><span class="sc-l">' + x.l + '</span><span class="sc-v">' + x.v + '</span></div>';
   });
 
-  const meta = [p.primaryPos, abbr(p.primaryTeam), p.birthYear, p.birthCountry].filter(Boolean).join(' / ');
+  const meta = [p.primaryPos, abbr(p.primaryTeam), p.birthYear, p.handedness, p.birthCountry].filter(Boolean).join(' / ');
   const brefUrl = 'https://www.baseball-reference.com/players/' + p.id[0] + '/' + p.id.replace('_alt','') + '.shtml';
 
   return '<div class="player-card">' + photo +
