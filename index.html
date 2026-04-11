@@ -856,32 +856,19 @@ function buildBadges(guess, secret) {
 }
 
 // ── PHOTO ─────────────────────────────────────────────────────────────────────
-function playerInitials(p) {
-  return p.name.trim().split(/\s+/).map(w => w[0].toUpperCase()).join('').slice(0, 2);
-}
-
-function initialsCircle(p, size) {
-  const initials = playerInitials(p);
-  const fontSize = size <= 36 ? Math.round(size * 0.38) : Math.round(size * 0.35);
-  return '<div style="width:' + size + 'px;height:' + size + 'px;border-radius:' + (size <= 36 ? '5px' : '8px') +
-    ';background:var(--night-border);border:1px solid var(--night-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;' +
-    'font-family:\'IBM Plex Mono\',monospace;font-size:' + fontSize + 'px;font-weight:600;color:var(--green-light);letter-spacing:0.02em">' +
-    initials + '</div>';
-}
-
 function thumbHtml(p, size) {
   const url = p.mlbID
-    ? 'https://img.mlbstatic.com/mlb-photos/image/upload/w_213,q_auto:best/v1/people/' + p.mlbID + '/headshot/67/current'
+    ? 'https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/' + p.mlbID + '/headshot/67/current'
     : null;
   const isSmall = size <= 36;
-  const cls = isSmall ? 'guess-thumb' : 'player-photo';
-  const fallback = initialsCircle(p, size);
+  const cls  = isSmall ? 'guess-thumb' : 'player-photo';
+  const pcls = isSmall ? 'guess-thumb-placeholder' : 'player-photo-placeholder';
   if (url) {
     return '<img class="' + cls + '" src="' + url + '" alt="' + p.name + '" width="' + size + '" height="' + size + '"' +
       ' onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">' +
-      '<div style="display:none">' + fallback + '</div>';
+      '<div class="' + pcls + '" style="display:none">&#9918;</div>';
   }
-  return fallback;
+  return '<div class="' + pcls + '">&#9918;</div>';
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
