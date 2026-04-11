@@ -871,7 +871,7 @@ function initialsCircle(p, size) {
 
 function thumbHtml(p, size) {
   const url = p.mlbID
-    ? 'https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/' + p.mlbID + '/headshot/67/current'
+    ? 'https://img.mlbstatic.com/mlb-photos/image/upload/w_213,q_auto:best/v1/people/' + p.mlbID + '/headshot/67/current'
     : null;
   const isSmall = size <= 36;
   const cls = isSmall ? 'guess-thumb' : 'player-photo';
