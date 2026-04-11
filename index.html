@@ -790,7 +790,7 @@ function buildBadges(guess, secret) {
   // POS
   if (guess.primaryPos === secret.primaryPos)
     all.push({ text: guess.primaryPos || '?', level: 'green' });
-  else if (secret.primaryPos && guess.positionsPlayed && guess.positionsPlayed.includes(secret.primaryPos))
+  else if (guess.primaryPos && secret.positionsPlayed && secret.positionsPlayed.includes(guess.primaryPos))
     all.push({ text: guess.primaryPos || '?', level: 'yellow' });
   else
     all.push({ text: guess.primaryPos || '?', level: '' });
