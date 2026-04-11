@@ -350,7 +350,6 @@
   <div class="logo">SIMBALL</div>
   <div class="tagline">Guess the player by similarity score</div>
   <div class="header-meta">
-    <span id="dateDisplay"></span>
     <div class="mode-toggle">
       <span class="mode-label-daily active" id="labelDaily">Daily</span>
       <div class="toggle-track" id="modeToggle"><div class="toggle-thumb"></div></div>
@@ -378,14 +377,15 @@
     <p>You start with 101 points. Each guess costs 1 point. Score floors at 0 but you can keep guessing. A correct answer scores whatever points remain, so a perfect game is 100.</p>
 
     <h3>Hints</h3>
-    <p>Six hints are available: Primary position, Birth year, Career WAR, Primary team, Birth country, and Initials. Hints use an escalating cost -- the first hint is free, then 10, 20, 30, and 40 points each. The sixth hint is always free since you will already be at 0 points by then.</p>
+    <p>Seven hints are available. Six use an escalating cost -- the first is free, then 10, 20, 30, and 40 points each, with the sixth free since you will already be at 0: Primary position, Birth year, Career WAR, Primary team, Birth country, and Initials.</p>
+    <p style="margin-top:0.5rem">The seventh hint, TOP 3, reveals the three players most similar to the secret player based on the similarity formula. It costs 25 points and is not available in Hard mode.</p>
 
     <h3>Difficulty</h3>
     <p>Three difficulty modes are available, selectable from the header:</p>
     <ul>
       <li>Easy: all five badges shown per guess (position, team, birth year, WAR, country), plus Hot/Cold stat breakdown</li>
       <li>Medium: only position and birth year badges shown, plus Hot/Cold</li>
-      <li>Hard: no badges, no Hot/Cold. Score only. Hints capped at 2, each costing 25 points</li>
+      <li>Hard: no badges, no Hot/Cold. Score only. Hints capped at 2, each costing 25 points. TOP 3 hint not available</li>
     </ul>
 
     <h3>Guess Badges</h3>
@@ -488,8 +488,10 @@
     <div class="guess-area" id="guessArea">
       <div class="guess-input-wrap">
         <input type="text" id="guessInput" placeholder="Type a player name..." autocomplete="off">
-        <button id="randomBtn">Random</button>
         <button id="guessBtn">Guess</button>
+      </div>
+      <div style="margin-top:0.4rem">
+        <button id="randomBtn" style="font-size:0.68rem;padding:0.3rem 0.75rem">Random Guess</button>
       </div>
       <div class="autocomplete-list" id="acList"></div>
     </div>
@@ -506,6 +508,7 @@
         <button class="hint-btn" id="hintTeam"     data-hint="team">TEAM</button>
         <button class="hint-btn" id="hintCountry"  data-hint="country">HOME</button>
         <button class="hint-btn" id="hintInitials" data-hint="initials">INIT</button>
+        <button class="hint-btn" id="hintTop3"     data-hint="top3" style="border-color:var(--green);color:var(--green-light)">TOP 3</button>
       </div>
       <div class="hint-display" id="hintDisplay"></div>
     </div>
@@ -517,6 +520,14 @@
     <div class="challenge-bar">
       <button class="challenge-bar-btn" id="challengeBtn">&#127381; Challenge a Friend</button>
     </div>
+
+    <div style="text-align:center;margin-top:2rem;font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:#3a4556;letter-spacing:0.08em" id="lastUpdated"></div>
+
+    <script>
+      const d = new Date(document.lastModified);
+      document.getElementById('lastUpdated').textContent =
+        'Last updated ' + d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    </script>
 
   </div>
 </main>
@@ -881,11 +892,8 @@ function initGame(forceRandom) {
   updateScoreDisplay();
   document.getElementById('guessCount').textContent = '0 guesses';
   document.querySelectorAll('.hint-btn').forEach(b => { b.disabled = false; b.classList.remove('revealed'); });
+  document.getElementById('hintTop3').style.display = difficulty === 'hard' ? 'none' : '';
   updateHintsUI();
-
-  const d = new Date();
-  document.getElementById('dateDisplay').textContent =
-    d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
 
   if (!secretPlayer)
     document.getElementById('statusMsg').textContent = 'No players found for this range.';
@@ -1054,13 +1062,26 @@ function renderGuessLog() {
 }
 
 // ── HINTS ─────────────────────────────────────────────────────────────────────
+// ── TOP 3 SIMILAR ─────────────────────────────────────────────────────────────
+function getTop3(secret) {
+  return ALL_PLAYERS
+    .filter(p => p.id !== secret.id && !p.id.endsWith('_alt'))
+    .map(p => ({ name: p.name, score: simDetails(p, secret).score }))
+    .filter(x => x.score > 0 && x.score < 1000)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map(x => x.name)
+    .join(', ');
+}
+
 const HINT_DEFS = [
-  { key: 'pos',      label: 'POS',  val: p => p.primaryPos || 'Unknown' },
-  { key: 'year',     label: 'BORN', val: p => p.birthYear  || 'Unknown' },
-  { key: 'war',      label: 'WAR',  val: p => p.WAR != null ? Number(p.WAR).toFixed(1) : 'N/A' },
-  { key: 'team',     label: 'TEAM', val: p => abbr(p.primaryTeam) || 'Unknown' },
-  { key: 'country',  label: 'HOME', val: p => p.birthCountry || 'Unknown' },
-  { key: 'initials', label: 'INIT', val: p => p.name.trim().split(/\s+/).map(w => w[0].toUpperCase()).join('') },
+  { key: 'pos',      label: 'POS',   val: p => p.primaryPos || 'Unknown' },
+  { key: 'year',     label: 'BORN',  val: p => p.birthYear  || 'Unknown' },
+  { key: 'war',      label: 'WAR',   val: p => p.WAR != null ? Number(p.WAR).toFixed(1) : 'N/A' },
+  { key: 'team',     label: 'TEAM',  val: p => abbr(p.primaryTeam) || 'Unknown' },
+  { key: 'country',  label: 'HOME',  val: p => p.birthCountry || 'Unknown' },
+  { key: 'initials', label: 'INIT',  val: p => p.name.trim().split(/\s+/).map(w => w[0].toUpperCase()).join('') },
+  { key: 'top3',     label: 'TOP 3', val: p => getTop3(p) },
 ];
 
 document.querySelectorAll('.hint-btn').forEach(btn => {
@@ -1069,13 +1090,13 @@ document.querySelectorAll('.hint-btn').forEach(btn => {
     const hint = this.dataset.hint;
     if (hintsUsed.some(h => h.key === hint)) return;
     if (difficulty === 'hard' && hintsUsed.length >= 2) return;
-    const cost = hintCost(hintsUsed.length);
+    if (difficulty === 'hard' && hint === 'top3') return;
+    const cost = hint === 'top3' ? 25 : hintCost(hintsUsed.length);
     hintsUsed.push({ key: hint, cost });
     score = Math.max(0, score - cost);
     updateScoreDisplay();
     this.classList.add('revealed');
     this.disabled = true;
-    // Disable hints in hard mode after 2
     if (difficulty === 'hard' && hintsUsed.length >= 2) {
       document.querySelectorAll('.hint-btn:not(.revealed)').forEach(b => b.disabled = true);
     }
@@ -1090,7 +1111,13 @@ function renderHints() {
   HINT_DEFS.filter(d => hintsUsed.some(h => h.key === d.key)).forEach(d => {
     const div = document.createElement('div');
     div.className = 'hint-item';
-    div.innerHTML = '<span class="hl">' + d.label + '</span><span class="hv">' + d.val(secretPlayer) + '</span>';
+    if (d.key === 'top3') {
+      const names = d.val(secretPlayer);
+      div.innerHTML = '<span class="hl">Top 3 Similar</span>' +
+        names.split(', ').map(n => '<span class="hv" style="font-size:0.8rem">' + n + '</span>').join('');
+    } else {
+      div.innerHTML = '<span class="hl">' + d.label + '</span><span class="hv">' + d.val(secretPlayer) + '</span>';
+    }
     display.appendChild(div);
   });
 }
