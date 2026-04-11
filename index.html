@@ -117,9 +117,14 @@
     background: var(--night-card); border: 1px solid var(--night-border);
     border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.25rem;
   }
-  .era-presets-row { display: flex; align-items: flex-start; gap: 0.5rem; }
-  .era-presets { display: flex; gap: 0.35rem; flex-wrap: wrap; flex: 1; }
-  .era-actions { display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
+  .era-top-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; flex-wrap: wrap; }
+  .era-inputs { display: flex; align-items: center; gap: 0.5rem; flex: 1; }
+  .era-inputs input[type=number] {
+    width: 72px; background: var(--night); border: 1px solid var(--night-border); border-radius: 4px;
+    color: var(--text-main); font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; padding: 0.35rem 0.4rem; text-align: center;
+  }
+  .era-inputs span { color: var(--text-dim); font-size: 0.85rem; }
+  .era-presets { display: flex; gap: 0.35rem; flex-wrap: wrap; }
   .era-preset {
     background: transparent; border: 1px solid var(--night-border); border-radius: 4px; color: var(--text-dim);
     font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.06em;
@@ -127,15 +132,6 @@
   }
   .era-preset:hover { border-color: var(--green-light); color: var(--green-light); }
   .era-preset.active-preset { border-color: var(--green); color: var(--green-light); background: rgba(45,106,79,0.15); }
-  .era-custom {
-    display: flex; align-items: center; gap: 0.5rem;
-    margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--night-border);
-  }
-  .era-custom input[type=number] {
-    width: 72px; background: var(--night); border: 1px solid var(--night-border); border-radius: 4px;
-    color: var(--text-main); font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; padding: 0.35rem 0.4rem; text-align: center;
-  }
-  .era-custom span { color: var(--text-dim); font-size: 0.8rem; }
   .era-btn {
     background: var(--green); border: none; border-radius: 4px; color: var(--chalk);
     font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em;
@@ -332,7 +328,14 @@
   .venmo-link { display: inline-block; margin-top: 1rem; background: #3D95CE; color: white; font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; padding: 0.5rem 1.25rem; border-radius: 6px; text-decoration: none; transition: opacity 0.15s; }
   .venmo-link:hover { opacity: 0.85; }
 
-  .no-data-msg { text-align: center; padding: 3rem; font-family: 'IBM Plex Mono', monospace; color: var(--text-dim); font-size: 0.85rem; }
+  .sticky-bar {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--night); border-bottom: 1px solid var(--night-border);
+    display: flex; justify-content: center; align-items: center; gap: 1.5rem;
+    padding: 0.4rem 1rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--text-dim);
+  }
+  .sticky-score { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--yellow); letter-spacing: 0.1em; }
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--night); }
   ::-webkit-scrollbar-thumb { background: var(--night-border); border-radius: 3px; }
@@ -434,38 +437,42 @@
   <div id="loadingMsg" class="no-data-msg">Loading player data...</div>
   <div id="gameArea" style="display:none">
 
+    <!-- STICKY SCORE BAR -->
+    <div class="sticky-bar" id="stickyBar" style="display:none">
+      <span>Score: <span class="sticky-score" id="stickyScore">101</span></span>
+      <span id="stickyGuessCount">0 guesses</span>
+      <span id="stickyDiff" style="color:var(--text-dim)">Easy</span>
+    </div>
+
     <div class="era-panel">
-      <div class="era-presets-row">
-        <div class="era-presets">
-          <button class="era-preset active-preset" data-start="1920" data-end="2025">Modern</button>
-          <button class="era-preset" data-start="1871" data-end="2025">All Time</button>
-          <button class="era-preset" data-start="1947" data-end="2025">Integration</button>
-          <button class="era-preset" data-start="1969" data-end="2025">Division</button>
-          <button class="era-preset" data-start="1994" data-end="2025">Wild Card</button>
-          <button class="era-preset" data-start="2015" data-end="2025">2015+</button>
-          <button class="era-preset" data-start="2025" data-end="2025">2025</button>
-          <button class="era-preset" data-start="1990" data-end="1999">1990s</button>
-          <button class="era-preset" data-start="1980" data-end="1989">1980s</button>
-          <button class="era-preset" data-start="1970" data-end="1979">1970s</button>
-          <button class="era-preset" data-negro="1">Negro Lg</button>
-          <button class="era-preset" data-start="1871" data-end="1919">Deadball</button>
-          <button class="era-preset" id="customToggle" data-custom="1">Custom</button>
-        </div>
-        <div class="era-actions">
+      <div class="era-top-row">
+        <div class="era-inputs">
+          <input type="number" id="eraStart" value="1920" min="1871" max="2025">
+          <span>to</span>
+          <input type="number" id="eraEnd" value="2025" min="1871" max="2025">
           <button class="era-btn" id="newGameBtn">New Game</button>
-          <div class="giveup-area">
-            <button class="giveup-btn" id="giveUpBtn">Give Up</button>
-            <div class="giveup-confirm" id="giveupConfirm">
-              Sure? <button class="giveup-yes" id="giveupYes">Yes</button>
-              <button class="giveup-no" id="giveupNo">No</button>
-            </div>
+        </div>
+        <div class="giveup-area">
+          <button class="giveup-btn" id="giveUpBtn">Give Up</button>
+          <div class="giveup-confirm" id="giveupConfirm">
+            Sure? <button class="giveup-yes" id="giveupYes">Yes</button>
+            <button class="giveup-no" id="giveupNo">No</button>
           </div>
         </div>
       </div>
-      <div class="era-custom" id="eraCustom" style="display:none">
-        <input type="number" id="eraStart" value="1920" min="1871" max="2025">
-        <span>to</span>
-        <input type="number" id="eraEnd" value="2025" min="1871" max="2025">
+      <div class="era-presets">
+        <button class="era-preset active-preset" data-start="1920" data-end="2025">Modern</button>
+        <button class="era-preset" data-start="1871" data-end="2025">All Time</button>
+        <button class="era-preset" data-start="1947" data-end="2025">Integration</button>
+        <button class="era-preset" data-start="1969" data-end="2025">Division</button>
+        <button class="era-preset" data-start="1994" data-end="2025">Wild Card</button>
+        <button class="era-preset" data-start="2015" data-end="2025">2015+</button>
+        <button class="era-preset" data-start="2025" data-end="2025">2025</button>
+        <button class="era-preset" data-start="1990" data-end="1999">1990s</button>
+        <button class="era-preset" data-start="1980" data-end="1989">1980s</button>
+        <button class="era-preset" data-start="1970" data-end="1979">1970s</button>
+        <button class="era-preset" data-negro="1">Negro Lg</button>
+        <button class="era-preset" data-start="1871" data-end="1919">Deadball</button>
       </div>
     </div>
 
@@ -883,6 +890,7 @@ function initGame(forceRandom) {
   document.getElementById('giveupConfirm').classList.remove('visible');
   updateScoreDisplay();
   document.getElementById('guessCount').textContent = '0 guesses';
+  document.getElementById('stickyGuessCount').textContent = '0 guesses';
   document.querySelectorAll('.hint-btn').forEach(b => { b.disabled = false; b.classList.remove('revealed'); });
   document.getElementById('hintTop3').style.display = difficulty === 'hard' ? 'none' : '';
   updateHintsUI();
@@ -892,8 +900,27 @@ function initGame(forceRandom) {
 }
 
 function updateScoreDisplay() {
-  document.getElementById('scoreDisplay').textContent = Math.max(0, score);
+  const s = Math.max(0, score);
+  document.getElementById('scoreDisplay').textContent = s;
+  document.getElementById('stickyScore').textContent  = s;
 }
+
+function updateStickyGuessCount() {
+  const txt = guesses.length + ' guess' + (guesses.length !== 1 ? 'es' : '');
+  document.getElementById('guessCount').textContent      = txt;
+  document.getElementById('stickyGuessCount').textContent = txt;
+  document.getElementById('stickyDiff').textContent = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+}
+
+// Show sticky bar once user scrolls past the header score
+window.addEventListener('scroll', function() {
+  const bar = document.getElementById('stickyBar');
+  if (!bar) return;
+  const headerScore = document.getElementById('scoreDisplay');
+  if (!headerScore) return;
+  const rect = headerScore.getBoundingClientRect();
+  bar.style.display = rect.bottom < 0 ? 'flex' : 'none';
+}, { passive: true });
 
 function updateHintsUI() {
   const header = document.getElementById('hintsHeader');
@@ -934,7 +961,12 @@ function buildAC(query) {
   const matches = ALL_PLAYERS.filter(p => p.name.toLowerCase().includes(q)).slice(0, 12);
   matches.forEach(p => {
     const div = document.createElement('div');
-    div.innerHTML = p.name + '<span class="ac-meta">' + (p.primaryPos || '?') + ' \u00b7 ' + (p.birthYear || '?') + '</span>';
+    div.style.display = 'flex';
+    div.style.alignItems = 'center';
+    div.style.gap = '0.6rem';
+    const photo = thumbHtml(p, 28);
+    const meta = (p.primaryPos || '?') + ' \u00b7 b.' + (p.birthYear || '?');
+    div.innerHTML = photo + '<span>' + p.name + '<span class="ac-meta">' + meta + '</span></span>';
     div.addEventListener('mousedown', e => { e.preventDefault(); selectAC(p); });
     list.appendChild(div);
   });
@@ -995,9 +1027,7 @@ function submitGuess() {
   updateScoreDisplay();
   guesses.sort((a, b) => b.det.score - a.det.score);
   renderGuessLog();
-
-  document.getElementById('guessCount').textContent =
-    guesses.length + ' guess' + (guesses.length !== 1 ? 'es' : '');
+  updateStickyGuessCount();
 
   input.value = ''; delete input.dataset.selectedId;
   if (det.score === 1000) endGame(true);
@@ -1206,19 +1236,36 @@ document.getElementById('shareBtn').addEventListener('click', function() {
   const d = new Date();
   const dateStr = d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
   const diffLabel = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
-  const lines = [
-    'SIMBALL ' + (dailyMode ? dateStr : 'Unlimited') + ' [' + diffLabel + ']',
-    secretPlayer.name,
-    won
-      ? 'Score: ' + Math.max(0, score) + ' | ' + guesses.length + ' guesses | ' + hintsUsed.length + ' hints'
-      : 'Gave up after ' + guesses.length + ' guesses',
-    ''
-  ];
-  [...guesses].sort((a,b) => a.guessNum - b.guessNum).forEach(g => {
-    const s = g.det.score;
-    const e = s === 1000 ? '\uD83D\uDFE2' : s >= 700 ? '\uD83D\uDFE1' : s >= 400 ? '\uD83D\uDFE0' : '\uD83D\uDD34';
-    lines.push(e + ' ' + s);
+
+  // Era label
+  let eraLabel = 'Modern';
+  document.querySelectorAll('.era-preset.active-preset').forEach(b => {
+    if (b.textContent) eraLabel = b.textContent.trim();
   });
+
+  const scoreStr = won ? Math.max(0, score) + '/100' : 'X/100';
+  const hintStr  = hintsUsed.length > 0 ? ' \u00b7 ' + hintsUsed.length + ' hint' + (hintsUsed.length !== 1 ? 's' : '') : '';
+
+  // Emoji grid - one per guess in order, 10 per row
+  const ordered = [...guesses].sort((a,b) => a.guessNum - b.guessNum);
+  const emojis = ordered.map(g => {
+    const s = g.det.score;
+    return s === 1000 ? '\uD83D\uDFE2' : s >= 700 ? '\uD83D\uDFE1' : s >= 400 ? '\uD83D\uDFE0' : '\uD83D\uDD34';
+  });
+
+  // Chunk into rows of 10
+  const rows = [];
+  for (let i = 0; i < emojis.length; i += 10) rows.push(emojis.slice(i, i+10).join(''));
+
+  const lines = [
+    '\u26BE SIMBALL \u00b7 ' + diffLabel + ' \u00b7 ' + (dailyMode ? dateStr : eraLabel),
+    scoreStr + ' (' + guesses.length + ' guess' + (guesses.length !== 1 ? 'es' : '') + hintStr + ')',
+    '',
+    ...rows,
+    '',
+    'djsimons.github.io/simball'
+  ];
+
   navigator.clipboard.writeText(lines.join('\n')).then(() => {
     this.textContent = 'Copied!';
     setTimeout(() => { this.textContent = 'Copy Result'; }, 2000);
@@ -1324,19 +1371,10 @@ function checkChallengeParam() {
 document.getElementById('guessBtn').addEventListener('click', submitGuess);
 document.getElementById('newGameBtn').addEventListener('click', () => { negroLeagueMode = false; initGame(true); });
 
-document.getElementById('customToggle').addEventListener('click', function() {
-  const box = document.getElementById('eraCustom');
-  const visible = box.style.display !== 'none';
-  box.style.display = visible ? 'none' : 'flex';
-  this.classList.toggle('active-preset', !visible);
-});
-
-document.querySelectorAll('.era-preset:not(#customToggle)').forEach(btn => {
+document.querySelectorAll('.era-preset').forEach(btn => {
   btn.addEventListener('click', function() {
     document.querySelectorAll('.era-preset').forEach(b => b.classList.remove('active-preset'));
     this.classList.add('active-preset');
-    document.getElementById('eraCustom').style.display = 'none';
-    document.getElementById('customToggle').classList.remove('active-preset');
     if (this.dataset.negro) {
       negroLeagueMode = true;
       document.getElementById('eraStart').value = 1871;
