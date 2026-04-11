@@ -48,7 +48,11 @@
     text-align: center;
     padding: 2rem 1rem 1rem;
     border-bottom: 1px solid var(--night-border);
-    position: relative;
+    position: sticky;
+    top: 0;
+    z-index: 500;
+    background: var(--night);
+    backdrop-filter: blur(8px);
   }
 
   .logo {
@@ -347,6 +351,7 @@
   <div class="logo">SIMBALL</div>
   <div class="tagline">Guess the player by similarity score</div>
   <div class="header-meta">
+    <span id="eraIndicator" style="color:var(--green-light);font-size:0.72rem"></span>
     <div class="mode-toggle">
       <span class="mode-label-daily" id="labelDaily">Daily</span>
       <div class="toggle-track on" id="modeToggle"><div class="toggle-thumb"></div></div>
@@ -851,19 +856,32 @@ function buildBadges(guess, secret) {
 }
 
 // ── PHOTO ─────────────────────────────────────────────────────────────────────
+function playerInitials(p) {
+  return p.name.trim().split(/\s+/).map(w => w[0].toUpperCase()).join('').slice(0, 2);
+}
+
+function initialsCircle(p, size) {
+  const initials = playerInitials(p);
+  const fontSize = size <= 36 ? Math.round(size * 0.38) : Math.round(size * 0.35);
+  return '<div style="width:' + size + 'px;height:' + size + 'px;border-radius:' + (size <= 36 ? '5px' : '8px') +
+    ';background:var(--night-border);border:1px solid var(--night-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;' +
+    'font-family:\'IBM Plex Mono\',monospace;font-size:' + fontSize + 'px;font-weight:600;color:var(--green-light);letter-spacing:0.02em">' +
+    initials + '</div>';
+}
+
 function thumbHtml(p, size) {
   const url = p.mlbID
     ? 'https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/' + p.mlbID + '/headshot/67/current'
     : null;
   const isSmall = size <= 36;
-  const cls  = isSmall ? 'guess-thumb' : 'player-photo';
-  const pcls = isSmall ? 'guess-thumb-placeholder' : 'player-photo-placeholder';
+  const cls = isSmall ? 'guess-thumb' : 'player-photo';
+  const fallback = initialsCircle(p, size);
   if (url) {
     return '<img class="' + cls + '" src="' + url + '" alt="' + p.name + '" width="' + size + '" height="' + size + '"' +
       ' onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">' +
-      '<div class="' + pcls + '" style="display:none">&#9918;</div>';
+      '<div style="display:none">' + fallback + '</div>';
   }
-  return '<div class="' + pcls + '">&#9918;</div>';
+  return fallback;
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
@@ -897,6 +915,20 @@ function initGame(forceRandom) {
 
   if (!secretPlayer)
     document.getElementById('statusMsg').textContent = 'No players found for this range.';
+  updateEraIndicator();
+}
+
+function updateEraIndicator() {
+  const el = document.getElementById('eraIndicator');
+  if (!el) return;
+  if (negroLeagueMode) { el.textContent = 'Negro Lg'; return; }
+  // Find active preset label
+  const active = document.querySelector('.era-preset.active-preset');
+  if (active && active.textContent) {
+    el.textContent = active.textContent.trim();
+  } else {
+    el.textContent = eraStart + '\u2013' + eraEnd;
+  }
 }
 
 function updateScoreDisplay() {
@@ -1385,6 +1417,7 @@ document.querySelectorAll('.era-preset').forEach(btn => {
       document.getElementById('eraEnd').value   = this.dataset.end;
     }
     initGame(true);
+    updateEraIndicator();
   });
 });
 
