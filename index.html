@@ -38,6 +38,7 @@
     color: var(--text-main);
     font-family: 'IBM Plex Sans', sans-serif;
     min-height: 100vh;
+    padding-top: 40px;
     background-image:
       radial-gradient(ellipse 80% 50% at 50% -10%, rgba(45,106,79,0.25) 0%, transparent 70%),
       repeating-linear-gradient(0deg, transparent, transparent 40px,
@@ -48,11 +49,7 @@
     text-align: center;
     padding: 2rem 1rem 1rem;
     border-bottom: 1px solid var(--night-border);
-    position: sticky;
-    top: 0;
-    z-index: 500;
-    background: var(--night);
-    backdrop-filter: blur(8px);
+    position: relative;
   }
 
   .logo {
@@ -121,6 +118,40 @@
     background: var(--night-card); border: 1px solid var(--night-border);
     border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.25rem;
   }
+  .era-filter-row {
+    display: flex; align-items: flex-start; gap: 1.25rem; flex-wrap: wrap; margin-bottom: 0.6rem;
+  }
+  .era-filter-group {
+    display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+  }
+  .era-filter-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); text-align: center;
+  }
+  .era-filter-control {
+    display: flex; align-items: center; gap: 0.35rem; height: 26px;
+  }
+  .era-filter-select {
+    background: var(--night); border: 1px solid var(--night-border); border-radius: 4px;
+    color: var(--text-main); font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
+    padding: 0 0.4rem; cursor: pointer; outline: none; transition: border-color 0.15s; height: 26px;
+  }
+  .era-filter-select:hover, .era-filter-select:focus { border-color: var(--green-light); }
+  .era-filter-select option { background: var(--night-card); }
+  .mode-toggle-compact {
+    display: flex; align-items: center; gap: 0.3rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+    color: var(--text-dim); text-transform: uppercase; height: 26px;
+  }
+  .mode-toggle-compact .toggle-track {
+    width: 32px; height: 18px;
+  }
+  .mode-toggle-compact .toggle-thumb {
+    width: 12px; height: 12px; top: 3px; left: 3px;
+  }
+  .mode-toggle-compact .toggle-track.on .toggle-thumb { transform: translateX(14px); }
+  .mode-toggle-compact .mode-label-daily.active,
+  .mode-toggle-compact .mode-label-unlim.active { color: var(--green-light); }
   .era-top-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; flex-wrap: wrap; }
   .era-inputs { display: flex; align-items: center; gap: 0.5rem; flex: 1; }
   .era-inputs input[type=number] {
@@ -128,7 +159,15 @@
     color: var(--text-main); font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; padding: 0.35rem 0.4rem; text-align: center;
   }
   .era-inputs span { color: var(--text-dim); font-size: 0.85rem; }
-  .era-presets { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+  .era-filter-row input[type=number] {
+    width: 68px; background: var(--night); border: 1px solid var(--night-border); border-radius: 4px;
+    color: var(--text-main); font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
+    padding: 0 0.4rem; text-align: center; height: 26px;
+    -moz-appearance: textfield;
+  }
+  .era-filter-row input[type=number]::-webkit-inner-spin-button,
+  .era-filter-row input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .era-presets { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
   .era-preset {
     background: transparent; border: 1px solid var(--night-border); border-radius: 4px; color: var(--text-dim);
     font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.06em;
@@ -136,13 +175,14 @@
   }
   .era-preset:hover { border-color: var(--green-light); color: var(--green-light); }
   .era-preset.active-preset { border-color: var(--green); color: var(--green-light); background: rgba(45,106,79,0.15); }
+  .era-action-row { display: flex; align-items: center; gap: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--night-border); }
   .era-btn {
     background: var(--green); border: none; border-radius: 4px; color: var(--chalk);
     font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em;
     padding: 0.35rem 0.75rem; cursor: pointer; transition: background 0.15s; white-space: nowrap;
   }
   .era-btn:hover { background: var(--green-light); color: var(--night); }
-  .giveup-area { display: flex; align-items: center; gap: 0.4rem; }
+  .giveup-area { display: flex; align-items: center; gap: 0.4rem; margin-left: auto; }
   .giveup-btn {
     background: transparent; border: 1px solid #444; border-radius: 4px; color: #777;
     font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; letter-spacing: 0.1em;
@@ -334,9 +374,10 @@
   .venmo-link:hover { opacity: 0.85; }
 
   .sticky-bar {
-    position: sticky; top: 0; z-index: 50;
-    background: var(--night); border-bottom: 1px solid var(--night-border);
-    display: flex; justify-content: center; align-items: center; gap: 1.5rem;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+    background: var(--night);
+    border-bottom: 1px solid var(--night-border);
+    display: flex; align-items: center; gap: 1rem;
     padding: 0.4rem 1rem;
     font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--text-dim);
   }
@@ -351,22 +392,6 @@
 <header>
   <div class="logo">SIMBALL</div>
   <div class="tagline">Guess the player by similarity score</div>
-  <div class="header-meta">
-    <span id="eraIndicator" style="color:var(--green-light);font-size:0.72rem"></span>
-    <div class="mode-toggle">
-      <span class="mode-label-daily" id="labelDaily">Daily</span>
-      <div class="toggle-track on" id="modeToggle"><div class="toggle-thumb"></div></div>
-      <span class="mode-label-unlim active" id="labelUnlim">Unlimited</span>
-    </div>
-    <select class="diff-select" id="diffSelect">
-      <option value="easy" selected>Easy</option>
-      <option value="medium">Medium</option>
-      <option value="hard">Hard</option>
-    </select>
-    <span>Score: <span class="score-display" id="scoreDisplay">101</span></span>
-    <span id="guessCount">0 guesses</span>
-  </div>
-  <button class="help-btn" id="helpBtn">?</button>
 </header>
 
 <!-- HELP MODAL -->
@@ -374,64 +399,49 @@
   <div class="modal">
     <button class="modal-close" id="modalClose">&times;</button>
     <h2>How to Play</h2>
-    <p>A secret MLB player has been chosen. Guess players by name and you will get back a similarity score (0-1000) comparing your guess to the secret player. The higher the score, the more similar the careers. 1000 means you got it.</p>
+    <p>A secret MLB player has been chosen. Guess any player by name and you will receive a similarity score (0-1000) comparing their career stats to the secret player. The higher the score, the more similar the careers. A score of 1000 means you found them.</p>
 
     <h3>Scoring</h3>
-    <p>You start with 101 points. Each guess costs 1 point. Score floors at 0 but you can keep guessing. A correct answer scores whatever points remain, so a perfect game is 100.</p>
+    <p>You start with 101 points. Each guess costs 1 point. Score floors at 0 but you can keep guessing. A correct answer scores whatever points remain, so a perfect game (first guess, no hints) scores 100.</p>
 
     <h3>Hints</h3>
-    <p>Seven hints are available. Six use an escalating cost -- the first is free, then 10, 20, 30, and 40 points each, with the sixth free since you will already be at 0: Primary position, Birth year, Career WAR, Primary team, Birth country, Initials, and Handedness (batting/throwing, e.g. BL/TR).</p>
-    <p style="margin-top:0.5rem">The seventh hint, TOP 3, reveals the three players most similar to the secret player based on the similarity formula. It costs 25 points and is not available in Hard mode.</p>
+    <p>Eight hints are available with escalating costs. The first hint is free, then 10, 20, 30, and 40 points for the next four, and the sixth is free again since you are already at 0. The hints match the badge order: POS (primary position), TEAM (primary team as 3-letter code), BORN (birth year), WAR (career WAR), HOME (birth country), INIT (initials), and HAND (handedness, e.g. BL/TR means bats left, throws right). The eighth hint, TOP 3, reveals the three most similar players in the pool for 25 points and is not available in Hard mode.</p>
 
     <h3>Difficulty</h3>
-    <p>Three difficulty modes are available, selectable from the header:</p>
+    <p>Set in the game panel. Affects how much information each guess reveals:</p>
     <ul>
-      <li>Easy: all five badges shown per guess (position, team, birth year, WAR, country), plus Hot/Cold stat breakdown</li>
-      <li>Medium: only position and birth year badges shown, plus Hot/Cold</li>
-      <li>Hard: no badges, no Hot/Cold. Score only. Hints capped at 2, each costing 25 points. TOP 3 hint not available</li>
+      <li>Easy: all five badges shown per guess, plus Hot/Cold</li>
+      <li>Medium: position and birth year badges only, plus Hot/Cold</li>
+      <li>Hard: no badges, no Hot/Cold, hints capped at 2 (25 pts each), no TOP 3</li>
     </ul>
 
     <h3>Guess Badges</h3>
-    <p>Badges compare your guess to the secret player. Colors:</p>
+    <p>Each guess shows up to five badges comparing your guess to the secret player. Green means exact or very close. Yellow means close. No color means far off.</p>
     <ul>
-      <li>Green = exact match (or very close for WAR)</li>
-      <li>Yellow = close but not exact</li>
-      <li>No color = far off</li>
-    </ul>
-    <p style="margin-top:0.5rem">Badge logic:</p>
-    <ul>
-      <li>POS: green if same primary position, yellow if guessed player played 10+ games at the secret player's position</li>
-      <li>TEAM: green if same franchise, yellow if same 2025 MLB division (historical teams mapped to current franchise)</li>
-      <li>BORN: green if exact birth year, yellow if within 5 years</li>
-      <li>WAR: green if within 2.0, yellow if within 10.0</li>
-      <li>HOME: green if same birth country only</li>
+      <li>POS: green if same primary position; yellow if the secret player has played 10+ games at the guessed position</li>
+      <li>TEAM: green if same franchise; yellow if same 2025 MLB division. Historical team names are mapped to their current franchise.</li>
+      <li>BORN: green if exact birth year; yellow if within 5 years</li>
+      <li>WAR: green if within 2.0; yellow if within 10.0</li>
+      <li>HOME: green if same birth country</li>
     </ul>
 
     <h3>Hot / Cold</h3>
-    <p>Each guess shows which stat was most similar (Hot) and least similar (Cold) to the secret player, using stats meaningful for that position. Available in Easy and Medium modes only.</p>
+    <p>Available in Easy and Medium. Each guess shows the stat most similar (Hot) and least similar (Cold) to the secret player, using the stats most meaningful for that player's role.</p>
 
     <h3>Cross-Role Guesses</h3>
-    <p>If the secret player is a pitcher and you guess a position player (or vice versa), you will get a score of 0. Use that as a signal to switch sides.</p>
+    <p>Guessing a pitcher when the secret player is a position player (or vice versa) scores 0. Use it as a signal to switch sides.</p>
 
-    <h3>Similarity Score Formula</h3>
-    <p>Scores are based on the <a href="https://www.baseball-reference.com/about/similarity.shtml" target="_blank" rel="noopener" style="color:var(--green-light)">Baseball Reference similarity score methodology</a>. For position players, career stats compared include G, AB, R, H, 2B, 3B, HR, RBI, BB, SO, SB, BA, and SLG. For pitchers: W, L, SV, IP, K, and ERA. Our scores may differ slightly from those on Baseball Reference, as their exact formula is proprietary. All stats are as of Opening Day 2026.</p>
+    <h3>Similarity Score</h3>
+    <p>The similarity score concept was created by Bill James and later adopted by Baseball Reference. Scores start at 1000 and are reduced based on differences in career stats. Position players are compared on G, AB, R, H, 2B, 3B, HR, RBI, BB, SO, SB, BA, and SLG. Pitchers on W, L, SV, IP, K, and ERA. Our scores may differ slightly from BBRef as their exact formula is proprietary. See the <a href="https://www.baseball-reference.com/about/similarity.shtml" target="_blank" rel="noopener" style="color:var(--green-light)">BBRef methodology page</a> for more. All stats as of Opening Day 2026.</p>
 
     <h3>Player Pool</h3>
-    <p>The pool includes players with:</p>
-    <ul>
-      <li>Position players: 500 or more career games</li>
-      <li>Starting pitchers: 100 or more career starts, with the majority of appearances as a starter</li>
-      <li>Relief pitchers: 300 or more career appearances, with the majority in relief</li>
-    </ul>
+    <p>Position players with 500+ career games. Starting pitchers with 100+ starts (majority as starter). Relief pitchers with 300+ appearances (majority in relief). Shohei Ohtani and Babe Ruth each appear twice -- once as a pitcher, once as a position player.</p>
 
-    <h3>Year Range</h3>
-    <p>The year range filter controls which players can be chosen as the secret player. It uses each player's actual first and last year in the majors. A player is included if their career overlaps with the selected range at all. Use the preset buttons or enter custom years.</p>
-
-    <h3>Daily vs. Unlimited</h3>
-    <p>Daily mode picks the same player for everyone on a given day. Unlimited mode picks a new random player each game.</p>
+    <h3>Filters</h3>
+    <p>Years filters the secret player pool using each player's actual first and last MLB season -- a player is included if their career overlaps the range at all. Use the preset buttons or type custom years. Team limits the pool to players whose primary team maps to that franchise, including all historical names. Mode: Daily picks the same player for everyone each day; Unlimited picks randomly each game. The Negro Lg preset limits the pool to players who appeared for a recognized Negro League team.</p>
 
     <h3>Challenge a Friend</h3>
-    <p>Pick any player and generate a shareable link. Your friend will be challenged to guess that player.</p>
+    <p>After a game ends, use the Challenge a Friend button to pick any player and generate a shareable link. Your friend opens it and must guess that player in Unlimited mode.</p>
 
     <h3>Support SIMBALL</h3>
     <p>If you enjoy the game, feel free to buy me a hot dog!</p>
@@ -444,64 +454,96 @@
   <div id="gameArea" style="display:none">
 
     <!-- STICKY SCORE BAR -->
-    <div class="sticky-bar" id="stickyBar" style="display:none">
+    <div class="sticky-bar" id="stickyBar">
+      <span id="stickyEra" style="color:var(--green-light)"></span>
       <span>Score: <span class="sticky-score" id="stickyScore">101</span></span>
       <span id="stickyGuessCount">0 guesses</span>
       <span id="stickyDiff" style="color:var(--text-dim)">Easy</span>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:0.4rem">
+        <button id="newGameBtn" style="background:var(--green);border:none;border-radius:4px;color:var(--chalk);font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.08em;padding:0.25rem 0.6rem;cursor:pointer">New Game</button>
+        <button id="giveUpBtn" style="background:transparent;border:1px solid #444;border-radius:4px;color:#777;font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.08em;padding:0.25rem 0.6rem;cursor:pointer">Give Up</button>
+        <div class="giveup-confirm" id="giveupConfirm" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--red)">
+          Sure? <button class="giveup-yes" id="giveupYes">Yes</button>
+          <button class="giveup-no" id="giveupNo">No</button>
+        </div>
+        <button class="help-btn" id="helpBtn" style="position:static;width:24px;height:24px;font-size:0.8rem">?</button>
+      </div>
     </div>
 
     <div class="era-panel">
-      <div class="era-top-row">
-        <div class="era-inputs">
-          <input type="number" id="eraStart" value="1920" min="1871" max="2025">
-          <span>to</span>
-          <input type="number" id="eraEnd" value="2025" min="1871" max="2025">
-          <select id="teamFilter" class="diff-select" style="max-width:70px">
-            <option value="">All</option>
-            <option value="Arizona Diamondbacks">ARI</option>
-            <option value="Atlanta Braves">ATL</option>
-            <option value="Baltimore Orioles">BAL</option>
-            <option value="Boston Red Sox">BOS</option>
-            <option value="Chicago Cubs">CHC</option>
-            <option value="Chicago White Sox">CWS</option>
-            <option value="Cincinnati Reds">CIN</option>
-            <option value="Cleveland Guardians">CLE</option>
-            <option value="Colorado Rockies">COL</option>
-            <option value="Detroit Tigers">DET</option>
-            <option value="Houston Astros">HOU</option>
-            <option value="Kansas City Royals">KC</option>
-            <option value="Los Angeles Angels">LAA</option>
-            <option value="Los Angeles Dodgers">LAD</option>
-            <option value="Miami Marlins">MIA</option>
-            <option value="Milwaukee Brewers">MIL</option>
-            <option value="Minnesota Twins">MIN</option>
-            <option value="New York Mets">NYM</option>
-            <option value="New York Yankees">NYY</option>
-            <option value="Oakland Athletics">OAK</option>
-            <option value="Philadelphia Phillies">PHI</option>
-            <option value="Pittsburgh Pirates">PIT</option>
-            <option value="San Diego Padres">SD</option>
-            <option value="San Francisco Giants">SF</option>
-            <option value="Seattle Mariners">SEA</option>
-            <option value="St. Louis Cardinals">STL</option>
-            <option value="Tampa Bay Rays">TB</option>
-            <option value="Texas Rangers">TEX</option>
-            <option value="Toronto Blue Jays">TOR</option>
-            <option value="Washington Nationals">WSH</option>
-          </select>
-          <button class="era-btn" id="newGameBtn">New Game</button>
+      <!-- Row 1: filters -->
+      <div class="era-filter-row">
+        <div class="era-filter-group">
+          <span class="era-filter-label">Years</span>
+          <div class="era-filter-control">
+            <input type="number" id="eraStart" value="1920" min="1871" max="2025">
+            <span style="color:var(--text-dim);font-size:0.8rem">–</span>
+            <input type="number" id="eraEnd" value="2025" min="1871" max="2025">
+          </div>
         </div>
-        <div class="giveup-area">
-          <button class="giveup-btn" id="giveUpBtn">Give Up</button>
-          <div class="giveup-confirm" id="giveupConfirm">
-            Sure? <button class="giveup-yes" id="giveupYes">Yes</button>
-            <button class="giveup-no" id="giveupNo">No</button>
+        <div class="era-filter-group">
+          <span class="era-filter-label">Team</span>
+          <div class="era-filter-control">
+            <select id="teamFilter" class="era-filter-select">
+              <option value="">All</option>
+              <option value="Arizona Diamondbacks">ARI</option>
+              <option value="Atlanta Braves">ATL</option>
+              <option value="Baltimore Orioles">BAL</option>
+              <option value="Boston Red Sox">BOS</option>
+              <option value="Chicago Cubs">CHC</option>
+              <option value="Chicago White Sox">CWS</option>
+              <option value="Cincinnati Reds">CIN</option>
+              <option value="Cleveland Guardians">CLE</option>
+              <option value="Colorado Rockies">COL</option>
+              <option value="Detroit Tigers">DET</option>
+              <option value="Houston Astros">HOU</option>
+              <option value="Kansas City Royals">KC</option>
+              <option value="Los Angeles Angels">LAA</option>
+              <option value="Los Angeles Dodgers">LAD</option>
+              <option value="Miami Marlins">MIA</option>
+              <option value="Milwaukee Brewers">MIL</option>
+              <option value="Minnesota Twins">MIN</option>
+              <option value="New York Mets">NYM</option>
+              <option value="New York Yankees">NYY</option>
+              <option value="Oakland Athletics">OAK</option>
+              <option value="Philadelphia Phillies">PHI</option>
+              <option value="Pittsburgh Pirates">PIT</option>
+              <option value="San Diego Padres">SD</option>
+              <option value="San Francisco Giants">SF</option>
+              <option value="Seattle Mariners">SEA</option>
+              <option value="St. Louis Cardinals">STL</option>
+              <option value="Tampa Bay Rays">TB</option>
+              <option value="Texas Rangers">TEX</option>
+              <option value="Toronto Blue Jays">TOR</option>
+              <option value="Washington Nationals">WSH</option>
+            </select>
+          </div>
+        </div>
+        <div class="era-filter-group">
+          <span class="era-filter-label">Mode</span>
+          <div class="era-filter-control">
+            <div class="mode-toggle-compact">
+              <span class="mode-label-daily" id="labelDaily">Day</span>
+              <div class="toggle-track on" id="modeToggle"><div class="toggle-thumb"></div></div>
+              <span class="mode-label-unlim active" id="labelUnlim">Unlim</span>
+            </div>
+          </div>
+        </div>
+        <div class="era-filter-group">
+          <span class="era-filter-label">Difficulty</span>
+          <div class="era-filter-control">
+            <select class="era-filter-select" id="diffSelect">
+              <option value="easy" selected>Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
           </div>
         </div>
       </div>
+      <!-- Row 2: presets -->
       <div class="era-presets">
-        <button class="era-preset active-preset" data-start="1920" data-end="2025">Modern</button>
         <button class="era-preset" data-start="1871" data-end="2025">All Time</button>
+        <button class="era-preset active-preset" data-start="1920" data-end="2025">Modern</button>
         <button class="era-preset" data-start="1947" data-end="2025">Integration</button>
         <button class="era-preset" data-start="1969" data-end="2025">Division</button>
         <button class="era-preset" data-start="1994" data-end="2025">Wild Card</button>
@@ -547,13 +589,13 @@
       </div>
       <div class="hints-row" id="hintsRow">
         <button class="hint-btn" id="hintPos"      data-hint="pos">POS</button>
+        <button class="hint-btn" id="hintTeam"     data-hint="team">TEAM</button>
         <button class="hint-btn" id="hintYear"     data-hint="year">BORN</button>
         <button class="hint-btn" id="hintWAR"      data-hint="war">WAR</button>
-        <button class="hint-btn" id="hintTeam"     data-hint="team">TEAM</button>
         <button class="hint-btn" id="hintCountry"  data-hint="country">HOME</button>
         <button class="hint-btn" id="hintInitials" data-hint="initials">INIT</button>
         <button class="hint-btn" id="hintHand"     data-hint="hand">HAND</button>
-        <button class="hint-btn" id="hintTop3"     data-hint="top3" style="border-color:var(--green);color:var(--green-light)">TOP 3</button>
+        <button class="hint-btn" id="hintTop3"     data-hint="top3">TOP 3</button>
       </div>
       <div class="hint-display" id="hintDisplay"></div>
     </div>
@@ -931,10 +973,11 @@ function initGame(forceRandom) {
   document.getElementById('guessArea').style.display = 'block';
   document.getElementById('guessInput').disabled   = false;
   document.getElementById('guessBtn').disabled     = false;
+  document.getElementById('giveUpBtn').disabled    = false;
   document.getElementById('giveUpBtn').style.display = '';
   document.getElementById('giveupConfirm').classList.remove('visible');
   updateScoreDisplay();
-  document.getElementById('guessCount').textContent = '0 guesses';
+  document.getElementById('stickyGuessCount').textContent = '0 guesses';
   document.getElementById('stickyGuessCount').textContent = '0 guesses';
   document.querySelectorAll('.hint-btn').forEach(b => { b.disabled = false; b.classList.remove('revealed'); });
   document.getElementById('hintTop3').style.display = difficulty === 'hard' ? 'none' : '';
@@ -947,8 +990,6 @@ function initGame(forceRandom) {
 }
 
 function updateEraIndicator() {
-  const el = document.getElementById('eraIndicator');
-  if (!el) return;
   let label = '';
   if (negroLeagueMode) {
     label = 'Negro Lg';
@@ -957,31 +998,24 @@ function updateEraIndicator() {
     label = (active && active.textContent) ? active.textContent.trim() : eraStart + '\u2013' + eraEnd;
   }
   if (teamFilter) label += ' \u00b7 ' + abbr(teamFilter);
-  el.textContent = label;
+  const el = document.getElementById('eraIndicator');
+  if (el) el.textContent = label;
+  const se = document.getElementById('stickyEra');
+  if (se) se.textContent = label;
 }
 
 function updateScoreDisplay() {
   const s = Math.max(0, score);
-  document.getElementById('scoreDisplay').textContent = s;
-  document.getElementById('stickyScore').textContent  = s;
+  document.getElementById('stickyScore').textContent = s;
 }
 
 function updateStickyGuessCount() {
   const txt = guesses.length + ' guess' + (guesses.length !== 1 ? 'es' : '');
-  document.getElementById('guessCount').textContent      = txt;
   document.getElementById('stickyGuessCount').textContent = txt;
   document.getElementById('stickyDiff').textContent = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
 }
 
-// Show sticky bar once user scrolls past the header score
-window.addEventListener('scroll', function() {
-  const bar = document.getElementById('stickyBar');
-  if (!bar) return;
-  const headerScore = document.getElementById('scoreDisplay');
-  if (!headerScore) return;
-  const rect = headerScore.getBoundingClientRect();
-  bar.style.display = rect.bottom < 0 ? 'flex' : 'none';
-}, { passive: true });
+// Sticky bar always visible - no scroll trigger needed
 
 function updateHintsUI() {
   const header = document.getElementById('hintsHeader');
@@ -1005,7 +1039,7 @@ document.getElementById('modeToggle').addEventListener('click', function() {
   this.classList.toggle('on', !dailyMode);
   document.getElementById('labelDaily').classList.toggle('active',  dailyMode);
   document.getElementById('labelUnlim').classList.toggle('active', !dailyMode);
-  initGame(!dailyMode);
+  initGame(true);
 });
 
 // ── HELP MODAL ────────────────────────────────────────────────────────────────
@@ -1251,8 +1285,8 @@ function endGame(didWin, gaveUp) {
   gameOver = true; won = didWin;
   document.getElementById('guessArea').style.display = 'none';
   document.querySelectorAll('.hint-btn').forEach(b => b.disabled = true);
-  document.getElementById('giveUpBtn').style.display = 'none';
   document.getElementById('giveupConfirm').classList.remove('visible');
+  document.getElementById('giveUpBtn').style.display = 'none';
 
   const panel = document.getElementById('endPanel');
   panel.classList.add('visible', didWin ? 'won' : 'lost');
