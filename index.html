@@ -456,6 +456,39 @@
           <input type="number" id="eraStart" value="1920" min="1871" max="2025">
           <span>to</span>
           <input type="number" id="eraEnd" value="2025" min="1871" max="2025">
+          <select id="teamFilter" class="diff-select" style="max-width:70px">
+            <option value="">All</option>
+            <option value="Arizona Diamondbacks">ARI</option>
+            <option value="Atlanta Braves">ATL</option>
+            <option value="Baltimore Orioles">BAL</option>
+            <option value="Boston Red Sox">BOS</option>
+            <option value="Chicago Cubs">CHC</option>
+            <option value="Chicago White Sox">CWS</option>
+            <option value="Cincinnati Reds">CIN</option>
+            <option value="Cleveland Guardians">CLE</option>
+            <option value="Colorado Rockies">COL</option>
+            <option value="Detroit Tigers">DET</option>
+            <option value="Houston Astros">HOU</option>
+            <option value="Kansas City Royals">KC</option>
+            <option value="Los Angeles Angels">LAA</option>
+            <option value="Los Angeles Dodgers">LAD</option>
+            <option value="Miami Marlins">MIA</option>
+            <option value="Milwaukee Brewers">MIL</option>
+            <option value="Minnesota Twins">MIN</option>
+            <option value="New York Mets">NYM</option>
+            <option value="New York Yankees">NYY</option>
+            <option value="Oakland Athletics">OAK</option>
+            <option value="Philadelphia Phillies">PHI</option>
+            <option value="Pittsburgh Pirates">PIT</option>
+            <option value="San Diego Padres">SD</option>
+            <option value="San Francisco Giants">SF</option>
+            <option value="Seattle Mariners">SEA</option>
+            <option value="St. Louis Cardinals">STL</option>
+            <option value="Tampa Bay Rays">TB</option>
+            <option value="Texas Rangers">TEX</option>
+            <option value="Toronto Blue Jays">TOR</option>
+            <option value="Washington Nationals">WSH</option>
+          </select>
           <button class="era-btn" id="newGameBtn">New Game</button>
         </div>
         <div class="giveup-area">
@@ -667,7 +700,9 @@ const TEAM_ABBR = {
 function abbr(teamName) {
   if (!teamName) return '?';
   if (TEAM_ABBR[teamName]) return TEAM_ABBR[teamName];
-  return teamName.split(' ').pop().slice(0, 4).toUpperCase();
+  const franchise = currentFranchise(teamName);
+  if (franchise && TEAM_ABBR[franchise]) return TEAM_ABBR[franchise];
+  return teamName.split(' ').pop().slice(0, 3).toUpperCase();
 }
 
 function fmtRate(val) {
@@ -688,6 +723,7 @@ let won = false;
 let dailyMode = false;
 let difficulty = 'easy';
 let negroLeagueMode = false;
+let teamFilter = null; // null = all teams
 let eraStart = 1920;
 let eraEnd = 2025;
 let acIndex = -1;
@@ -735,6 +771,7 @@ function seededRandom(seed) {
 function pickSecretPlayer(forceRandom) {
   let pool = ALL_PLAYERS.filter(p => playerOverlapsEra(p, eraStart, eraEnd));
   if (negroLeagueMode) pool = pool.filter(p => p.isNegroLeague);
+  if (teamFilter) pool = pool.filter(p => currentFranchise(p.primaryTeam) === teamFilter);
   if (!pool.length) return null;
   if (!forceRandom && dailyMode) {
     const seed = todaySeed() ^ (eraStart * 31) ^ (eraEnd * 17) ^ (negroLeagueMode ? 999 : 0);
@@ -877,6 +914,7 @@ function thumbHtml(p, size) {
 function initGame(forceRandom) {
   eraStart = parseInt(document.getElementById('eraStart').value) || 1920;
   eraEnd   = parseInt(document.getElementById('eraEnd').value)   || 2025;
+  teamFilter = document.getElementById('teamFilter').value || null;
   difficulty = document.getElementById('diffSelect').value;
   secretPlayer = pickSecretPlayer(forceRandom);
   guesses = []; score = 101; hintsUsed = []; gameOver = false; won = false; acIndex = -1;
@@ -911,14 +949,15 @@ function initGame(forceRandom) {
 function updateEraIndicator() {
   const el = document.getElementById('eraIndicator');
   if (!el) return;
-  if (negroLeagueMode) { el.textContent = 'Negro Lg'; return; }
-  // Find active preset label
-  const active = document.querySelector('.era-preset.active-preset');
-  if (active && active.textContent) {
-    el.textContent = active.textContent.trim();
+  let label = '';
+  if (negroLeagueMode) {
+    label = 'Negro Lg';
   } else {
-    el.textContent = eraStart + '\u2013' + eraEnd;
+    const active = document.querySelector('.era-preset.active-preset');
+    label = (active && active.textContent) ? active.textContent.trim() : eraStart + '\u2013' + eraEnd;
   }
+  if (teamFilter) label += ' \u00b7 ' + abbr(teamFilter);
+  el.textContent = label;
 }
 
 function updateScoreDisplay() {
@@ -1392,6 +1431,12 @@ function checkChallengeParam() {
 
 // ── EVENTS ────────────────────────────────────────────────────────────────────
 document.getElementById('guessBtn').addEventListener('click', submitGuess);
+document.getElementById('teamFilter').addEventListener('change', function() {
+  teamFilter = this.value || null;
+  initGame(true);
+  updateEraIndicator();
+});
+
 document.getElementById('newGameBtn').addEventListener('click', () => { negroLeagueMode = false; initGame(true); });
 
 document.querySelectorAll('.era-preset').forEach(btn => {
