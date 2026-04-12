@@ -38,157 +38,52 @@
     color: var(--text-main);
     font-family: 'IBM Plex Sans', sans-serif;
     min-height: 100vh;
-    padding-top: 40px;
+    padding-top: 48px;
     background-image:
       radial-gradient(ellipse 80% 50% at 50% -10%, rgba(45,106,79,0.25) 0%, transparent 70%),
       repeating-linear-gradient(0deg, transparent, transparent 40px,
         rgba(255,255,255,0.012) 40px, rgba(255,255,255,0.012) 41px);
   }
 
-  header {
-    text-align: center;
-    padding: 2rem 1rem 1rem;
+  /* STICKY BAR */
+  .sticky-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+    background: var(--night);
     border-bottom: 1px solid var(--night-border);
-    position: relative;
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.35rem 1rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--text-dim);
+    flex-wrap: wrap;
   }
-
-  .logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(3rem, 8vw, 5rem);
-    letter-spacing: 0.15em; color: var(--chalk);
-    text-shadow: 0 0 40px rgba(82,183,136,0.4), 3px 3px 0 var(--green);
-    line-height: 1;
-  }
-
-  .tagline {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
-    color: var(--green-light); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.4rem;
-  }
-
-  .header-meta {
-    display: flex; justify-content: center; align-items: center;
-    gap: 1.25rem; margin-top: 1rem;
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--text-dim); flex-wrap: wrap;
-  }
-
-  .score-display { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--yellow); letter-spacing: 0.1em; }
-
-  .help-btn {
-    position: absolute; top: 1.2rem; right: 1.2rem;
-    width: 28px; height: 28px; border-radius: 50%;
+  .sticky-score-wrap { display: flex; align-items: baseline; gap: 0.25rem; }
+  .sticky-score { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--yellow); letter-spacing: 0.1em; line-height: 1; }
+  .sticky-divider { width: 1px; height: 20px; background: var(--night-border); flex-shrink: 0; }
+  .sticky-setting { display: flex; flex-direction: column; gap: 1px; }
+  .sticky-setting-val { font-size: 0.72rem; color: var(--text-main); line-height: 1.2; }
+  .sticky-setting-lbl { font-size: 0.58rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; line-height: 1; }
+  .sticky-spacer { flex: 1; }
+  .sticky-icon-btn {
+    width: 28px; height: 28px; border-radius: 5px;
     border: 1px solid var(--night-border); background: var(--night-card); color: var(--text-dim);
     font-family: 'IBM Plex Sans', sans-serif; font-size: 0.85rem; font-weight: 600;
     cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
   }
-  .help-btn:hover { border-color: var(--green-light); color: var(--green-light); }
-
-  /* MODE + DIFFICULTY TOGGLES */
-  .mode-toggle {
-    display: flex; align-items: center; gap: 0.5rem;
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
-    color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase;
-  }
-  .toggle-track {
-    width: 40px; height: 20px; background: var(--night-border);
-    border-radius: 10px; position: relative; cursor: pointer; transition: background 0.2s; flex-shrink: 0;
-  }
-  .toggle-track.on { background: var(--green); }
-  .toggle-thumb {
-    position: absolute; top: 3px; left: 3px; width: 14px; height: 14px;
-    background: var(--chalk); border-radius: 50%; transition: transform 0.2s;
-  }
-  .toggle-track.on .toggle-thumb { transform: translateX(20px); }
-  .mode-label-daily.active, .mode-label-unlim.active { color: var(--green-light); }
-
-  .diff-select {
-    background: var(--night-card); border: 1px solid var(--night-border);
-    border-radius: 4px; color: var(--text-dim);
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
-    letter-spacing: 0.08em; padding: 0.2rem 0.5rem; cursor: pointer;
-    text-transform: uppercase; appearance: none; -webkit-appearance: none;
-    outline: none; transition: border-color 0.15s;
-  }
-  .diff-select:hover, .diff-select:focus { border-color: var(--green-light); color: var(--green-light); }
-  .diff-select option { background: var(--night-card); color: var(--text-main); }
-
-  main { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
-
-  /* ERA PANEL */
-  .era-panel {
-    background: var(--night-card); border: 1px solid var(--night-border);
-    border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.25rem;
-  }
-  .era-filter-row {
-    display: flex; align-items: flex-start; gap: 1.25rem; flex-wrap: wrap; margin-bottom: 0.6rem;
-  }
-  .era-filter-group {
-    display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
-  }
-  .era-filter-label {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
-    text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); text-align: center;
-  }
-  .era-filter-control {
-    display: flex; align-items: center; gap: 0.35rem; height: 26px;
-  }
-  .era-filter-select {
-    background: var(--night); border: 1px solid var(--night-border); border-radius: 4px;
-    color: var(--text-main); font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
-    padding: 0 0.4rem; cursor: pointer; outline: none; transition: border-color 0.15s; height: 26px;
-  }
-  .era-filter-select:hover, .era-filter-select:focus { border-color: var(--green-light); }
-  .era-filter-select option { background: var(--night-card); }
-  .mode-toggle-compact {
-    display: flex; align-items: center; gap: 0.3rem;
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
-    color: var(--text-dim); text-transform: uppercase; height: 26px;
-  }
-  .mode-toggle-compact .toggle-track {
-    width: 32px; height: 18px;
-  }
-  .mode-toggle-compact .toggle-thumb {
-    width: 12px; height: 12px; top: 3px; left: 3px;
-  }
-  .mode-toggle-compact .toggle-track.on .toggle-thumb { transform: translateX(14px); }
-  .mode-toggle-compact .mode-label-daily.active,
-  .mode-toggle-compact .mode-label-unlim.active { color: var(--green-light); }
-  .era-top-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; flex-wrap: wrap; }
-  .era-inputs { display: flex; align-items: center; gap: 0.5rem; flex: 1; }
-  .era-inputs input[type=number] {
-    width: 72px; background: var(--night); border: 1px solid var(--night-border); border-radius: 4px;
-    color: var(--text-main); font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; padding: 0.35rem 0.4rem; text-align: center;
-  }
-  .era-inputs span { color: var(--text-dim); font-size: 0.85rem; }
-  .era-filter-row input[type=number] {
-    width: 68px; background: var(--night); border: 1px solid var(--night-border); border-radius: 4px;
-    color: var(--text-main); font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
-    padding: 0 0.4rem; text-align: center; height: 26px;
-    -moz-appearance: textfield;
-  }
-  .era-filter-row input[type=number]::-webkit-inner-spin-button,
-  .era-filter-row input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-  .era-presets { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
-  .era-preset {
-    background: transparent; border: 1px solid var(--night-border); border-radius: 4px; color: var(--text-dim);
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.06em;
-    padding: 0.22rem 0.55rem; cursor: pointer; transition: all 0.15s;
-  }
-  .era-preset:hover { border-color: var(--green-light); color: var(--green-light); }
-  .era-preset.active-preset { border-color: var(--green); color: var(--green-light); background: rgba(45,106,79,0.15); }
-  .era-action-row { display: flex; align-items: center; gap: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--night-border); }
-  .era-btn {
+  .sticky-icon-btn:hover { border-color: var(--green-light); color: var(--green-light); }
+  .sticky-icon-btn.active { border-color: var(--green-light); color: var(--green-light); background: rgba(82,183,136,0.1); }
+  .sticky-actions { display: flex; align-items: center; gap: 0.4rem; }
+  .sticky-new-btn {
     background: var(--green); border: none; border-radius: 4px; color: var(--chalk);
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em;
-    padding: 0.35rem 0.75rem; cursor: pointer; transition: background 0.15s; white-space: nowrap;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em;
+    padding: 0.28rem 0.65rem; cursor: pointer; transition: background 0.15s; white-space: nowrap;
   }
-  .era-btn:hover { background: var(--green-light); color: var(--night); }
-  .giveup-area { display: flex; align-items: center; gap: 0.4rem; margin-left: auto; }
-  .giveup-btn {
+  .sticky-new-btn:hover { background: var(--green-light); color: var(--night); }
+  .sticky-giveup-btn {
     background: transparent; border: 1px solid #444; border-radius: 4px; color: #777;
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; letter-spacing: 0.1em;
-    padding: 0.4rem 0.9rem; cursor: pointer; transition: all 0.15s;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em;
+    padding: 0.28rem 0.65rem; cursor: pointer; transition: all 0.15s; white-space: nowrap;
   }
-  .giveup-btn:hover { border-color: var(--red); color: var(--red); }
+  .sticky-giveup-btn:hover { border-color: var(--red); color: var(--red); }
   .giveup-confirm {
     display: none; gap: 0.4rem; align-items: center;
     font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--red);
@@ -196,20 +91,105 @@
   .giveup-confirm.visible { display: flex; }
   .giveup-confirm button {
     border: 1px solid currentColor; border-radius: 3px; background: transparent;
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; padding: 0.2rem 0.5rem; cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; padding: 0.15rem 0.45rem; cursor: pointer;
   }
   .giveup-yes { color: var(--red); }
   .giveup-yes:hover { background: var(--red); color: var(--night); }
   .giveup-no  { color: var(--text-dim); }
-  .giveup-no:hover  { background: var(--night-border); color: var(--chalk); }
+  .giveup-no:hover { background: var(--night-border); color: var(--chalk); }
 
-  .era-presets { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.6rem; }
+  main { max-width: 700px; margin: 0 auto; padding: 1rem 1rem 4rem; }
+
+  /* HEADER */
+  header {
+    text-align: center;
+    padding: 1.5rem 1rem 1rem;
+    border-bottom: 1px solid var(--night-border);
+  }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 5rem);
+    letter-spacing: 0.15em; color: var(--chalk);
+    text-shadow: 0 0 40px rgba(82,183,136,0.4), 3px 3px 0 var(--green);
+    line-height: 1;
+  }
+  .tagline {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
+    color: var(--green-light); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.4rem;
+  }
+
+  /* FILTER PANEL */
+  .filter-panel {
+    background: var(--night-card); border: 1px solid var(--night-border);
+    border-radius: 8px; margin-bottom: 1.25rem; overflow: hidden;
+    display: none;
+  }
+  .filter-panel.open { display: block; }
+  .filter-panel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.6rem 1rem; border-bottom: 1px solid var(--night-border);
+  }
+  .filter-panel-title {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+    text-transform: uppercase; letter-spacing: 0.15em; color: var(--green-light);
+  }
+  .filter-panel-close {
+    background: none; border: none; color: var(--text-dim); font-size: 1.1rem; cursor: pointer; line-height: 1;
+  }
+  .filter-panel-close:hover { color: var(--chalk); }
+  .filter-section { padding: 0.7rem 1rem; border-bottom: 1px solid var(--night-border); }
+  .filter-section:last-child { border-bottom: none; }
+  .filter-section-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem;
+    text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-dim); margin-bottom: 0.5rem;
+  }
+  .era-presets { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
   .era-preset {
     background: transparent; border: 1px solid var(--night-border); border-radius: 4px; color: var(--text-dim);
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.06em;
-    padding: 0.25rem 0.6rem; cursor: pointer; transition: all 0.15s;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.06em;
+    padding: 0.22rem 0.55rem; cursor: pointer; transition: all 0.15s;
   }
   .era-preset:hover { border-color: var(--green-light); color: var(--green-light); }
+  .era-preset.active-preset { border-color: var(--green); color: var(--green-light); background: rgba(45,106,79,0.15); }
+  .custom-era-row {
+    display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem;
+  }
+  .custom-era-row span { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--text-dim); }
+  .custom-era-row input[type=number] {
+    width: 64px; background: var(--night); border: 1px solid var(--night-border); border-radius: 4px;
+    color: var(--text-main); font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
+    padding: 0.25rem 0.4rem; text-align: center;
+    -moz-appearance: textfield;
+  }
+  .custom-era-row input[type=number]::-webkit-inner-spin-button,
+  .custom-era-row input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .era-apply-btn {
+    background: var(--green); border: none; border-radius: 4px; color: var(--chalk);
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.06em;
+    padding: 0.25rem 0.7rem; cursor: pointer; transition: background 0.15s;
+  }
+  .era-apply-btn:hover { background: var(--green-light); color: var(--night); }
+  .filter-row { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .filter-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .filter-group-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem;
+    text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-dim);
+  }
+  .filter-select {
+    background: var(--night); border: 1px solid var(--night-border); border-radius: 4px;
+    color: var(--text-main); font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
+    padding: 0.25rem 0.5rem; cursor: pointer; outline: none; transition: border-color 0.15s;
+  }
+  .filter-select:hover, .filter-select:focus { border-color: var(--green-light); }
+  .filter-select option { background: var(--night-card); }
+  .toggle-btn-group { display: flex; gap: 0.3rem; }
+  .toggle-btn {
+    background: transparent; border: 1px solid var(--night-border); border-radius: 4px;
+    color: var(--text-dim); font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.06em; padding: 0.22rem 0.6rem; cursor: pointer; transition: all 0.15s;
+  }
+  .toggle-btn:hover { border-color: var(--green-light); color: var(--green-light); }
+  .toggle-btn.active { border-color: var(--green); color: var(--green-light); background: rgba(45,106,79,0.15); }
 
   /* GUESS INPUT */
   .guess-area { position: relative; margin-bottom: 1rem; }
@@ -227,12 +207,6 @@
   }
   #guessBtn:hover { background: var(--green-light); color: var(--night); }
   #guessBtn:active { transform: scale(0.97); }
-  #randomBtn {
-    background: var(--night-card); border: 1px solid var(--night-border); border-radius: 6px; color: var(--text-dim);
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.06em;
-    padding: 0 0.75rem; cursor: pointer; transition: all 0.15s; white-space: nowrap;
-  }
-  #randomBtn:hover { border-color: var(--green-light); color: var(--green-light); }
 
   .autocomplete-list {
     position: absolute; top: 100%; left: 0; right: 130px;
@@ -254,14 +228,20 @@
   .hints-header { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-dim); margin-bottom: 0.4rem; }
   .hints-row { display: flex; gap: 0.35rem; flex-wrap: wrap; justify-content: flex-start; }
   .hint-btn {
-    background: var(--night-card); border: 1px solid var(--night-border); border-radius: 5px; color: var(--text-dim);
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em;
-    padding: 0.3rem 0.65rem; cursor: pointer; transition: all 0.15s; text-transform: uppercase;
-    flex: 1 1 auto; text-align: center; min-width: 52px;
+    background: var(--night-card); border: 1px solid var(--night-border); border-radius: 5px;
+    color: var(--text-dim); font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.06em; padding: 0.3rem 0.55rem 0.2rem; cursor: pointer; transition: all 0.15s;
+    text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 1px;
+    min-width: 44px;
   }
+  .hint-btn .hint-label { font-size: 0.65rem; line-height: 1.2; }
+  .hint-btn .hint-cost { font-size: 0.55rem; color: #555; line-height: 1; }
+  .hint-btn.cheap .hint-cost { color: var(--dirt-dark); }
   .hint-btn:hover:not(:disabled) { border-color: var(--dirt); color: var(--dirt); }
+  .hint-btn:hover:not(:disabled) .hint-cost { color: var(--dirt); }
   .hint-btn:disabled { opacity: 0.35; cursor: not-allowed; }
   .hint-btn.revealed { background: var(--dirt-dark); color: var(--chalk); border-color: var(--dirt); cursor: default; }
+  .hint-btn.revealed .hint-cost { color: var(--dirt); }
 
   .hint-display {
     background: var(--night-card); border: 1px solid var(--dirt-dark); border-radius: 6px;
@@ -277,7 +257,6 @@
 
   /* GUESS LOG */
   .guess-log { display: flex; flex-direction: column; gap: 0.75rem; }
-
   .guess-card {
     background: var(--night-card); border: 1px solid var(--night-border);
     border-radius: 8px; overflow: hidden; animation: slideIn 0.2s ease;
@@ -286,14 +265,12 @@
     from { opacity: 0; transform: translateY(-8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-
   .guess-main { display: flex; align-items: center; gap: 0.65rem; padding: 0.55rem 0.75rem; }
   .guess-num { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--text-dim); width: 1.2rem; text-align: right; flex-shrink: 0; }
   .guess-thumb { width: 36px; height: 36px; border-radius: 5px; object-fit: cover; flex-shrink: 0; background: var(--night-border); }
   .guess-thumb-placeholder { width: 36px; height: 36px; border-radius: 5px; flex-shrink: 0; background: var(--night-border); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: var(--text-dim); }
   .guess-name { font-size: 0.9rem; font-weight: 500; flex-shrink: 0; min-width: 100px; max-width: 155px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .guess-badges { display: flex; gap: 0.25rem; flex-wrap: wrap; flex: 1; }
-
   .badge {
     font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem;
     padding: 0.12rem 0.35rem; border-radius: 3px;
@@ -301,16 +278,12 @@
   }
   .badge.green { border-color: var(--green-light); color: var(--green-light); background: rgba(82,183,136,0.12); }
   .badge.yellow { border-color: var(--yellow); color: var(--yellow); background: rgba(244,196,48,0.1); }
-
   .sim-wrap { display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
-  .sim-bar-wrap { width: 60px; height: 4px; background: var(--night-border); border-radius: 2px; overflow: hidden; }
-  .sim-bar { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
   .sim-score { font-family: 'Bebas Neue', sans-serif; font-size: 1.35rem; letter-spacing: 0.05em; min-width: 3rem; text-align: right; }
   .score-hot  { color: #52b788; }
   .score-warm { color: #f4c430; }
   .score-cold { color: #e63946; }
   .score-zero { color: #555; }
-
   .sim-breakdown {
     padding: 0.35rem 0.75rem 0.45rem 3.5rem; border-top: 1px solid var(--night-border);
     display: flex; gap: 1.5rem; flex-wrap: wrap; background: rgba(0,0,0,0.12);
@@ -325,7 +298,6 @@
   .end-panel.visible { display: block; }
   .end-panel.won  { border: 2px solid var(--green-light); }
   .end-panel.lost { border: 2px solid #444; }
-
   .player-card { display: flex; gap: 1.25rem; align-items: flex-start; margin: 1.25rem 0; text-align: left; }
   .player-photo { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; flex-shrink: 0; border: 2px solid var(--night-border); background: var(--night-border); }
   .player-photo-placeholder { width: 80px; height: 80px; border-radius: 8px; flex-shrink: 0; background: var(--night-border); border: 2px solid var(--night-border); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: var(--text-dim); }
@@ -336,23 +308,19 @@
   .stat-chip { display: flex; flex-direction: column; align-items: center; gap: 0.1rem; min-width: 36px; }
   .stat-chip .sc-l { font-family: 'IBM Plex Mono', monospace; font-size: 0.56rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; text-align: center; }
   .stat-chip .sc-v { font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; color: var(--chalk); font-weight: 600; text-align: center; }
-
   .closest-guess {
     background: var(--night); border: 1px solid var(--night-border); border-radius: 6px;
-    padding: 0.6rem 1rem; margin: 0.75rem 0; text-align: left;
-    font-family: 'IBM Plex Mono', monospace;
+    padding: 0.6rem 1rem; margin: 0.75rem 0; text-align: left; font-family: 'IBM Plex Mono', monospace;
   }
   .closest-guess .cg-label { font-size: 0.62rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem; }
   .closest-guess .cg-row { display: flex; align-items: center; gap: 0.75rem; }
   .closest-guess .cg-name { font-size: 0.85rem; color: var(--text-main); flex: 1; }
   .closest-guess .cg-score { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; }
-
   .end-panel h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 0.1em; }
   .end-panel.won  h2 { color: var(--green-light); }
   .end-panel.lost h2 { color: #888; }
   .end-panel .final-score { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; color: var(--yellow); letter-spacing: 0.1em; }
   .end-panel .sub { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--text-dim); margin-top: 0.25rem; }
-
   .end-btns { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
   .share-btn { background: var(--green); border: none; border-radius: 6px; color: var(--chalk); font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; letter-spacing: 0.1em; padding: 0.6rem 1.25rem; cursor: pointer; transition: background 0.15s; }
   .share-btn:hover { background: var(--green-light); color: var(--night); }
@@ -373,15 +341,11 @@
   .venmo-link { display: inline-block; margin-top: 1rem; background: #3D95CE; color: white; font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; padding: 0.5rem 1.25rem; border-radius: 6px; text-decoration: none; transition: opacity 0.15s; }
   .venmo-link:hover { opacity: 0.85; }
 
-  .sticky-bar {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 600;
-    background: var(--night);
-    border-bottom: 1px solid var(--night-border);
-    display: flex; align-items: center; gap: 1rem;
-    padding: 0.4rem 1rem;
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--text-dim);
-  }
-  .sticky-score { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--yellow); letter-spacing: 0.1em; }
+  .hint-table { width: 100%; border-collapse: collapse; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; margin-top: 0.5rem; }
+  .hint-table th { text-align: left; color: var(--text-dim); font-weight: 400; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.2rem 0.5rem 0.2rem 0; border-bottom: 1px solid var(--night-border); }
+  .hint-table td { padding: 0.25rem 0.5rem 0.25rem 0; color: var(--text-main); border-bottom: 1px solid rgba(45,55,72,0.5); }
+  .hint-table td:not(:first-child) { text-align: center; color: var(--text-dim); }
+
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--night); }
   ::-webkit-scrollbar-thumb { background: var(--night-border); border-radius: 3px; }
@@ -389,59 +353,103 @@
 </head>
 <body>
 
-<header>
-  <div class="logo">SIMBALL</div>
-  <div class="tagline">Guess the player by similarity score</div>
-</header>
+<!-- STICKY BAR -->
+<div class="sticky-bar" id="stickyBar">
+  <div class="sticky-score-wrap">
+    <span class="sticky-score" id="stickyScore">101</span>
+    <span style="font-size:0.65rem;color:var(--text-dim)">pts</span>
+  </div>
+  <div class="sticky-divider"></div>
+  <div class="sticky-setting">
+    <div class="sticky-setting-val" id="stickyEra">Modern (1920&ndash;2025)</div>
+    <div class="sticky-setting-lbl">era</div>
+  </div>
+  <div class="sticky-divider"></div>
+  <div class="sticky-setting">
+    <div class="sticky-setting-val" id="stickyMode">Easy &middot; Unlim</div>
+    <div class="sticky-setting-lbl">mode</div>
+  </div>
+  <div id="stickyTeamWrap" style="display:none">
+    <div class="sticky-divider"></div>
+    <div class="sticky-setting">
+      <div class="sticky-setting-val" id="stickyTeam"></div>
+      <div class="sticky-setting-lbl">team</div>
+    </div>
+  </div>
+  <div class="sticky-spacer"></div>
+  <div class="sticky-actions">
+    <button class="sticky-new-btn" id="newGameBtn">&#8635; New</button>
+    <button class="sticky-giveup-btn" id="giveUpBtn">Give Up</button>
+    <div class="giveup-confirm" id="giveupConfirm">
+      Sure? <button class="giveup-yes" id="giveupYes">Yes</button>
+      <button class="giveup-no" id="giveupNo">No</button>
+    </div>
+    <button class="sticky-icon-btn" id="filterToggleBtn" title="Filters">&#9881;</button>
+    <button class="sticky-icon-btn" id="helpBtn" title="How to play">?</button>
+  </div>
+</div>
 
 <!-- HELP MODAL -->
 <div class="modal-overlay" id="helpModal">
   <div class="modal">
     <button class="modal-close" id="modalClose">&times;</button>
     <h2>How to Play</h2>
-    <p>A secret MLB player has been chosen. Guess any player by name and you will receive a similarity score (0-1000) comparing their career stats to the secret player. The higher the score, the more similar the careers. A score of 1000 means you found them.</p>
+    <p>A secret MLB player has been chosen. Guess any player by name and you will receive a similarity score (0&ndash;1000) comparing their career stats to the secret player. The higher the score, the more similar the careers. A score of 1000 means you found them.</p>
 
     <h3>Scoring</h3>
-    <p>You start with 101 points. Each guess costs 1 point. Score floors at 0 but you can keep guessing. A correct answer scores whatever points remain, so a perfect game (first guess, no hints) scores 100.</p>
+    <p>You start with 101 points. Each guess costs 1 point. Score floors at 0 but you can keep guessing. A correct answer scores whatever points remain &mdash; a perfect game (first guess, no hints) scores 100.</p>
 
     <h3>Hints</h3>
-    <p>Eight hints are available with escalating costs. The first hint is free, then 10, 20, 30, and 40 points for the next four, and the sixth is free again since you are already at 0. The hints match the badge order: POS (primary position), TEAM (primary team as 3-letter code), BORN (birth year), WAR (career WAR), HOME (birth country), INIT (initials), and HAND (handedness, e.g. BL/TR means bats left, throws right). The eighth hint, TOP 3, reveals the three most similar players in the pool for 25 points and is not available in Hard mode.</p>
+    <p>Eight hints are available. Costs are based on how hard each hint is to brute-force through guessing. Hints are ordered cheapest to most expensive:</p>
+    <table class="hint-table">
+      <thead><tr><th>Hint</th><th>Easy</th><th>Medium</th><th>Hard</th></tr></thead>
+      <tbody>
+        <tr><td>HOME &mdash; birth country</td><td>5</td><td>5</td><td>5</td></tr>
+        <tr><td>HAND &mdash; bats/throws</td><td>5</td><td>5</td><td>5</td></tr>
+        <tr><td>POS &mdash; primary position</td><td>10</td><td>15</td><td>15</td></tr>
+        <tr><td>INIT &mdash; initials</td><td>10</td><td>15</td><td>20</td></tr>
+        <tr><td>TEAM &mdash; primary team</td><td>15</td><td>20</td><td>30</td></tr>
+        <tr><td>WAR &mdash; career WAR</td><td>15</td><td>20</td><td>30</td></tr>
+        <tr><td>BORN &mdash; birth year</td><td>20</td><td>25</td><td>40</td></tr>
+        <tr><td>TOP 3 &mdash; 3 most similar players</td><td>30</td><td>40</td><td>N/A</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:0.6rem">Hard mode: max 2 hints, TOP 3 not available.</p>
 
     <h3>Difficulty</h3>
-    <p>Set in the game panel. Affects how much information each guess reveals:</p>
     <ul>
-      <li>Easy: all five badges shown per guess, plus Hot/Cold</li>
+      <li>Easy: all five badges shown per guess, plus Hot/Cold stat indicators</li>
       <li>Medium: position and birth year badges only, plus Hot/Cold</li>
-      <li>Hard: no badges, no Hot/Cold, hints capped at 2 (25 pts each), no TOP 3</li>
+      <li>Hard: no badges, no Hot/Cold, max 2 hints</li>
     </ul>
 
     <h3>Guess Badges</h3>
-    <p>Each guess shows up to five badges comparing your guess to the secret player. Green means exact or very close. Yellow means close. No color means far off.</p>
+    <p>Each guess shows up to five badges (Easy) or two (Medium) comparing your guess to the secret player. Green means exact or very close. Yellow means close.</p>
     <ul>
-      <li>POS: green if same primary position; yellow if the secret player has played 10+ games at the guessed position</li>
-      <li>TEAM: green if same franchise; yellow if same 2025 MLB division. Historical team names are mapped to their current franchise.</li>
+      <li>POS: green if same primary position; yellow if the secret player has played 10+ games there</li>
+      <li>TEAM: green if same franchise; yellow if same division</li>
       <li>BORN: green if exact birth year; yellow if within 5 years</li>
       <li>WAR: green if within 2.0; yellow if within 10.0</li>
       <li>HOME: green if same birth country</li>
     </ul>
 
     <h3>Hot / Cold</h3>
-    <p>Available in Easy and Medium. Each guess shows the stat most similar (Hot) and least similar (Cold) to the secret player, using the stats most meaningful for that player's role.</p>
+    <p>Available in Easy and Medium. Each guess shows the stat most similar (Hot) and least similar (Cold) to the secret player.</p>
 
     <h3>Cross-Role Guesses</h3>
     <p>Guessing a pitcher when the secret player is a position player (or vice versa) scores 0. Use it as a signal to switch sides.</p>
 
     <h3>Similarity Score</h3>
-    <p>The similarity score concept was created by Bill James and later adopted by Baseball Reference. Scores start at 1000 and are reduced based on differences in career stats. Position players are compared on G, AB, R, H, 2B, 3B, HR, RBI, BB, SO, SB, BA, and SLG. Pitchers on W, L, SV, IP, K, and ERA. Our scores may differ slightly from BBRef as their exact formula is proprietary. See the <a href="https://www.baseball-reference.com/about/similarity.shtml" target="_blank" rel="noopener" style="color:var(--green-light)">BBRef methodology page</a> for more. All stats as of Opening Day 2026.</p>
+    <p>The similarity score concept was created by Bill James and later adopted by Baseball Reference. Scores start at 1000 and are reduced based on differences in career stats. All stats as of Opening Day 2026. See the <a href="https://www.baseball-reference.com/about/similarity.shtml" target="_blank" rel="noopener" style="color:var(--green-light)">BBRef methodology page</a> for more.</p>
 
     <h3>Player Pool</h3>
-    <p>Position players with 500+ career games. Starting pitchers with 100+ starts (majority as starter). Relief pitchers with 300+ appearances (majority in relief). Shohei Ohtani and Babe Ruth each appear twice -- once as a pitcher, once as a position player.</p>
+    <p>Position players with 500+ career games. Starting pitchers with 100+ starts. Relief pitchers with 300+ appearances. Shohei Ohtani and Babe Ruth each appear twice &mdash; once as a pitcher, once as a position player.</p>
 
     <h3>Filters</h3>
-    <p>Years filters the secret player pool using each player's actual first and last MLB season -- a player is included if their career overlaps the range at all. Use the preset buttons or type custom years. Team limits the pool to players whose primary team maps to that franchise, including all historical names. Mode: Daily picks the same player for everyone each day; Unlimited picks randomly each game. The Negro Lg preset limits the pool to players who appeared for a recognized Negro League team.</p>
+    <p>Era filters the secret player pool by career overlap. Team limits the pool to players whose primary team maps to that franchise. Daily mode picks the same player for everyone each day; Unlimited picks randomly. The Negro Lg preset limits the pool to Negro League players.</p>
 
     <h3>Challenge a Friend</h3>
-    <p>After a game ends, use the Challenge a Friend button to pick any player and generate a shareable link. Your friend opens it and must guess that player in Unlimited mode.</p>
+    <p>After a game ends, use Challenge a Friend to pick any player and generate a shareable link.</p>
 
     <h3>Support SIMBALL</h3>
     <p>If you enjoy the game, feel free to buy me a hot dog!</p>
@@ -449,43 +457,72 @@
   </div>
 </div>
 
+<!-- CHALLENGE MODAL -->
+<div class="modal-overlay" id="challengeModal">
+  <div class="modal" style="max-width:420px">
+    <button class="modal-close" id="challengeModalClose">&times;</button>
+    <h2>Challenge a Friend</h2>
+    <p style="margin-bottom:1rem">Pick any player and send your friend a link. They will have to guess who it is.</p>
+    <div style="position:relative;margin-bottom:0.75rem">
+      <input type="text" id="challengeInput" placeholder="Type a player name..." autocomplete="off"
+        style="width:100%;background:var(--night);border:2px solid var(--night-border);border-radius:6px;color:var(--text-main);font-family:'IBM Plex Sans',sans-serif;font-size:0.95rem;padding:0.6rem 0.9rem;outline:none">
+      <div class="autocomplete-list" id="challengeAcList" style="right:0"></div>
+    </div>
+    <div id="challengeSelected" style="font-family:'IBM Plex Mono',monospace;font-size:0.8rem;color:var(--green-light);min-height:1.2rem;margin-bottom:0.75rem"></div>
+    <button id="generateChallengeBtn" class="share-btn" style="width:100%">Generate Link</button>
+    <div id="challengeLinkBox" style="display:none;margin-top:0.75rem">
+      <input id="challengeLinkInput" readonly
+        style="width:100%;background:var(--night);border:1px solid var(--night-border);border-radius:5px;color:var(--text-dim);font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:0.5rem 0.75rem;outline:none">
+      <button id="copyChallengeBtn" class="share-btn" style="width:100%;margin-top:0.5rem">Copy Link</button>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="logo">SIMBALL</div>
+  <div class="tagline">Guess the player by similarity score</div>
+</header>
+
 <main>
-  <div id="loadingMsg" class="no-data-msg">Loading player data...</div>
+  <div id="loadingMsg" style="font-family:'IBM Plex Mono',monospace;color:var(--text-dim);text-align:center;padding:2rem">Loading player data...</div>
   <div id="gameArea" style="display:none">
 
-    <!-- STICKY SCORE BAR -->
-    <div class="sticky-bar" id="stickyBar">
-      <span id="stickyEra" style="color:var(--green-light)"></span>
-      <span>Score: <span class="sticky-score" id="stickyScore">101</span></span>
-      <span id="stickyGuessCount">0 guesses</span>
-      <span id="stickyDiff" style="color:var(--text-dim)">Easy</span>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:0.4rem">
-        <button id="newGameBtn" style="background:var(--green);border:none;border-radius:4px;color:var(--chalk);font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.08em;padding:0.25rem 0.6rem;cursor:pointer">New Game</button>
-        <button id="giveUpBtn" style="background:transparent;border:1px solid #444;border-radius:4px;color:#777;font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.08em;padding:0.25rem 0.6rem;cursor:pointer">Give Up</button>
-        <div class="giveup-confirm" id="giveupConfirm" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--red)">
-          Sure? <button class="giveup-yes" id="giveupYes">Yes</button>
-          <button class="giveup-no" id="giveupNo">No</button>
-        </div>
-        <button class="help-btn" id="helpBtn" style="position:static;width:24px;height:24px;font-size:0.8rem">?</button>
+    <!-- FILTER PANEL -->
+    <div class="filter-panel" id="filterPanel">
+      <div class="filter-panel-header">
+        <div class="filter-panel-title">&#9881; Filters &amp; Settings</div>
+        <button class="filter-panel-close" id="filterCloseBtn">&times;</button>
       </div>
-    </div>
-
-    <div class="era-panel">
-      <!-- Row 1: filters -->
-      <div class="era-filter-row">
-        <div class="era-filter-group">
-          <span class="era-filter-label">Years</span>
-          <div class="era-filter-control">
-            <input type="number" id="eraStart" value="1920" min="1871" max="2025">
-            <span style="color:var(--text-dim);font-size:0.8rem">–</span>
-            <input type="number" id="eraEnd" value="2025" min="1871" max="2025">
-          </div>
+      <div class="filter-section">
+        <div class="filter-section-label">Era</div>
+        <div class="era-presets">
+          <button class="era-preset active-preset" data-start="1920" data-end="2025" data-label="Modern">Modern (1920&ndash;2025)</button>
+          <button class="era-preset" data-start="1871" data-end="2025" data-label="All Time">All Time (1871&ndash;2025)</button>
+          <button class="era-preset" data-start="1947" data-end="2025" data-label="Integration">Integration (1947&ndash;)</button>
+          <button class="era-preset" data-start="1969" data-end="2025" data-label="Division">Division (1969&ndash;)</button>
+          <button class="era-preset" data-start="1994" data-end="2025" data-label="Wild Card">Wild Card (1994&ndash;)</button>
+          <button class="era-preset" data-start="2015" data-end="2025" data-label="2015+">2015+</button>
+          <button class="era-preset" data-start="2025" data-end="2025" data-label="2025">2025</button>
+          <button class="era-preset" data-start="1990" data-end="1999" data-label="1990s">1990s</button>
+          <button class="era-preset" data-start="1980" data-end="1989" data-label="1980s">1980s</button>
+          <button class="era-preset" data-start="1970" data-end="1979" data-label="1970s">1970s</button>
+          <button class="era-preset" data-start="1871" data-end="1919" data-label="Deadball">Deadball (&ndash;1919)</button>
+          <button class="era-preset" data-negro="1" data-label="Negro Lg">Negro Lg</button>
         </div>
-        <div class="era-filter-group">
-          <span class="era-filter-label">Team</span>
-          <div class="era-filter-control">
-            <select id="teamFilter" class="era-filter-select">
-              <option value="">All</option>
+        <div class="custom-era-row">
+          <span>Custom:</span>
+          <input type="number" id="eraStart" value="1920" min="1871" max="2025">
+          <span>to</span>
+          <input type="number" id="eraEnd" value="2025" min="1871" max="2025">
+          <button class="era-apply-btn" id="eraApplyBtn">Apply</button>
+        </div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-row">
+          <div class="filter-group">
+            <div class="filter-group-label">Team</div>
+            <select class="filter-select" id="teamFilter">
+              <option value="">All teams</option>
               <option value="Arizona Diamondbacks">ARI</option>
               <option value="Atlanta Braves">ATL</option>
               <option value="Baltimore Orioles">BAL</option>
@@ -518,42 +555,22 @@
               <option value="Washington Nationals">WSH</option>
             </select>
           </div>
-        </div>
-        <div class="era-filter-group">
-          <span class="era-filter-label">Mode</span>
-          <div class="era-filter-control">
-            <div class="mode-toggle-compact">
-              <span class="mode-label-daily" id="labelDaily">Day</span>
-              <div class="toggle-track on" id="modeToggle"><div class="toggle-thumb"></div></div>
-              <span class="mode-label-unlim active" id="labelUnlim">Unlim</span>
+          <div class="filter-group">
+            <div class="filter-group-label">Difficulty</div>
+            <div class="toggle-btn-group" id="diffGroup">
+              <button class="toggle-btn active" data-diff="easy">Easy</button>
+              <button class="toggle-btn" data-diff="medium">Medium</button>
+              <button class="toggle-btn" data-diff="hard">Hard</button>
+            </div>
+          </div>
+          <div class="filter-group">
+            <div class="filter-group-label">Mode</div>
+            <div class="toggle-btn-group" id="modeGroup">
+              <button class="toggle-btn" data-mode="daily">Daily</button>
+              <button class="toggle-btn active" data-mode="unlimited">Unlimited</button>
             </div>
           </div>
         </div>
-        <div class="era-filter-group">
-          <span class="era-filter-label">Difficulty</span>
-          <div class="era-filter-control">
-            <select class="era-filter-select" id="diffSelect">
-              <option value="easy" selected>Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <!-- Row 2: presets -->
-      <div class="era-presets">
-        <button class="era-preset" data-start="1871" data-end="2025">All Time</button>
-        <button class="era-preset active-preset" data-start="1920" data-end="2025">Modern</button>
-        <button class="era-preset" data-start="1947" data-end="2025">Integration</button>
-        <button class="era-preset" data-start="1969" data-end="2025">Division</button>
-        <button class="era-preset" data-start="1994" data-end="2025">Wild Card</button>
-        <button class="era-preset" data-start="2015" data-end="2025">2015+</button>
-        <button class="era-preset" data-start="2025" data-end="2025">2025</button>
-        <button class="era-preset" data-start="1990" data-end="1999">1990s</button>
-        <button class="era-preset" data-start="1980" data-end="1989">1980s</button>
-        <button class="era-preset" data-start="1970" data-end="1979">1970s</button>
-        <button class="era-preset" data-negro="1">Negro Lg</button>
-        <button class="era-preset" data-start="1871" data-end="1919">Deadball</button>
       </div>
     </div>
 
@@ -583,19 +600,32 @@
 
     <!-- HINTS -->
     <div class="hints-section">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">
-        <div class="hints-header" id="hintsHeader">Hints</div>
-        <button id="challengeBtn" style="background:none;border:none;color:var(--dirt-dark);font-family:'IBM Plex Mono',monospace;font-size:0.62rem;cursor:pointer;letter-spacing:0.06em;padding:0" onmouseover="this.style.color='var(--dirt)'" onmouseout="this.style.color='var(--dirt-dark)'">&#127381; challenge</button>
-      </div>
+      <div class="hints-header" id="hintsHeader">Hints</div>
       <div class="hints-row" id="hintsRow">
-        <button class="hint-btn" id="hintPos"      data-hint="pos">POS</button>
-        <button class="hint-btn" id="hintTeam"     data-hint="team">TEAM</button>
-        <button class="hint-btn" id="hintYear"     data-hint="year">BORN</button>
-        <button class="hint-btn" id="hintWAR"      data-hint="war">WAR</button>
-        <button class="hint-btn" id="hintCountry"  data-hint="country">HOME</button>
-        <button class="hint-btn" id="hintInitials" data-hint="initials">INIT</button>
-        <button class="hint-btn" id="hintHand"     data-hint="hand">HAND</button>
-        <button class="hint-btn" id="hintTop3"     data-hint="top3">TOP 3</button>
+        <button class="hint-btn cheap" id="hintCountry" data-hint="country">
+          <span class="hint-label">HOME</span><span class="hint-cost" id="costCountry"></span>
+        </button>
+        <button class="hint-btn cheap" id="hintHand" data-hint="hand">
+          <span class="hint-label">HAND</span><span class="hint-cost" id="costHand"></span>
+        </button>
+        <button class="hint-btn" id="hintPos" data-hint="pos">
+          <span class="hint-label">POS</span><span class="hint-cost" id="costPos"></span>
+        </button>
+        <button class="hint-btn" id="hintInitials" data-hint="initials">
+          <span class="hint-label">INIT</span><span class="hint-cost" id="costInitials"></span>
+        </button>
+        <button class="hint-btn" id="hintTeam" data-hint="team">
+          <span class="hint-label">TEAM</span><span class="hint-cost" id="costTeam"></span>
+        </button>
+        <button class="hint-btn" id="hintWAR" data-hint="war">
+          <span class="hint-label">WAR</span><span class="hint-cost" id="costWar"></span>
+        </button>
+        <button class="hint-btn" id="hintYear" data-hint="year">
+          <span class="hint-label">BORN</span><span class="hint-cost" id="costYear"></span>
+        </button>
+        <button class="hint-btn" id="hintTop3" data-hint="top3">
+          <span class="hint-label">TOP 3</span><span class="hint-cost" id="costTop3"></span>
+        </button>
       </div>
       <div class="hint-display" id="hintDisplay"></div>
     </div>
@@ -604,7 +634,6 @@
     <div class="guess-log" id="guessLog"></div>
 
     <div style="text-align:center;margin-top:2rem;font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:#3a4556;letter-spacing:0.08em" id="lastUpdated"></div>
-
     <script>
       const d = new Date(document.lastModified);
       document.getElementById('lastUpdated').textContent =
@@ -613,27 +642,6 @@
 
   </div>
 </main>
-
-<!-- CHALLENGE MODAL -->
-<div class="modal-overlay" id="challengeModal">
-  <div class="modal" style="max-width:420px">
-    <button class="modal-close" id="challengeModalClose">&times;</button>
-    <h2>Challenge a Friend</h2>
-    <p style="margin-bottom:1rem">Pick any player and send your friend a link. They will have to guess who it is.</p>
-    <div style="position:relative;margin-bottom:0.75rem">
-      <input type="text" id="challengeInput" placeholder="Type a player name..." autocomplete="off"
-        style="width:100%;background:var(--night);border:2px solid var(--night-border);border-radius:6px;color:var(--text-main);font-family:'IBM Plex Sans',sans-serif;font-size:0.95rem;padding:0.6rem 0.9rem;outline:none">
-      <div class="autocomplete-list" id="challengeAcList" style="right:0"></div>
-    </div>
-    <div id="challengeSelected" style="font-family:'IBM Plex Mono',monospace;font-size:0.8rem;color:var(--green-light);min-height:1.2rem;margin-bottom:0.75rem"></div>
-    <button id="generateChallengeBtn" class="share-btn" style="width:100%">Generate Link</button>
-    <div id="challengeLinkBox" style="display:none;margin-top:0.75rem">
-      <input id="challengeLinkInput" readonly
-        style="width:100%;background:var(--night);border:1px solid var(--night-border);border-radius:5px;color:var(--text-dim);font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:0.5rem 0.75rem;outline:none">
-      <button id="copyChallengeBtn" class="share-btn" style="width:100%;margin-top:0.5rem">Copy Link</button>
-    </div>
-  </div>
-</div>
 
 <script>
 // ── FRANCHISE MAPPING ─────────────────────────────────────────────────────────
@@ -754,6 +762,17 @@ function fmtRate(val) {
   return (n >= 1 ? n.toFixed(3) : '.' + n.toFixed(3).split('.')[1]);
 }
 
+// ── HINT COST TABLE ───────────────────────────────────────────────────────────
+const HINT_COSTS = {
+  easy:   { country:5, hand:5, pos:10, initials:10, team:15, war:15, year:20, top3:30 },
+  medium: { country:5, hand:5, pos:15, initials:15, team:20, war:20, year:25, top3:40 },
+  hard:   { country:5, hand:5, pos:15, initials:20, team:30, war:30, year:40, top3:null },
+};
+
+function hintCost(key) {
+  return HINT_COSTS[difficulty][key] || 0;
+}
+
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let ALL_PLAYERS = [];
 let secretPlayer = null;
@@ -765,18 +784,10 @@ let won = false;
 let dailyMode = false;
 let difficulty = 'easy';
 let negroLeagueMode = false;
-let teamFilter = null; // null = all teams
+let teamFilter = null;
 let eraStart = 1920;
 let eraEnd = 2025;
 let acIndex = -1;
-
-// Hint cost schedule: escalating for easy/medium, flat 25 (max 2) for hard
-const HINT_COSTS_NORMAL = [0, 10, 20, 30, 40, 0];
-
-function hintCost(hintIndex) {
-  if (difficulty === 'hard') return 25;
-  return HINT_COSTS_NORMAL[Math.min(hintIndex, HINT_COSTS_NORMAL.length - 1)];
-}
 
 // ── LOAD ──────────────────────────────────────────────────────────────────────
 async function loadPlayers() {
@@ -785,6 +796,7 @@ async function loadPlayers() {
     ALL_PLAYERS = await resp.json();
     document.getElementById('loadingMsg').style.display = 'none';
     document.getElementById('gameArea').style.display = 'block';
+    updateHintCostDisplay();
     if (!checkChallengeParam()) initGame();
   } catch(e) {
     document.getElementById('loadingMsg').textContent = 'Could not load players.json.';
@@ -883,17 +895,11 @@ function scoreClass(s) {
   if (s >= 400) return 'score-warm';
   return 'score-cold';
 }
-function barColor(s) {
-  if (s >= 700) return '#52b788';
-  if (s >= 400) return '#f4c430';
-  return '#e63946';
-}
 
 // ── BADGES ────────────────────────────────────────────────────────────────────
 function buildBadges(guess, secret) {
   const all = [];
 
-  // POS
   if (guess.primaryPos === secret.primaryPos)
     all.push({ text: guess.primaryPos || '?', level: 'green' });
   else if (guess.primaryPos && secret.positionsPlayed && secret.positionsPlayed.includes(guess.primaryPos))
@@ -901,7 +907,6 @@ function buildBadges(guess, secret) {
   else
     all.push({ text: guess.primaryPos || '?', level: '' });
 
-  // TEAM
   const gt = guess.primaryTeam, st = secret.primaryTeam;
   if (gt && st && currentFranchise(gt) === currentFranchise(st))
     all.push({ text: abbr(gt), level: 'green' });
@@ -910,7 +915,6 @@ function buildBadges(guess, secret) {
   else
     all.push({ text: abbr(gt), level: '' });
 
-  // BORN
   if (guess.birthYear != null && secret.birthYear != null) {
     const diff = Math.abs(guess.birthYear - secret.birthYear);
     all.push({ text: String(guess.birthYear), level: diff === 0 ? 'green' : diff <= 5 ? 'yellow' : '' });
@@ -918,7 +922,6 @@ function buildBadges(guess, secret) {
     all.push({ text: String(guess.birthYear || '?'), level: '' });
   }
 
-  // WAR
   if (guess.WAR != null && secret.WAR != null) {
     const diff = Math.abs(Number(guess.WAR) - Number(secret.WAR));
     all.push({ text: 'WAR\u00a0' + Number(guess.WAR).toFixed(1), level: diff <= 2 ? 'green' : diff <= 10 ? 'yellow' : '' });
@@ -926,14 +929,12 @@ function buildBadges(guess, secret) {
     all.push({ text: 'WAR ?', level: '' });
   }
 
-  // HOME
   const gc = guess.birthCountry, sc2 = secret.birthCountry;
   all.push({ text: gc || '?', level: (gc && sc2 && gc === sc2) ? 'green' : '' });
 
-  // Filter by difficulty
-  if (difficulty === 'easy')   return all;           // all 5
-  if (difficulty === 'medium') return [all[0], all[2]]; // POS + BORN only
-  return [];                                           // hard: none
+  if (difficulty === 'easy')   return all;
+  if (difficulty === 'medium') return [all[0], all[2]];
+  return [];
 }
 
 // ── PHOTO ─────────────────────────────────────────────────────────────────────
@@ -952,12 +953,75 @@ function thumbHtml(p, size) {
   return '<div class="' + pcls + '">&#9918;</div>';
 }
 
+// ── STICKY BAR UPDATE ─────────────────────────────────────────────────────────
+function updateStickyBar() {
+  document.getElementById('stickyScore').textContent = Math.max(0, score);
+
+  let eraLabel;
+  if (negroLeagueMode) {
+    eraLabel = 'Negro Lg';
+  } else {
+    const active = document.querySelector('.era-preset.active-preset');
+    const label = active ? active.dataset.label : null;
+    if (label && label !== 'Custom') {
+      if (active.dataset.negro) {
+        eraLabel = 'Negro Lg';
+      } else {
+        eraLabel = label + ' (' + eraStart + '\u2013' + eraEnd + ')';
+      }
+    } else {
+      eraLabel = eraStart + '\u2013' + eraEnd;
+    }
+  }
+  document.getElementById('stickyEra').textContent = eraLabel;
+
+  const diffLabel = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+  const modeLabel = dailyMode ? 'Daily' : 'Unlim';
+  document.getElementById('stickyMode').textContent = diffLabel + ' \u00b7 ' + modeLabel;
+
+  const teamWrap = document.getElementById('stickyTeamWrap');
+  if (teamFilter) {
+    document.getElementById('stickyTeam').textContent = abbr(teamFilter);
+    teamWrap.style.display = '';
+  } else {
+    teamWrap.style.display = 'none';
+  }
+}
+
+// ── HINT COST DISPLAY ─────────────────────────────────────────────────────────
+function updateHintCostDisplay() {
+  const keys = ['country','hand','pos','initials','team','war','year','top3'];
+  keys.forEach(k => {
+    const el = document.getElementById('cost' + k.charAt(0).toUpperCase() + k.slice(1));
+    if (!el) return;
+    const cost = HINT_COSTS[difficulty][k];
+    el.textContent = cost != null ? '-' + cost : 'N/A';
+  });
+  // cheap class: HOME and HAND always cheap
+  document.querySelectorAll('.hint-btn').forEach(btn => {
+    const h = btn.dataset.hint;
+    if (h === 'country' || h === 'hand') btn.classList.add('cheap');
+    else btn.classList.remove('cheap');
+  });
+  updateHintsHeader();
+}
+
+function updateHintsHeader() {
+  const header = document.getElementById('hintsHeader');
+  if (difficulty === 'hard') {
+    const used = hintsUsed.length;
+    const remaining = 2 - used;
+    header.textContent = 'Hints \u2014 ' + remaining + ' remaining (max 2)';
+  } else {
+    header.textContent = 'Hints';
+  }
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────────
 function initGame(forceRandom) {
   eraStart = parseInt(document.getElementById('eraStart').value) || 1920;
   eraEnd   = parseInt(document.getElementById('eraEnd').value)   || 2025;
   teamFilter = document.getElementById('teamFilter').value || null;
-  difficulty = document.getElementById('diffSelect').value;
   secretPlayer = pickSecretPlayer(forceRandom);
   guesses = []; score = 101; hintsUsed = []; gameOver = false; won = false; acIndex = -1;
 
@@ -976,70 +1040,81 @@ function initGame(forceRandom) {
   document.getElementById('giveUpBtn').disabled    = false;
   document.getElementById('giveUpBtn').style.display = '';
   document.getElementById('giveupConfirm').classList.remove('visible');
-  updateScoreDisplay();
-  document.getElementById('stickyGuessCount').textContent = '0 guesses';
-  document.getElementById('stickyGuessCount').textContent = '0 guesses';
-  document.querySelectorAll('.hint-btn').forEach(b => { b.disabled = false; b.classList.remove('revealed'); });
+
+  document.querySelectorAll('.hint-btn').forEach(b => {
+    b.disabled = false;
+    b.classList.remove('revealed');
+  });
+  // TOP 3 hidden on hard
   document.getElementById('hintTop3').style.display = difficulty === 'hard' ? 'none' : '';
-  document.getElementById('hintHand').style.display = difficulty === 'hard' ? 'none' : '';
-  updateHintsUI();
+
+  updateHintCostDisplay();
+  updateStickyBar();
 
   if (!secretPlayer)
     document.getElementById('statusMsg').textContent = 'No players found for this range.';
-  updateEraIndicator();
 }
 
-function updateEraIndicator() {
-  let label = '';
-  if (negroLeagueMode) {
-    label = 'Negro Lg';
-  } else {
-    const active = document.querySelector('.era-preset.active-preset');
-    label = (active && active.textContent) ? active.textContent.trim() : eraStart + '\u2013' + eraEnd;
-  }
-  if (teamFilter) label += ' \u00b7 ' + abbr(teamFilter);
-  const el = document.getElementById('eraIndicator');
-  if (el) el.textContent = label;
-  const se = document.getElementById('stickyEra');
-  if (se) se.textContent = label;
-}
-
-function updateScoreDisplay() {
-  const s = Math.max(0, score);
-  document.getElementById('stickyScore').textContent = s;
-}
-
-function updateStickyGuessCount() {
-  const txt = guesses.length + ' guess' + (guesses.length !== 1 ? 'es' : '');
-  document.getElementById('stickyGuessCount').textContent = txt;
-  document.getElementById('stickyDiff').textContent = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
-}
-
-// Sticky bar always visible - no scroll trigger needed
-
-function updateHintsUI() {
-  const header = document.getElementById('hintsHeader');
-  if (difficulty === 'hard') {
-    header.textContent = 'Hints (2 max, 25 pts each)';
-  } else {
-    const nextCost = hintCost(hintsUsed.length);
-    header.textContent = nextCost === 0 ? 'Hints (next hint free)' : 'Hints (next: -' + nextCost + ' pts)';
-  }
-}
-
-// ── DIFFICULTY CHANGE ─────────────────────────────────────────────────────────
-document.getElementById('diffSelect').addEventListener('change', function() {
-  difficulty = this.value;
-  initGame(!dailyMode);
+// ── FILTER PANEL TOGGLE ───────────────────────────────────────────────────────
+document.getElementById('filterToggleBtn').addEventListener('click', function() {
+  const panel = document.getElementById('filterPanel');
+  const isOpen = panel.classList.toggle('open');
+  this.classList.toggle('active', isOpen);
+});
+document.getElementById('filterCloseBtn').addEventListener('click', function() {
+  document.getElementById('filterPanel').classList.remove('open');
+  document.getElementById('filterToggleBtn').classList.remove('active');
 });
 
-// ── MODE TOGGLE ───────────────────────────────────────────────────────────────
-document.getElementById('modeToggle').addEventListener('click', function() {
-  dailyMode = !dailyMode;
-  this.classList.toggle('on', !dailyMode);
-  document.getElementById('labelDaily').classList.toggle('active',  dailyMode);
-  document.getElementById('labelUnlim').classList.toggle('active', !dailyMode);
+// ── ERA PRESETS ───────────────────────────────────────────────────────────────
+document.querySelectorAll('.era-preset').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.era-preset').forEach(b => b.classList.remove('active-preset'));
+    this.classList.add('active-preset');
+    if (this.dataset.negro) {
+      negroLeagueMode = true;
+      document.getElementById('eraStart').value = 1871;
+      document.getElementById('eraEnd').value   = 1948;
+    } else {
+      negroLeagueMode = false;
+      document.getElementById('eraStart').value = this.dataset.start;
+      document.getElementById('eraEnd').value   = this.dataset.end;
+    }
+    initGame(true);
+  });
+});
+
+// ── CUSTOM ERA APPLY ──────────────────────────────────────────────────────────
+document.getElementById('eraApplyBtn').addEventListener('click', function() {
+  document.querySelectorAll('.era-preset').forEach(b => b.classList.remove('active-preset'));
+  negroLeagueMode = false;
   initGame(true);
+});
+
+// ── TEAM FILTER ───────────────────────────────────────────────────────────────
+document.getElementById('teamFilter').addEventListener('change', function() {
+  teamFilter = this.value || null;
+  initGame(true);
+});
+
+// ── DIFFICULTY TOGGLES ────────────────────────────────────────────────────────
+document.querySelectorAll('#diffGroup .toggle-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('#diffGroup .toggle-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    difficulty = this.dataset.diff;
+    initGame(!dailyMode);
+  });
+});
+
+// ── MODE TOGGLES ──────────────────────────────────────────────────────────────
+document.querySelectorAll('#modeGroup .toggle-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('#modeGroup .toggle-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    dailyMode = this.dataset.mode === 'daily';
+    initGame(true);
+  });
 });
 
 // ── HELP MODAL ────────────────────────────────────────────────────────────────
@@ -1119,10 +1194,9 @@ function submitGuess() {
   guesses.push({ player: guessPlayer, det, guessNum: guesses.length + 1 });
 
   score = Math.max(0, score - 1);
-  updateScoreDisplay();
+  updateStickyBar();
   guesses.sort((a, b) => b.det.score - a.det.score);
   renderGuessLog();
-  updateStickyGuessCount();
 
   input.value = ''; delete input.dataset.selectedId;
   if (det.score === 1000) endGame(true);
@@ -1136,8 +1210,6 @@ function renderGuessLog() {
     card.className = 'guess-card';
     const sim = g.det.score;
     const cls = scoreClass(sim);
-    const bc  = barColor(sim);
-    const pct = sim / 10;
     const badges = buildBadges(g.player, secretPlayer);
     const badgeHtml = badges.map(b =>
       '<span class="badge ' + b.level + '">' + b.text + '</span>'
@@ -1166,7 +1238,6 @@ function renderGuessLog() {
 }
 
 // ── HINTS ─────────────────────────────────────────────────────────────────────
-// ── TOP 3 SIMILAR ─────────────────────────────────────────────────────────────
 function getTop3(secret) {
   return ALL_PLAYERS
     .filter(p => p.id !== secret.id && !p.id.endsWith('_alt'))
@@ -1179,13 +1250,13 @@ function getTop3(secret) {
 }
 
 const HINT_DEFS = [
-  { key: 'pos',      label: 'POS',   val: p => p.primaryPos || 'Unknown' },
-  { key: 'year',     label: 'BORN',  val: p => p.birthYear  || 'Unknown' },
-  { key: 'war',      label: 'WAR',   val: p => p.WAR != null ? Number(p.WAR).toFixed(1) : 'N/A' },
-  { key: 'team',     label: 'TEAM',  val: p => abbr(p.primaryTeam) || 'Unknown' },
   { key: 'country',  label: 'HOME',  val: p => p.birthCountry || 'Unknown' },
-  { key: 'initials', label: 'INIT',  val: p => p.name.trim().split(/\s+/).map(w => w[0].toUpperCase()).join('') },
   { key: 'hand',     label: 'HAND',  val: p => p.handedness || 'Unknown' },
+  { key: 'pos',      label: 'POS',   val: p => p.primaryPos || 'Unknown' },
+  { key: 'initials', label: 'INIT',  val: p => p.name.trim().split(/\s+/).map(w => w[0].toUpperCase()).join('') },
+  { key: 'team',     label: 'TEAM',  val: p => abbr(p.primaryTeam) || 'Unknown' },
+  { key: 'war',      label: 'WAR',   val: p => p.WAR != null ? Number(p.WAR).toFixed(1) : 'N/A' },
+  { key: 'year',     label: 'BORN',  val: p => p.birthYear  || 'Unknown' },
   { key: 'top3',     label: 'TOP 3', val: p => getTop3(p) },
 ];
 
@@ -1196,16 +1267,18 @@ document.querySelectorAll('.hint-btn').forEach(btn => {
     if (hintsUsed.some(h => h.key === hint)) return;
     if (difficulty === 'hard' && hintsUsed.length >= 2) return;
     if (difficulty === 'hard' && hint === 'top3') return;
-    const cost = hint === 'top3' ? 25 : hintCost(hintsUsed.length);
+
+    const cost = hintCost(hint);
     hintsUsed.push({ key: hint, cost });
     score = Math.max(0, score - cost);
-    updateScoreDisplay();
+    updateStickyBar();
     this.classList.add('revealed');
     this.disabled = true;
+
     if (difficulty === 'hard' && hintsUsed.length >= 2) {
       document.querySelectorAll('.hint-btn:not(.revealed)').forEach(b => b.disabled = true);
     }
-    updateHintsUI();
+    updateHintsHeader();
     renderHints();
   });
 });
@@ -1263,9 +1336,8 @@ function buildPlayerCard(p) {
     '</div></div>';
 }
 
-// ── CLOSEST GUESS BOX ────────────────────────────────────────────────────────
+// ── CLOSEST GUESS BOX ─────────────────────────────────────────────────────────
 function buildClosestGuessBox() {
-  // Find best non-winning guess
   const nonWinning = guesses.filter(g => g.det.score < 1000 && !g.det.crossRole);
   if (!nonWinning.length) return '';
   const best = nonWinning.reduce((a, b) => b.det.score > a.det.score ? b : a);
@@ -1313,7 +1385,7 @@ function endGame(didWin, gaveUp) {
   }
 }
 
-// ── GIVE UP (inline) ──────────────────────────────────────────────────────────
+// ── GIVE UP ───────────────────────────────────────────────────────────────────
 document.getElementById('giveUpBtn').addEventListener('click', function() {
   if (gameOver || !secretPlayer) return;
   this.style.display = 'none';
@@ -1327,29 +1399,29 @@ document.getElementById('giveupYes').addEventListener('click', function() {
   endGame(false, true);
 });
 
+// ── NEW GAME ──────────────────────────────────────────────────────────────────
+document.getElementById('newGameBtn').addEventListener('click', () => {
+  negroLeagueMode = false;
+  initGame(true);
+});
+
 // ── SHARE ─────────────────────────────────────────────────────────────────────
 document.getElementById('shareBtn').addEventListener('click', function() {
   const d = new Date();
   const dateStr = d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
   const diffLabel = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
 
-  // Era label
-  let eraLabel = 'Modern';
-  document.querySelectorAll('.era-preset.active-preset').forEach(b => {
-    if (b.textContent) eraLabel = b.textContent.trim();
-  });
+  let eraLabel = document.getElementById('stickyEra').textContent;
 
   const scoreStr = won ? Math.max(0, score) + '/100' : 'X/100';
   const hintStr  = hintsUsed.length > 0 ? ' \u00b7 ' + hintsUsed.length + ' hint' + (hintsUsed.length !== 1 ? 's' : '') : '';
 
-  // Emoji grid - one per guess in order, 10 per row
   const ordered = [...guesses].sort((a,b) => a.guessNum - b.guessNum);
   const emojis = ordered.map(g => {
     const s = g.det.score;
     return s === 1000 ? '\uD83D\uDFE2' : s >= 700 ? '\uD83D\uDFE1' : s >= 400 ? '\uD83D\uDFE0' : '\uD83D\uDD34';
   });
 
-  // Chunk into rows of 10
   const rows = [];
   for (let i = 0; i < emojis.length; i += 10) rows.push(emojis.slice(i, i+10).join(''));
 
@@ -1368,7 +1440,7 @@ document.getElementById('shareBtn').addEventListener('click', function() {
   });
 });
 
-// ── CHALLENGE ────────────────────────────────────────────────────────────────
+// ── CHALLENGE ─────────────────────────────────────────────────────────────────
 const BASE_URL = 'https://djsimons.github.io/simball/';
 
 function encodeChallenge(id) { return btoa(id).replace(/=/g, ''); }
@@ -1389,7 +1461,6 @@ function openChallengeModal() {
   setTimeout(() => document.getElementById('challengeInput').focus(), 100);
 }
 
-document.getElementById('challengeBtn').addEventListener('click', openChallengeModal);
 document.getElementById('challengeFromEndBtn').addEventListener('click', openChallengeModal);
 document.getElementById('challengeModalClose').addEventListener('click', () => document.getElementById('challengeModal').classList.remove('visible'));
 document.getElementById('challengeModal').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('visible'); });
@@ -1451,45 +1522,22 @@ function checkChallengeParam() {
   const player = ALL_PLAYERS.find(p => p.id === playerId);
   if (!player) return false;
   dailyMode = false;
-  document.getElementById('modeToggle').classList.add('on');
-  document.getElementById('labelDaily').classList.remove('active');
-  document.getElementById('labelUnlim').classList.add('active');
+  document.querySelectorAll('#modeGroup .toggle-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.mode === 'unlimited');
+  });
   secretPlayer = player;
   guesses = []; score = 101; hintsUsed = []; gameOver = false; won = false; acIndex = -1;
-  difficulty = document.getElementById('diffSelect').value;
+  difficulty = 'easy';
+  document.querySelectorAll('#diffGroup .toggle-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.diff === 'easy');
+  });
   document.getElementById('statusMsg').textContent = 'A friend challenged you! Good luck.';
   document.getElementById('statusMsg').style.color = 'var(--green-light)';
-  updateHintsUI();
+  updateHintCostDisplay();
+  updateStickyBar();
+  document.getElementById('hintTop3').style.display = '';
   return true;
 }
-
-// ── EVENTS ────────────────────────────────────────────────────────────────────
-document.getElementById('guessBtn').addEventListener('click', submitGuess);
-document.getElementById('teamFilter').addEventListener('change', function() {
-  teamFilter = this.value || null;
-  initGame(true);
-  updateEraIndicator();
-});
-
-document.getElementById('newGameBtn').addEventListener('click', () => { negroLeagueMode = false; initGame(true); });
-
-document.querySelectorAll('.era-preset').forEach(btn => {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.era-preset').forEach(b => b.classList.remove('active-preset'));
-    this.classList.add('active-preset');
-    if (this.dataset.negro) {
-      negroLeagueMode = true;
-      document.getElementById('eraStart').value = 1871;
-      document.getElementById('eraEnd').value   = 1948;
-    } else {
-      negroLeagueMode = false;
-      document.getElementById('eraStart').value = this.dataset.start;
-      document.getElementById('eraEnd').value   = this.dataset.end;
-    }
-    initGame(true);
-    updateEraIndicator();
-  });
-});
 
 loadPlayers();
 </script>
