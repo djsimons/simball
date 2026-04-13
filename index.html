@@ -53,7 +53,7 @@
     display: flex; align-items: center; gap: 0.6rem;
     padding: 0.35rem 1rem;
     font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--text-dim);
-    flex-wrap: wrap;
+    overflow: visible;
   }
   .sticky-score-wrap { display: flex; align-items: baseline; gap: 0.25rem; }
   .sticky-score { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--yellow); letter-spacing: 0.1em; line-height: 1; }
@@ -62,6 +62,17 @@
   .sticky-setting-val { font-size: 0.72rem; color: var(--text-main); line-height: 1.2; }
   .sticky-setting-lbl { font-size: 0.58rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; line-height: 1; }
   .sticky-spacer { flex: 1; }
+  /* Logo centered absolutely so it doesn't affect flex layout */
+  .sticky-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem; letter-spacing: 0.15em; color: var(--chalk);
+    text-shadow: 1px 1px 0 var(--green);
+    line-height: 1; opacity: 0; pointer-events: none;
+    position: absolute; left: 50%; transform: translateX(-50%);
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
+  }
+  .sticky-logo.visible { opacity: 1; }
   .sticky-icon-btn {
     width: 28px; height: 28px; border-radius: 5px;
     border: 1px solid var(--night-border); background: var(--night-card); color: var(--text-dim);
@@ -71,7 +82,7 @@
   }
   .sticky-icon-btn:hover { border-color: var(--green-light); color: var(--green-light); }
   .sticky-icon-btn.active { border-color: var(--green-light); color: var(--green-light); background: rgba(82,183,136,0.1); }
-  .sticky-actions { display: flex; align-items: center; gap: 0.4rem; }
+  .sticky-actions { display: flex; align-items: center; gap: 0.4rem; position: relative; }
   .sticky-new-btn {
     background: var(--green); border: none; border-radius: 4px; color: var(--chalk);
     font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em;
@@ -87,6 +98,9 @@
   .giveup-confirm {
     display: none; gap: 0.4rem; align-items: center;
     font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--red);
+    position: absolute; right: 100%; margin-right: 0.4rem; white-space: nowrap;
+    background: var(--night); border: 1px solid var(--night-border);
+    border-radius: 5px; padding: 0.2rem 0.6rem;
   }
   .giveup-confirm.visible { display: flex; }
   .giveup-confirm button {
@@ -105,6 +119,7 @@
     text-align: center;
     padding: 1.5rem 1rem 1rem;
     border-bottom: 1px solid var(--night-border);
+    transition: padding 0.3s ease;
   }
   .logo {
     font-family: 'Bebas Neue', sans-serif;
@@ -112,11 +127,14 @@
     letter-spacing: 0.15em; color: var(--chalk);
     text-shadow: 0 0 40px rgba(82,183,136,0.4), 3px 3px 0 var(--green);
     line-height: 1;
+    transition: font-size 0.3s ease, opacity 0.3s ease, max-height 0.3s ease;
   }
   .tagline {
     font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
     color: var(--green-light); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.4rem;
+    transition: opacity 0.25s ease, max-height 0.3s ease;
   }
+  /* Sticky logo handled in sticky bar CSS above */
 
   /* FILTER PANEL */
   .filter-panel {
@@ -147,10 +165,17 @@
   .era-preset {
     background: transparent; border: 1px solid var(--night-border); border-radius: 4px; color: var(--text-dim);
     font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.06em;
-    padding: 0.22rem 0.55rem; cursor: pointer; transition: all 0.15s;
+    padding: 0.3rem 0.55rem; cursor: pointer; transition: all 0.15s;
+    display: flex; flex-direction: column; align-items: center;
   }
   .era-preset:hover { border-color: var(--green-light); color: var(--green-light); }
   .era-preset.active-preset { border-color: var(--green); color: var(--green-light); background: rgba(45,106,79,0.15); }
+  .era-preset-years {
+    display: block; font-size: 0.55rem; color: var(--text-dim); letter-spacing: 0.04em;
+    margin-top: 1px; line-height: 1;
+  }
+  .era-preset:hover .era-preset-years { color: var(--green-pale); }
+  .era-preset.active-preset .era-preset-years { color: var(--green-pale); }
   .custom-era-row {
     display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem;
   }
@@ -194,22 +219,31 @@
   /* GUESS INPUT */
   .guess-area { position: relative; margin-bottom: 1rem; }
   .guess-input-wrap { display: flex; gap: 0.5rem; }
+  .guess-input-inner { position: relative; flex: 1; }
   #guessInput {
-    flex: 1; background: var(--night-card); border: 2px solid var(--night-border); border-radius: 6px;
+    width: 100%; background: var(--night-card); border: 2px solid var(--night-border); border-radius: 6px;
     color: var(--text-main); font-family: 'IBM Plex Sans', sans-serif; font-size: 1rem;
-    padding: 0.65rem 1rem; outline: none; transition: border-color 0.15s;
+    padding: 0.65rem 2.6rem 0.65rem 1rem; outline: none; transition: border-color 0.15s;
   }
   #guessInput:focus { border-color: var(--green-light); }
+  #diceBtn {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    background: transparent; border: none; border-radius: 4px;
+    color: var(--text-dim); padding: 4px; cursor: pointer; transition: color 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #diceBtn:hover { color: var(--dirt); }
+  #diceBtn:active { color: var(--dirt); opacity: 0.7; }
   #guessBtn {
     background: var(--green); border: none; border-radius: 6px; color: var(--chalk);
     font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.1em;
-    padding: 0 1.5rem; cursor: pointer; transition: background 0.15s, transform 0.1s;
+    padding: 0 1.5rem; cursor: pointer; transition: background 0.15s, transform 0.1s; flex-shrink: 0;
   }
   #guessBtn:hover { background: var(--green-light); color: var(--night); }
   #guessBtn:active { transform: scale(0.97); }
 
   .autocomplete-list {
-    position: absolute; top: 100%; left: 0; right: 130px;
+    position: absolute; top: 100%; left: 0; right: 0;
     background: var(--night-card); border: 1px solid var(--green-light);
     border-top: none; border-radius: 0 0 6px 6px; z-index: 100; max-height: 220px; overflow-y: auto;
   }
@@ -255,6 +289,15 @@
 
   .status-msg { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--red); min-height: 1.2rem; margin-bottom: 0.5rem; padding-left: 0.25rem; }
 
+  /* GUESS LOG SORT */
+  .sort-btn {
+    background: transparent; border: 1px solid var(--night-border); border-radius: 4px;
+    color: var(--text-dim); font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.06em; padding: 0.18rem 0.5rem; cursor: pointer; transition: all 0.15s;
+  }
+  .sort-btn:hover { border-color: var(--green-light); color: var(--green-light); }
+  .sort-btn.active { border-color: var(--green); color: var(--green-light); background: rgba(45,106,79,0.15); }
+
   /* GUESS LOG */
   .guess-log { display: flex; flex-direction: column; gap: 0.75rem; }
   .guess-card {
@@ -298,13 +341,13 @@
   .end-panel.visible { display: block; }
   .end-panel.won  { border: 2px solid var(--green-light); }
   .end-panel.lost { border: 2px solid #444; }
-  .player-card { display: flex; gap: 1.25rem; align-items: flex-start; margin: 1.25rem 0; text-align: left; }
-  .player-photo { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; flex-shrink: 0; border: 2px solid var(--night-border); background: var(--night-border); }
-  .player-photo-placeholder { width: 80px; height: 80px; border-radius: 8px; flex-shrink: 0; background: var(--night-border); border: 2px solid var(--night-border); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: var(--text-dim); }
-  .player-card-info { flex: 1; }
-  .player-card-name { font-size: 1.15rem; font-weight: 600; color: var(--chalk); margin-bottom: 0.3rem; }
-  .player-card-meta { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.5rem; }
-  .player-card-stats { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: flex-start; }
+  .player-card { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; margin: 1.25rem 0; text-align: center; }
+  .player-photo { width: 90px; height: 90px; border-radius: 8px; object-fit: cover; border: 2px solid var(--night-border); background: var(--night-border); }
+  .player-photo-placeholder { width: 90px; height: 90px; border-radius: 8px; background: var(--night-border); border: 2px solid var(--night-border); display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--text-dim); }
+  .player-card-info { width: 100%; }
+  .player-card-name { font-size: 1.2rem; font-weight: 600; color: var(--chalk); margin-bottom: 0.3rem; }
+  .player-card-meta { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.6rem; }
+  .player-card-stats { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; }
   .stat-chip { display: flex; flex-direction: column; align-items: center; gap: 0.1rem; min-width: 36px; }
   .stat-chip .sc-l { font-family: 'IBM Plex Mono', monospace; font-size: 0.56rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; text-align: center; }
   .stat-chip .sc-v { font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; color: var(--chalk); font-weight: 600; text-align: center; }
@@ -355,35 +398,33 @@
 
 <!-- STICKY BAR -->
 <div class="sticky-bar" id="stickyBar">
+  <div class="sticky-logo" id="stickyLogo">SIMBALL</div>
   <div class="sticky-score-wrap">
     <span class="sticky-score" id="stickyScore">101</span>
     <span style="font-size:0.65rem;color:var(--text-dim)">pts</span>
   </div>
   <div class="sticky-divider"></div>
   <div class="sticky-setting">
-    <div class="sticky-setting-val" id="stickyEra">Modern (1920&ndash;2025)</div>
-    <div class="sticky-setting-lbl">era</div>
+    <div class="sticky-setting-val" id="stickyEra" style="line-height:1.1"></div>
   </div>
   <div class="sticky-divider"></div>
   <div class="sticky-setting">
     <div class="sticky-setting-val" id="stickyMode">Easy &middot; Unlim</div>
     <div class="sticky-setting-lbl">mode</div>
   </div>
-  <div id="stickyTeamWrap" style="display:none">
-    <div class="sticky-divider"></div>
-    <div class="sticky-setting">
-      <div class="sticky-setting-val" id="stickyTeam"></div>
-      <div class="sticky-setting-lbl">team</div>
-    </div>
+  <div class="sticky-divider"></div>
+  <div class="sticky-setting">
+    <div class="sticky-setting-val" id="stickyTeam">All</div>
+    <div class="sticky-setting-lbl">franch</div>
   </div>
   <div class="sticky-spacer"></div>
   <div class="sticky-actions">
-    <button class="sticky-new-btn" id="newGameBtn">&#8635; New</button>
     <button class="sticky-giveup-btn" id="giveUpBtn">Give Up</button>
     <div class="giveup-confirm" id="giveupConfirm">
       Sure? <button class="giveup-yes" id="giveupYes">Yes</button>
       <button class="giveup-no" id="giveupNo">No</button>
     </div>
+    <button class="sticky-new-btn" id="newGameBtn">&#8635; New</button>
     <button class="sticky-icon-btn" id="filterToggleBtn" title="Filters">&#9881;</button>
     <button class="sticky-icon-btn" id="helpBtn" title="How to play">?</button>
   </div>
@@ -394,13 +435,37 @@
   <div class="modal">
     <button class="modal-close" id="modalClose">&times;</button>
     <h2>How to Play</h2>
-    <p>A secret MLB player has been chosen. Guess any player by name and you will receive a similarity score (0&ndash;1000) comparing their career stats to the secret player. The higher the score, the more similar the careers. A score of 1000 means you found them.</p>
+    <p>A secret MLB player has been chosen. Guess any player by name to receive a similarity score (0&ndash;1000) comparing their career stats to the secret player. Higher score = more similar careers. A score of 1000 means you found them.</p>
 
     <h3>Scoring</h3>
-    <p>You start with 101 points. Each guess costs 1 point. Score floors at 0 but you can keep guessing. A correct answer scores whatever points remain &mdash; a perfect game (first guess, no hints) scores 100.</p>
+    <p>You start with 101 points. Each guess costs 1 point. Score floors at 0 but you can keep guessing. A correct answer scores whatever points remain &mdash; a perfect game (1 guess, no hints) scores 100.</p>
+
+    <h3>Difficulty</h3>
+    <p>Difficulty controls how much information each guess reveals. <strong>It does not change the player pool</strong> &mdash; Easy, Medium, and Hard all draw from the same set of players. Hard is not harder players, it is a harder guessing process.</p>
+    <ul>
+      <li><strong>Easy:</strong> each guess shows 5 badges (position, franchise, birth year, WAR, country) plus Hot/Cold stat indicators. Up to 8 hints available.</li>
+      <li><strong>Medium:</strong> each guess shows 2 badges (position and birth year) plus Hot/Cold. Up to 8 hints available at higher cost.</li>
+      <li><strong>Hard:</strong> no badges, no Hot/Cold. Maximum 2 hints. TOP 3 hint not available.</li>
+    </ul>
+
+    <h3>Guess Badges (Easy &amp; Medium)</h3>
+    <p>Green = exact match or very close. Yellow = close. Grey = far off.</p>
+    <ul>
+      <li>POS: green if same primary position; yellow if secret player has played 10+ games at that position</li>
+      <li>FRANCH: green if same franchise (historical names mapped to current); yellow if same division</li>
+      <li>BORN: green if exact birth year; yellow if within 5 years</li>
+      <li>WAR: green if within 2.0 career WAR; yellow if within 10.0</li>
+      <li>HOME: green if same birth country</li>
+    </ul>
+
+    <h3>Hot / Cold (Easy &amp; Medium)</h3>
+    <p>Each guess shows the single stat most similar to the secret player (Hot, shown in green) and least similar (Cold, shown in red). Stats used depend on whether the player is a hitter or pitcher.</p>
+
+    <h3>Cross-Role Guesses</h3>
+    <p>If you guess a pitcher and the secret player is a position player (or vice versa), the score will show as 0 and the card will be labeled "Wrong role" to let you know why. Use it as a free signal to switch sides.</p>
 
     <h3>Hints</h3>
-    <p>Eight hints are available. Costs are based on how hard each hint is to brute-force through guessing. Hints are ordered cheapest to most expensive:</p>
+    <p>Hints are priced based on how many guesses it would take to brute-force the same information. Cheaper hints give less unique info; expensive hints would take many guesses to figure out on your own.</p>
     <table class="hint-table">
       <thead><tr><th>Hint</th><th>Easy</th><th>Medium</th><th>Hard</th></tr></thead>
       <tbody>
@@ -408,52 +473,39 @@
         <tr><td>HAND &mdash; bats/throws</td><td>5</td><td>5</td><td>5</td></tr>
         <tr><td>POS &mdash; primary position</td><td>10</td><td>15</td><td>15</td></tr>
         <tr><td>INIT &mdash; initials</td><td>10</td><td>15</td><td>20</td></tr>
-        <tr><td>TEAM &mdash; primary team</td><td>15</td><td>20</td><td>30</td></tr>
+        <tr><td>FRANCH &mdash; franchise (abbr.)</td><td>15</td><td>20</td><td>30</td></tr>
         <tr><td>WAR &mdash; career WAR</td><td>15</td><td>20</td><td>30</td></tr>
         <tr><td>BORN &mdash; birth year</td><td>20</td><td>25</td><td>40</td></tr>
         <tr><td>TOP 3 &mdash; 3 most similar players</td><td>30</td><td>40</td><td>N/A</td></tr>
       </tbody>
     </table>
-    <p style="margin-top:0.6rem">Hard mode: max 2 hints, TOP 3 not available.</p>
-
-    <h3>Difficulty</h3>
-    <ul>
-      <li>Easy: all five badges shown per guess, plus Hot/Cold stat indicators</li>
-      <li>Medium: position and birth year badges only, plus Hot/Cold</li>
-      <li>Hard: no badges, no Hot/Cold, max 2 hints</li>
-    </ul>
-
-    <h3>Guess Badges</h3>
-    <p>Each guess shows up to five badges (Easy) or two (Medium) comparing your guess to the secret player. Green means exact or very close. Yellow means close.</p>
-    <ul>
-      <li>POS: green if same primary position; yellow if the secret player has played 10+ games there</li>
-      <li>TEAM: green if same franchise; yellow if same division</li>
-      <li>BORN: green if exact birth year; yellow if within 5 years</li>
-      <li>WAR: green if within 2.0; yellow if within 10.0</li>
-      <li>HOME: green if same birth country</li>
-    </ul>
-
-    <h3>Hot / Cold</h3>
-    <p>Available in Easy and Medium. Each guess shows the stat most similar (Hot) and least similar (Cold) to the secret player.</p>
-
-    <h3>Cross-Role Guesses</h3>
-    <p>Guessing a pitcher when the secret player is a position player (or vice versa) scores 0. Use it as a signal to switch sides.</p>
+    <p style="margin-top:0.6rem;font-size:0.82rem;color:var(--text-dim)">Hard mode: max 2 hints of your choice, TOP 3 not available.</p>
 
     <h3>Similarity Score</h3>
-    <p>The similarity score concept was created by Bill James and later adopted by Baseball Reference. Scores start at 1000 and are reduced based on differences in career stats. All stats as of Opening Day 2026. See the <a href="https://www.baseball-reference.com/about/similarity.shtml" target="_blank" rel="noopener" style="color:var(--green-light)">BBRef methodology page</a> for more.</p>
+    <p>Based on the similarity score method created by Bill James and used by Baseball Reference. Scores start at 1000 and are reduced by differences in career stats. Position players are compared on counting stats (G, AB, R, H, 2B, 3B, HR, RBI, BB, SO, SB) and rate stats (BA, OBP, SLG). Pitchers are compared on W, L, SV, IP, K, BB, and ERA. All stats as of Opening Day 2026.</p>
 
     <h3>Player Pool</h3>
-    <p>Position players with 500+ career games. Starting pitchers with 100+ starts. Relief pitchers with 300+ appearances. Shohei Ohtani and Babe Ruth each appear twice &mdash; once as a pitcher, once as a position player.</p>
+    <p>Position players with 500+ career games. Starting pitchers with 100+ career starts (majority as starter). Relief pitchers with 300+ appearances (majority in relief). Shohei Ohtani and Babe Ruth each appear twice &mdash; once as a pitcher and once as a position player.</p>
 
-    <h3>Filters</h3>
-    <p>Era filters the secret player pool by career overlap. Team limits the pool to players whose primary team maps to that franchise. Daily mode picks the same player for everyone each day; Unlimited picks randomly. The Negro Lg preset limits the pool to Negro League players.</p>
+    <h3>Era Filter</h3>
+    <p>Filters the secret player pool by career overlap &mdash; a player is included if any part of their career falls within the selected range. Use presets or enter custom years. The Negro Lg preset limits the pool to players from recognized Negro League franchises (careers 1920&ndash;1948).</p>
+
+    <h3>Franchise Filter</h3>
+    <p>Limits the secret player pool to players whose primary franchise matches the selection. Historical team names are mapped to their current franchise (e.g. Brooklyn Dodgers = Los Angeles Dodgers, Montreal Expos = Washington Nationals).</p>
+
+    <h3>Daily vs. Unlimited</h3>
+    <p>Daily mode picks the same secret player for everyone on a given day, seeded by date and era. Unlimited picks a new random player each game.</p>
 
     <h3>Challenge a Friend</h3>
-    <p>After a game ends, use Challenge a Friend to pick any player and generate a shareable link.</p>
+    <p>After any game ends, tap Challenge a Friend to pick any player and generate a shareable link. Your friend opens the link and must guess that player.</p>
 
     <h3>Support SIMBALL</h3>
     <p>If you enjoy the game, feel free to buy me a hot dog!</p>
     <a class="venmo-link" href="https://venmo.com/u/dj-simons" target="_blank" rel="noopener">@dj-simons on Venmo</a>
+
+    <h3>Report a Bug</h3>
+    <p>See a wrong stat, a missing player, or something broken? Let me know.</p>
+    <a class="venmo-link" href="mailto:XXX@XXX.com?subject=SIMBALL bug report" style="background:#2d3748;margin-top:0.5rem">&#9993; Report a bug</a>
   </div>
 </div>
 
@@ -493,69 +545,68 @@
         <div class="filter-panel-title">&#9881; Filters &amp; Settings</div>
         <button class="filter-panel-close" id="filterCloseBtn">&times;</button>
       </div>
-      <div class="filter-section">
+      <div class="filter-section" style="text-align:center">
         <div class="filter-section-label">Era</div>
-        <div class="era-presets">
-          <button class="era-preset active-preset" data-start="1920" data-end="2025" data-label="Modern">Modern (1920&ndash;2025)</button>
-          <button class="era-preset" data-start="1871" data-end="2025" data-label="All Time">All Time (1871&ndash;2025)</button>
-          <button class="era-preset" data-start="1947" data-end="2025" data-label="Integration">Integration (1947&ndash;)</button>
-          <button class="era-preset" data-start="1969" data-end="2025" data-label="Division">Division (1969&ndash;)</button>
-          <button class="era-preset" data-start="1994" data-end="2025" data-label="Wild Card">Wild Card (1994&ndash;)</button>
-          <button class="era-preset" data-start="2015" data-end="2025" data-label="2015+">2015+</button>
-          <button class="era-preset" data-start="2025" data-end="2025" data-label="2025">2025</button>
-          <button class="era-preset" data-start="1990" data-end="1999" data-label="1990s">1990s</button>
-          <button class="era-preset" data-start="1980" data-end="1989" data-label="1980s">1980s</button>
-          <button class="era-preset" data-start="1970" data-end="1979" data-label="1970s">1970s</button>
-          <button class="era-preset" data-start="1871" data-end="1919" data-label="Deadball">Deadball (&ndash;1919)</button>
-          <button class="era-preset" data-negro="1" data-label="Negro Lg">Negro Lg</button>
+        <div class="era-presets" style="justify-content:center">
+          <button class="era-preset active-preset" data-start="1920" data-end="2025" data-label="Modern">Modern<span class="era-preset-years">1920&ndash;2025</span></button>
+          <button class="era-preset" data-start="1871" data-end="2025" data-label="All Time">All Time<span class="era-preset-years">1871&ndash;2025</span></button>
+          <button class="era-preset" data-start="1947" data-end="2025" data-label="Integration">Integration<span class="era-preset-years">1947&ndash;</span></button>
+          <button class="era-preset" data-start="1969" data-end="2025" data-label="Division">Division<span class="era-preset-years">1969&ndash;</span></button>
+          <button class="era-preset" data-start="1994" data-end="2025" data-label="Wild Card">Wild Card<span class="era-preset-years">1994&ndash;</span></button>
+          <button class="era-preset" data-start="2015" data-end="2025" data-label="2015+">2015+<span class="era-preset-years">2015&ndash;2025</span></button>
+          <button class="era-preset" data-start="2025" data-end="2025" data-label="Active">Active<span class="era-preset-years">2025 only</span></button>
+          <button class="era-preset" data-start="1990" data-end="1999" data-label="1990s">1990s<span class="era-preset-years">1990&ndash;1999</span></button>
+          <button class="era-preset" data-start="1980" data-end="1989" data-label="1980s">1980s<span class="era-preset-years">1980&ndash;1989</span></button>
+          <button class="era-preset" data-start="1970" data-end="1979" data-label="1970s">1970s<span class="era-preset-years">1970&ndash;1979</span></button>
+          <button class="era-preset" data-start="1871" data-end="1919" data-label="Deadball">Deadball<span class="era-preset-years">&ndash;1919</span></button>
+          <button class="era-preset" data-negro="1" data-label="Negro Lg">Negro Lg<span class="era-preset-years">1920&ndash;1948</span></button>
         </div>
-        <div class="custom-era-row">
+        <div class="custom-era-row" style="justify-content:center">
           <span>Custom:</span>
           <input type="number" id="eraStart" value="1920" min="1871" max="2025">
           <span>to</span>
           <input type="number" id="eraEnd" value="2025" min="1871" max="2025">
-          <button class="era-apply-btn" id="eraApplyBtn">Apply</button>
         </div>
       </div>
-      <div class="filter-section">
-        <div class="filter-row">
-          <div class="filter-group">
-            <div class="filter-group-label">Team</div>
-            <select class="filter-select" id="teamFilter">
-              <option value="">All teams</option>
-              <option value="Arizona Diamondbacks">ARI</option>
-              <option value="Atlanta Braves">ATL</option>
-              <option value="Baltimore Orioles">BAL</option>
-              <option value="Boston Red Sox">BOS</option>
-              <option value="Chicago Cubs">CHC</option>
-              <option value="Chicago White Sox">CWS</option>
-              <option value="Cincinnati Reds">CIN</option>
-              <option value="Cleveland Guardians">CLE</option>
-              <option value="Colorado Rockies">COL</option>
-              <option value="Detroit Tigers">DET</option>
-              <option value="Houston Astros">HOU</option>
-              <option value="Kansas City Royals">KC</option>
-              <option value="Los Angeles Angels">LAA</option>
-              <option value="Los Angeles Dodgers">LAD</option>
-              <option value="Miami Marlins">MIA</option>
-              <option value="Milwaukee Brewers">MIL</option>
-              <option value="Minnesota Twins">MIN</option>
-              <option value="New York Mets">NYM</option>
-              <option value="New York Yankees">NYY</option>
-              <option value="Oakland Athletics">OAK</option>
-              <option value="Philadelphia Phillies">PHI</option>
-              <option value="Pittsburgh Pirates">PIT</option>
-              <option value="San Diego Padres">SD</option>
-              <option value="San Francisco Giants">SF</option>
-              <option value="Seattle Mariners">SEA</option>
-              <option value="St. Louis Cardinals">STL</option>
-              <option value="Tampa Bay Rays">TB</option>
-              <option value="Texas Rangers">TEX</option>
-              <option value="Toronto Blue Jays">TOR</option>
-              <option value="Washington Nationals">WSH</option>
-            </select>
-          </div>
-          <div class="filter-group">
+      <div class="filter-section" style="text-align:center">
+        <div class="filter-section-label">Franchise</div>
+        <select class="filter-select" id="teamFilter" style="margin:0 auto;display:block">
+          <option value="">All franchises</option>
+          <option value="Arizona Diamondbacks">Arizona Diamondbacks</option>
+          <option value="Atlanta Braves">Atlanta Braves</option>
+          <option value="Baltimore Orioles">Baltimore Orioles</option>
+          <option value="Boston Red Sox">Boston Red Sox</option>
+          <option value="Chicago Cubs">Chicago Cubs</option>
+          <option value="Chicago White Sox">Chicago White Sox</option>
+          <option value="Cincinnati Reds">Cincinnati Reds</option>
+          <option value="Cleveland Guardians">Cleveland Guardians</option>
+          <option value="Colorado Rockies">Colorado Rockies</option>
+          <option value="Detroit Tigers">Detroit Tigers</option>
+          <option value="Houston Astros">Houston Astros</option>
+          <option value="Kansas City Royals">Kansas City Royals</option>
+          <option value="Los Angeles Angels">Los Angeles Angels</option>
+          <option value="Los Angeles Dodgers">Los Angeles Dodgers</option>
+          <option value="Miami Marlins">Miami Marlins</option>
+          <option value="Milwaukee Brewers">Milwaukee Brewers</option>
+          <option value="Minnesota Twins">Minnesota Twins</option>
+          <option value="New York Mets">New York Mets</option>
+          <option value="New York Yankees">New York Yankees</option>
+          <option value="Oakland Athletics">Oakland Athletics</option>
+          <option value="Philadelphia Phillies">Philadelphia Phillies</option>
+          <option value="Pittsburgh Pirates">Pittsburgh Pirates</option>
+          <option value="San Diego Padres">San Diego Padres</option>
+          <option value="San Francisco Giants">San Francisco Giants</option>
+          <option value="Seattle Mariners">Seattle Mariners</option>
+          <option value="St. Louis Cardinals">St. Louis Cardinals</option>
+          <option value="Tampa Bay Rays">Tampa Bay Rays</option>
+          <option value="Texas Rangers">Texas Rangers</option>
+          <option value="Toronto Blue Jays">Toronto Blue Jays</option>
+          <option value="Washington Nationals">Washington Nationals</option>
+        </select>
+      </div>
+      <div class="filter-section" style="text-align:center">
+        <div class="filter-row" style="justify-content:center">
+          <div class="filter-group" style="align-items:center">
             <div class="filter-group-label">Difficulty</div>
             <div class="toggle-btn-group" id="diffGroup">
               <button class="toggle-btn active" data-diff="easy">Easy</button>
@@ -563,13 +614,17 @@
               <button class="toggle-btn" data-diff="hard">Hard</button>
             </div>
           </div>
-          <div class="filter-group">
+          <div class="filter-group" style="align-items:center">
             <div class="filter-group-label">Mode</div>
             <div class="toggle-btn-group" id="modeGroup">
               <button class="toggle-btn" data-mode="daily">Daily</button>
               <button class="toggle-btn active" data-mode="unlimited">Unlimited</button>
             </div>
           </div>
+        </div>
+        <div style="text-align:center;margin-top:0.75rem;padding-top:0.65rem;border-top:1px solid var(--night-border)">
+          <button id="setDefaultBtn" style="background:transparent;border:1px solid var(--night-border);border-radius:4px;color:var(--text-dim);font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.08em;padding:0.3rem 0.85rem;cursor:pointer;transition:all 0.15s">Save as default settings</button>
+          <div id="defaultSavedMsg" style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--green-light);margin-top:0.35rem;min-height:0.9rem;opacity:0;transition:opacity 0.3s"></div>
         </div>
       </div>
     </div>
@@ -590,17 +645,32 @@
     <!-- GUESS INPUT -->
     <div class="guess-area" id="guessArea">
       <div class="guess-input-wrap">
-        <input type="text" id="guessInput" placeholder="Type a player name..." autocomplete="off">
+        <div class="guess-input-inner">
+          <input type="text" id="guessInput" placeholder="Type a player name..." autocomplete="off">
+          <button id="diceBtn" title="Random guess from eligible pool">
+            <svg width="17" height="17" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block">
+              <rect x="1" y="1" width="16" height="16" rx="3" ry="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              <circle cx="5.5" cy="5.5" r="1.4" fill="currentColor"/>
+              <circle cx="12.5" cy="5.5" r="1.4" fill="currentColor"/>
+              <circle cx="9" cy="9" r="1.4" fill="currentColor"/>
+              <circle cx="5.5" cy="12.5" r="1.4" fill="currentColor"/>
+              <circle cx="12.5" cy="12.5" r="1.4" fill="currentColor"/>
+            </svg>
+          </button>
+          <div class="autocomplete-list" id="acList"></div>
+        </div>
         <button id="guessBtn">Guess</button>
       </div>
-      <div class="autocomplete-list" id="acList"></div>
     </div>
 
     <div class="status-msg" id="statusMsg"></div>
 
     <!-- HINTS -->
     <div class="hints-section">
-      <div class="hints-header" id="hintsHeader">Hints</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">
+        <div class="hints-header" id="hintsHeader">Hints</div>
+        <button id="challengeBtn" style="background:none;border:none;color:var(--dirt-dark);font-family:'IBM Plex Mono',monospace;font-size:0.62rem;cursor:pointer;letter-spacing:0.06em;padding:0" onmouseover="this.style.color='var(--dirt)'" onmouseout="this.style.color='var(--dirt-dark)'">&#127381; challenge</button>
+      </div>
       <div class="hints-row" id="hintsRow">
         <button class="hint-btn cheap" id="hintCountry" data-hint="country">
           <span class="hint-label">HOME</span><span class="hint-cost" id="costCountry"></span>
@@ -615,7 +685,7 @@
           <span class="hint-label">INIT</span><span class="hint-cost" id="costInitials"></span>
         </button>
         <button class="hint-btn" id="hintTeam" data-hint="team">
-          <span class="hint-label">TEAM</span><span class="hint-cost" id="costTeam"></span>
+          <span class="hint-label">FRANCH</span><span class="hint-cost" id="costTeam"></span>
         </button>
         <button class="hint-btn" id="hintWAR" data-hint="war">
           <span class="hint-label">WAR</span><span class="hint-cost" id="costWar"></span>
@@ -631,6 +701,13 @@
     </div>
 
     <!-- GUESS LOG -->
+    <div id="guessLogHeader" style="display:none;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-dim)" id="guessCountLabel">0 guesses</span>
+      <div style="display:flex;gap:0.25rem">
+        <button class="sort-btn active" id="sortByScore" title="Sort by similarity score">Best first</button>
+        <button class="sort-btn" id="sortByOrder" title="Sort by guess order">Guess order</button>
+      </div>
+    </div>
     <div class="guess-log" id="guessLog"></div>
 
     <div style="text-align:center;margin-top:2rem;font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:#3a4556;letter-spacing:0.08em" id="lastUpdated"></div>
@@ -788,6 +865,7 @@ let teamFilter = null;
 let eraStart = 1920;
 let eraEnd = 2025;
 let acIndex = -1;
+let sortMode = 'score'; // 'score' or 'order'
 
 // ── LOAD ──────────────────────────────────────────────────────────────────────
 async function loadPlayers() {
@@ -957,35 +1035,25 @@ function thumbHtml(p, size) {
 function updateStickyBar() {
   document.getElementById('stickyScore').textContent = Math.max(0, score);
 
-  let eraLabel;
+  const eraEl = document.getElementById('stickyEra');
   if (negroLeagueMode) {
-    eraLabel = 'Negro Lg';
+    eraEl.innerHTML = 'Negro Lg<span style="display:block;font-size:0.58rem;color:var(--text-dim);line-height:1">1920\u20131948</span>';
   } else {
     const active = document.querySelector('.era-preset.active-preset');
     const label = active ? active.dataset.label : null;
-    if (label && label !== 'Custom') {
-      if (active.dataset.negro) {
-        eraLabel = 'Negro Lg';
-      } else {
-        eraLabel = label + ' (' + eraStart + '\u2013' + eraEnd + ')';
-      }
+    if (label && !active.dataset.negro) {
+      const yearsStr = eraStart === eraEnd ? String(eraStart) : eraStart + '\u2013' + eraEnd;
+      eraEl.innerHTML = label + '<span style="display:block;font-size:0.58rem;color:var(--text-dim);line-height:1">' + yearsStr + '</span>';
     } else {
-      eraLabel = eraStart + '\u2013' + eraEnd;
+      eraEl.textContent = eraStart + '\u2013' + eraEnd;
     }
   }
-  document.getElementById('stickyEra').textContent = eraLabel;
 
   const diffLabel = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
   const modeLabel = dailyMode ? 'Daily' : 'Unlim';
   document.getElementById('stickyMode').textContent = diffLabel + ' \u00b7 ' + modeLabel;
 
-  const teamWrap = document.getElementById('stickyTeamWrap');
-  if (teamFilter) {
-    document.getElementById('stickyTeam').textContent = abbr(teamFilter);
-    teamWrap.style.display = '';
-  } else {
-    teamWrap.style.display = 'none';
-  }
+  document.getElementById('stickyTeam').textContent = teamFilter ? abbr(teamFilter) : 'All';
 }
 
 // ── HINT COST DISPLAY ─────────────────────────────────────────────────────────
@@ -1021,7 +1089,6 @@ function updateHintsHeader() {
 function initGame(forceRandom) {
   eraStart = parseInt(document.getElementById('eraStart').value) || 1920;
   eraEnd   = parseInt(document.getElementById('eraEnd').value)   || 2025;
-  teamFilter = document.getElementById('teamFilter').value || null;
   secretPlayer = pickSecretPlayer(forceRandom);
   guesses = []; score = 101; hintsUsed = []; gameOver = false; won = false; acIndex = -1;
 
@@ -1037,9 +1104,15 @@ function initGame(forceRandom) {
   document.getElementById('guessArea').style.display = 'block';
   document.getElementById('guessInput').disabled   = false;
   document.getElementById('guessBtn').disabled     = false;
+  document.getElementById('diceBtn').disabled      = false;
   document.getElementById('giveUpBtn').disabled    = false;
   document.getElementById('giveUpBtn').style.display = '';
   document.getElementById('giveupConfirm').classList.remove('visible');
+  const hdr = document.getElementById('guessLogHeader');
+  if (hdr) hdr.style.display = 'none';
+  sortMode = 'score';
+  document.getElementById('sortByScore').classList.add('active');
+  document.getElementById('sortByOrder').classList.remove('active');
 
   document.querySelectorAll('.hint-btn').forEach(b => {
     b.disabled = false;
@@ -1084,17 +1157,33 @@ document.querySelectorAll('.era-preset').forEach(btn => {
   });
 });
 
-// ── CUSTOM ERA APPLY ──────────────────────────────────────────────────────────
-document.getElementById('eraApplyBtn').addEventListener('click', function() {
+// ── CUSTOM ERA AUTO-APPLY ─────────────────────────────────────────────────────
+function applyCustomEra() {
   document.querySelectorAll('.era-preset').forEach(b => b.classList.remove('active-preset'));
   negroLeagueMode = false;
   initGame(true);
-});
+}
+document.getElementById('eraStart').addEventListener('change', applyCustomEra);
+document.getElementById('eraEnd').addEventListener('change', applyCustomEra);
+document.getElementById('eraStart').addEventListener('blur', applyCustomEra);
+document.getElementById('eraEnd').addEventListener('blur', applyCustomEra);
 
-// ── TEAM FILTER ───────────────────────────────────────────────────────────────
+// ── TEAM FILTER SELECT ────────────────────────────────────────────────────────
 document.getElementById('teamFilter').addEventListener('change', function() {
   teamFilter = this.value || null;
   initGame(true);
+});
+
+// ── CLICK OUTSIDE FILTER PANEL ────────────────────────────────────────────────
+document.addEventListener('click', function(e) {
+  const panel = document.getElementById('filterPanel');
+  const toggleBtn = document.getElementById('filterToggleBtn');
+  if (panel.classList.contains('open') &&
+      !panel.contains(e.target) &&
+      e.target !== toggleBtn && !toggleBtn.contains(e.target)) {
+    panel.classList.remove('open');
+    toggleBtn.classList.remove('active');
+  }
 });
 
 // ── DIFFICULTY TOGGLES ────────────────────────────────────────────────────────
@@ -1162,8 +1251,13 @@ document.getElementById('guessInput').addEventListener('keydown', function(e) {
     e.preventDefault();
     acIndex = Math.max(acIndex - 1, -1);
     items.forEach((el, i) => el.classList.toggle('active', i === acIndex));
-  } else if (e.key === 'Enter') { submitGuess(); }
-  else if (e.key === 'Escape') { list.innerHTML = ''; }
+  } else if (e.key === 'Enter') {
+    // If no selection yet but exactly one AC result, auto-select it
+    if (!this.dataset.selectedId && list._matches && list._matches.length === 1) {
+      selectAC(list._matches[0]);
+    }
+    submitGuess();
+  } else if (e.key === 'Escape') { list.innerHTML = ''; }
 });
 document.getElementById('guessInput').addEventListener('blur', function() {
   setTimeout(() => { document.getElementById('acList').innerHTML = ''; }, 150);
@@ -1182,9 +1276,20 @@ function submitGuess() {
     guessPlayer = ALL_PLAYERS.find(p => p.id === selectedId);
   } else {
     const q = input.value.trim().toLowerCase();
-    const matches = ALL_PLAYERS.filter(p => p.name.toLowerCase() === q);
-    if (matches.length === 1) guessPlayer = matches[0];
-    else if (matches.length > 1) { status.textContent = 'Multiple players match -- use the dropdown.'; return; }
+    // Exact name match
+    const exact = ALL_PLAYERS.filter(p => p.name.toLowerCase() === q);
+    if (exact.length === 1) {
+      guessPlayer = exact[0];
+    } else if (exact.length > 1) {
+      status.textContent = 'Multiple players match -- use the dropdown.'; return;
+    } else {
+      // Fall back to AC list if exactly one result showing
+      const list = document.getElementById('acList');
+      if (list._matches && list._matches.length === 1) {
+        guessPlayer = list._matches[0];
+        selectAC(guessPlayer);
+      }
+    }
   }
 
   if (!guessPlayer) { status.textContent = 'Player not found. Try the dropdown.'; return; }
@@ -1195,8 +1300,15 @@ function submitGuess() {
 
   score = Math.max(0, score - 1);
   updateStickyBar();
-  guesses.sort((a, b) => b.det.score - a.det.score);
   renderGuessLog();
+
+  // Show sort header once there's at least one guess
+  const hdr = document.getElementById('guessLogHeader');
+  if (hdr) {
+    hdr.style.display = 'flex';
+    document.getElementById('guessCountLabel').textContent =
+      guesses.length + ' guess' + (guesses.length !== 1 ? 'es' : '');
+  }
 
   input.value = ''; delete input.dataset.selectedId;
   if (det.score === 1000) endGame(true);
@@ -1205,7 +1317,10 @@ function submitGuess() {
 function renderGuessLog() {
   const log = document.getElementById('guessLog');
   log.innerHTML = '';
-  guesses.forEach(g => {
+  const sorted = [...guesses].sort((a, b) =>
+    sortMode === 'score' ? b.det.score - a.det.score : a.guessNum - b.guessNum
+  );
+  sorted.forEach(g => {
     const card = document.createElement('div');
     card.className = 'guess-card';
     const sim = g.det.score;
@@ -1222,7 +1337,9 @@ function renderGuessLog() {
       '<span class="guess-name">' + g.player.name + '</span>' +
       '<div class="guess-badges">' + badgeHtml + '</div>' +
       '<div class="sim-wrap">' +
-        '<span class="sim-score ' + cls + '">' + sim + '</span>' +
+        (g.det.crossRole
+          ? '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:0.6rem;color:var(--text-dim);text-align:right">Wrong<br>role</span>'
+          : '<span class="sim-score ' + cls + '">' + sim + '</span>') +
       '</div>';
     card.appendChild(main);
     if (difficulty !== 'hard' && !g.det.crossRole && g.det.best) {
@@ -1253,8 +1370,13 @@ const HINT_DEFS = [
   { key: 'country',  label: 'HOME',  val: p => p.birthCountry || 'Unknown' },
   { key: 'hand',     label: 'HAND',  val: p => p.handedness || 'Unknown' },
   { key: 'pos',      label: 'POS',   val: p => p.primaryPos || 'Unknown' },
-  { key: 'initials', label: 'INIT',  val: p => p.name.trim().split(/\s+/).map(w => w[0].toUpperCase()).join('') },
-  { key: 'team',     label: 'TEAM',  val: p => abbr(p.primaryTeam) || 'Unknown' },
+  { key: 'initials', label: 'INIT',  val: p => {
+      const parts = p.name.trim().split(/\s+/);
+      if (parts.length === 1) return parts[0][0].toUpperCase();
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+  },
+  { key: 'team',     label: 'FRANCH', val: p => abbr(p.primaryTeam) || 'Unknown' },
   { key: 'war',      label: 'WAR',   val: p => p.WAR != null ? Number(p.WAR).toFixed(1) : 'N/A' },
   { key: 'year',     label: 'BORN',  val: p => p.birthYear  || 'Unknown' },
   { key: 'top3',     label: 'TOP 3', val: p => getTop3(p) },
@@ -1325,7 +1447,29 @@ function buildPlayerCard(p) {
     statsHtml += '<div class="stat-chip"><span class="sc-l">' + x.l + '</span><span class="sc-v">' + x.v + '</span></div>';
   });
 
-  const meta = [p.primaryPos, abbr(p.primaryTeam), p.birthYear, p.handedness, p.birthCountry].filter(Boolean).join(' / ');
+  // Build birthplace string
+  function birthplaceStr(p) {
+    const city = p.birthCity;
+    const state = p.birthState;
+    const country = p.birthCountry;
+    if (!city && !country) return null;
+    if (country === 'USA') {
+      if (city && state) return city + ', ' + state;
+      if (city) return city;
+      return 'USA';
+    }
+    if (country === 'CAN') {
+      if (city && state) return city + ', ' + state; // state = province in Lahman
+      if (city) return city + ', CAN';
+      return 'CAN';
+    }
+    // All others: city + country code
+    if (city && country) return city + ', ' + country;
+    if (city) return city;
+    return country || null;
+  }
+
+  const meta = [p.primaryPos, abbr(p.primaryTeam), p.birthYear, p.handedness, birthplaceStr(p)].filter(Boolean).join(' \u00b7 ');
   const brefUrl = 'https://www.baseball-reference.com/players/' + p.id[0] + '/' + p.id.replace('_alt','') + '.shtml';
 
   return '<div class="player-card">' + photo +
@@ -1333,7 +1477,8 @@ function buildPlayerCard(p) {
       '<div class="player-card-name"><a href="' + brefUrl + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px">' + p.name + '</a></div>' +
       '<div class="player-card-meta">' + meta + '</div>' +
       '<div class="player-card-stats">' + statsHtml + '</div>' +
-    '</div></div>';
+    '</div></div>' +
+    '<div id="endEraLine" style="font-family:\'IBM Plex Mono\',monospace;font-size:0.62rem;color:var(--text-dim);margin-top:0.5rem;letter-spacing:0.06em"></div>';
 }
 
 // ── CLOSEST GUESS BOX ─────────────────────────────────────────────────────────
@@ -1357,6 +1502,7 @@ function endGame(didWin, gaveUp) {
   gameOver = true; won = didWin;
   document.getElementById('guessArea').style.display = 'none';
   document.querySelectorAll('.hint-btn').forEach(b => b.disabled = true);
+  document.getElementById('diceBtn').disabled = true;
   document.getElementById('giveupConfirm').classList.remove('visible');
   document.getElementById('giveUpBtn').style.display = 'none';
 
@@ -1372,6 +1518,21 @@ function endGame(didWin, gaveUp) {
   document.getElementById('playerCard').innerHTML  = buildPlayerCard(secretPlayer);
   document.getElementById('closestGuessBox').innerHTML = buildClosestGuessBox();
 
+  // Era label in end panel
+  const eraEl = document.getElementById('endEraLine');
+  if (eraEl) {
+    let eraStr;
+    if (negroLeagueMode) {
+      eraStr = 'Negro Lg \u00b7 1920\u20131948';
+    } else {
+      const active = document.querySelector('.era-preset.active-preset');
+      const label = active ? active.dataset.label : null;
+      eraStr = label ? label + ' \u00b7 ' + eraStart + '\u2013' + eraEnd : eraStart + '\u2013' + eraEnd;
+    }
+    if (teamFilter) eraStr += ' \u00b7 ' + abbr(teamFilter);
+    eraEl.textContent = eraStr;
+  }
+
   if (didWin) {
     document.getElementById('endScore').textContent = Math.max(0, score);
     document.getElementById('endSub').textContent =
@@ -1383,6 +1544,7 @@ function endGame(didWin, gaveUp) {
       guesses.length + ' guess' + (guesses.length !== 1 ? 'es' : '') +
       (gaveUp ? ' \u00b7 Gave Up' : '');
   }
+  saveDailyResult();
 }
 
 // ── GIVE UP ───────────────────────────────────────────────────────────────────
@@ -1402,6 +1564,8 @@ document.getElementById('giveupYes').addEventListener('click', function() {
 // ── NEW GAME ──────────────────────────────────────────────────────────────────
 document.getElementById('newGameBtn').addEventListener('click', () => {
   negroLeagueMode = false;
+  document.getElementById('filterPanel').classList.remove('open');
+  document.getElementById('filterToggleBtn').classList.remove('active');
   initGame(true);
 });
 
@@ -1539,6 +1703,172 @@ function checkChallengeParam() {
   return true;
 }
 
+document.getElementById('guessBtn').addEventListener('click', submitGuess);
+document.getElementById('challengeBtn').addEventListener('click', openChallengeModal);
+
+// ── RANDOM GUESS (DICE) ───────────────────────────────────────────────────────
+document.getElementById('diceBtn').addEventListener('click', function() {
+  if (gameOver || !secretPlayer) return;
+
+  // Build eligible pool: matches current era/franchise settings, not yet guessed, not the answer
+  const guessedIds = new Set(guesses.map(g => g.player.id));
+  let pool = ALL_PLAYERS.filter(p =>
+    p.id !== secretPlayer.id &&
+    !guessedIds.has(p.id) &&
+    !p.id.endsWith('_alt') &&
+    playerOverlapsEra(p, eraStart, eraEnd)
+  );
+  if (negroLeagueMode) pool = pool.filter(p => p.isNegroLeague);
+  if (teamFilter) pool = pool.filter(p => currentFranchise(p.primaryTeam) === teamFilter);
+
+  if (!pool.length) {
+    document.getElementById('statusMsg').textContent = 'No eligible players left to guess!';
+    return;
+  }
+
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  const input = document.getElementById('guessInput');
+  input.value = pick.name;
+  input.dataset.selectedId = pick.id;
+  document.getElementById('acList').innerHTML = '';
+  submitGuess();
+});
+
+// ── SORT TOGGLE ───────────────────────────────────────────────────────────────
+document.getElementById('sortByScore').addEventListener('click', function() {
+  sortMode = 'score';
+  this.classList.add('active');
+  document.getElementById('sortByOrder').classList.remove('active');
+  renderGuessLog();
+});
+document.getElementById('sortByOrder').addEventListener('click', function() {
+  sortMode = 'order';
+  this.classList.add('active');
+  document.getElementById('sortByScore').classList.remove('active');
+  renderGuessLog();
+});
+
+// ── DAILY MODE PERSISTENCE (infrastructure) ───────────────────────────────────
+const DAILY_KEY = 'simball_daily';
+
+function getDailySeed() {
+  const d = new Date();
+  return d.getFullYear() * 10000 + (d.getMonth()+1) * 100 + d.getDate();
+}
+
+function saveDailyResult() {
+  if (!dailyMode || !gameOver) return;
+  try {
+    const data = {
+      seed: getDailySeed(),
+      won: won,
+      score: Math.max(0, score),
+      guesses: guesses.length,
+      hints: hintsUsed.length,
+      playerId: secretPlayer ? secretPlayer.id : null,
+    };
+    localStorage.setItem(DAILY_KEY, JSON.stringify(data));
+  } catch(e) {}
+}
+
+function loadDailyResult() {
+  if (!dailyMode) return null;
+  try {
+    const saved = localStorage.getItem(DAILY_KEY);
+    if (!saved) return null;
+    const data = JSON.parse(saved);
+    if (data.seed !== getDailySeed()) return null;
+    return data;
+  } catch(e) { return null; }
+}
+
+// Hook saveDailyResult into endGame
+// (called directly inside endGame after gameOver is set)
+
+// ── SCROLL LOGO ANIMATION ─────────────────────────────────────────────────────
+(function() {
+  const header = document.querySelector('header');
+  const stickyLogo = document.getElementById('stickyLogo');
+  let scrolled = false;
+  window.addEventListener('scroll', function() {
+    const headerBottom = header.getBoundingClientRect().bottom;
+    const shouldShow = headerBottom < 10;
+    if (shouldShow !== scrolled) {
+      scrolled = shouldShow;
+      stickyLogo.classList.toggle('visible', scrolled);
+    }
+  }, { passive: true });
+})();
+
+// ── DEFAULT SETTINGS ──────────────────────────────────────────────────────────
+const DEFAULTS_KEY = 'simball_defaults';
+
+function loadDefaults() {
+  try {
+    const saved = localStorage.getItem(DEFAULTS_KEY);
+    if (!saved) return;
+    const d = JSON.parse(saved);
+    // Era
+    if (d.eraStart) document.getElementById('eraStart').value = d.eraStart;
+    if (d.eraEnd)   document.getElementById('eraEnd').value   = d.eraEnd;
+    if (d.eraPreset) {
+      document.querySelectorAll('.era-preset').forEach(b => {
+        const match = d.eraPreset === 'negro' ? b.dataset.negro : (b.dataset.label === d.eraPreset && !b.dataset.negro);
+        b.classList.toggle('active-preset', !!match);
+      });
+      if (d.eraPreset === 'negro') negroLeagueMode = true;
+    }
+    // Franchise
+    if (d.teamFilter !== undefined) {
+      teamFilter = d.teamFilter;
+      document.getElementById('teamFilter').value = d.teamFilter || '';
+    }
+    // Difficulty
+    if (d.difficulty) {
+      difficulty = d.difficulty;
+      document.querySelectorAll('#diffGroup .toggle-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.diff === d.difficulty);
+      });
+    }
+    // Mode
+    if (d.dailyMode !== undefined) {
+      dailyMode = d.dailyMode;
+      document.querySelectorAll('#modeGroup .toggle-btn').forEach(b => {
+        b.classList.toggle('active', (b.dataset.mode === 'daily') === d.dailyMode);
+      });
+    }
+  } catch(e) {}
+}
+
+document.getElementById('setDefaultBtn').addEventListener('click', function() {
+  try {
+    const activePreset = document.querySelector('.era-preset.active-preset');
+    const presetLabel = activePreset
+      ? (activePreset.dataset.negro ? 'negro' : activePreset.dataset.label)
+      : null;
+    const defaults = {
+      eraStart:   parseInt(document.getElementById('eraStart').value) || 1920,
+      eraEnd:     parseInt(document.getElementById('eraEnd').value)   || 2025,
+      eraPreset:  presetLabel,
+      teamFilter: teamFilter || '',
+      difficulty: difficulty,
+      dailyMode:  dailyMode,
+    };
+    localStorage.setItem(DEFAULTS_KEY, JSON.stringify(defaults));
+    const msg = document.getElementById('defaultSavedMsg');
+    msg.textContent = 'Saved as default \u2713';
+    msg.style.opacity = '1';
+    setTimeout(() => { msg.style.opacity = '0'; }, 2500);
+    this.style.borderColor = 'var(--green)';
+    this.style.color = 'var(--green-light)';
+    setTimeout(() => {
+      this.style.borderColor = '';
+      this.style.color = '';
+    }, 2500);
+  } catch(e) {}
+});
+
+loadDefaults();
 loadPlayers();
 </script>
 </body>
