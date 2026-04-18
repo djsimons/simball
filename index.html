@@ -476,10 +476,11 @@
         <tr><td>FRANCH &mdash; franchise (abbr.)</td><td>15</td><td>20</td><td>30</td></tr>
         <tr><td>WAR &mdash; career WAR</td><td>15</td><td>20</td><td>30</td></tr>
         <tr><td>BORN &mdash; birth year</td><td>20</td><td>25</td><td>40</td></tr>
+        <tr><td>AWDS &mdash; awards (AS, ROY, MVP, CY, HOF)</td><td>20</td><td>25</td><td>35</td></tr>
         <tr><td>TOP 3 &mdash; 3 most similar players</td><td>30</td><td>40</td><td>N/A</td></tr>
       </tbody>
     </table>
-    <p style="margin-top:0.6rem;font-size:0.82rem;color:var(--text-dim)">Hard mode: max 2 hints of your choice, TOP 3 not available.</p>
+    <p style="margin-top:0.6rem;font-size:0.82rem;color:var(--text-dim)">Hard mode: max 2 hints of your choice, TOP 3 not available. All other hints including AWDS are available.</p>
 
     <h3>Similarity Score</h3>
     <p>Based on the similarity score method created by Bill James and used by Baseball Reference. Scores start at 1000 and are reduced by differences in career stats. Position players are compared on counting stats (G, AB, R, H, 2B, 3B, HR, RBI, BB, SO, SB) and rate stats (BA, OBP, SLG). Pitchers are compared on W, L, SV, IP, K, BB, and ERA. All stats as of Opening Day 2026.</p>
@@ -693,6 +694,9 @@
         <button class="hint-btn" id="hintYear" data-hint="year">
           <span class="hint-label">BORN</span><span class="hint-cost" id="costYear"></span>
         </button>
+        <button class="hint-btn" id="hintAwards" data-hint="awards">
+          <span class="hint-label">AWDS</span><span class="hint-cost" id="costAwards"></span>
+        </button>
         <button class="hint-btn" id="hintTop3" data-hint="top3">
           <span class="hint-label">TOP 3</span><span class="hint-cost" id="costTop3"></span>
         </button>
@@ -841,9 +845,9 @@ function fmtRate(val) {
 
 // ── HINT COST TABLE ───────────────────────────────────────────────────────────
 const HINT_COSTS = {
-  easy:   { country:5, hand:5, pos:10, initials:10, team:15, war:15, year:20, top3:30 },
-  medium: { country:5, hand:5, pos:15, initials:15, team:20, war:20, year:25, top3:40 },
-  hard:   { country:5, hand:5, pos:15, initials:20, team:30, war:30, year:40, top3:null },
+  easy:   { country:5, hand:5, pos:10, initials:10, team:15, war:15, year:20, awards:20, top3:30 },
+  medium: { country:5, hand:5, pos:15, initials:15, team:20, war:20, year:25, awards:25, top3:40 },
+  hard:   { country:5, hand:5, pos:15, initials:20, team:30, war:30, year:40, awards:35, top3:null },
 };
 
 function hintCost(key) {
@@ -1058,7 +1062,7 @@ function updateStickyBar() {
 
 // ── HINT COST DISPLAY ─────────────────────────────────────────────────────────
 function updateHintCostDisplay() {
-  const keys = ['country','hand','pos','initials','team','war','year','top3'];
+  const keys = ['country','hand','pos','initials','team','war','year','awards','top3'];
   keys.forEach(k => {
     const el = document.getElementById('cost' + k.charAt(0).toUpperCase() + k.slice(1));
     if (!el) return;
@@ -1379,6 +1383,16 @@ const HINT_DEFS = [
   { key: 'team',     label: 'FRANCH', val: p => abbr(p.primaryTeam) || 'Unknown' },
   { key: 'war',      label: 'WAR',   val: p => p.WAR != null ? Number(p.WAR).toFixed(1) : 'N/A' },
   { key: 'year',     label: 'BORN',  val: p => p.birthYear  || 'Unknown' },
+  { key: 'awards',   label: 'AWDS',  val: p => {
+      const parts = [];
+      if (p.allStars > 0) parts.push('AS\u00d7' + p.allStars);
+      if (p.roy > 0)      parts.push('ROY' + (p.roy > 1 ? '\u00d7' + p.roy : ''));
+      if (p.mvp > 0)      parts.push('MVP' + (p.mvp > 1 ? '\u00d7' + p.mvp : ''));
+      if (p.cy > 0)       parts.push('CY' + (p.cy > 1 ? '\u00d7' + p.cy : ''));
+      if (p.hof)          parts.push('HOF');
+      return parts.length ? parts.join(' \u00b7 ') : 'None';
+    }
+  },
   { key: 'top3',     label: 'TOP 3', val: p => getTop3(p) },
 ];
 
