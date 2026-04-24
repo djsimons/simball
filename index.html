@@ -54,6 +54,40 @@
     padding: 0.35rem 1rem;
     font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--text-dim);
     overflow: visible;
+    transition: padding 0.2s ease;
+  }
+  /* When guess bar is docked into sticky bar */
+  .sticky-bar.guess-docked {
+    flex-wrap: wrap;
+    padding-bottom: 0.45rem;
+  }
+  .sticky-bar.guess-docked .sticky-guess-row {
+    display: flex;
+  }
+  .sticky-guess-row {
+    display: none;
+    width: 100%; gap: 0.4rem; align-items: center;
+    position: relative;
+  }
+  .sticky-guess-row .guess-input-inner {
+    position: relative; flex: 1;
+  }
+  .sticky-guess-row #guessInputDocked {
+    width: 100%; background: rgba(28,35,48,0.85); border: 1px solid var(--night-border);
+    border-radius: 5px; color: var(--text-main);
+    font-family: 'IBM Plex Sans', sans-serif; font-size: 0.88rem;
+    padding: 0.4rem 2.2rem 0.4rem 0.75rem; outline: none;
+    transition: border-color 0.15s;
+  }
+  .sticky-guess-row #guessInputDocked:focus { border-color: var(--green-light); }
+  .sticky-guess-row #guessBtnDocked {
+    background: var(--green); border: none; border-radius: 5px; color: var(--chalk);
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; letter-spacing: 0.1em;
+    padding: 0.35rem 1rem; cursor: pointer; transition: background 0.15s; flex-shrink: 0;
+  }
+  .sticky-guess-row #guessBtnDocked:hover { background: var(--green-light); color: var(--night); }
+  .sticky-guess-row .autocomplete-list {
+    top: 100%; left: 0; right: 0;
   }
   .sticky-score-wrap { display: flex; align-items: baseline; gap: 0.25rem; }
   .sticky-score { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--yellow); letter-spacing: 0.1em; line-height: 1; }
@@ -73,6 +107,15 @@
     white-space: nowrap;
   }
   .sticky-logo.visible { opacity: 1; }
+  /* When guess is docked, logo becomes a subtle watermark behind the input row */
+  .sticky-bar.guess-docked .sticky-logo {
+    font-size: 1.6rem;
+    opacity: 0.07;
+    bottom: 0.3rem; top: auto;
+    transform: translateX(-50%);
+    letter-spacing: 0.25em;
+    pointer-events: none;
+  }
   .sticky-icon-btn {
     width: 28px; height: 28px; border-radius: 5px;
     border: 1px solid var(--night-border); background: var(--night-card); color: var(--text-dim);
@@ -428,6 +471,14 @@
     <button class="sticky-icon-btn" id="filterToggleBtn" title="Filters">&#9881;</button>
     <button class="sticky-icon-btn" id="helpBtn" title="How to play">?</button>
   </div>
+  <!-- Docked guess row (shown when scrolled past main guess bar) -->
+  <div class="sticky-guess-row" id="stickyGuessRow">
+    <div class="guess-input-inner">
+      <input type="text" id="guessInputDocked" placeholder="Type a player name..." autocomplete="off">
+      <div class="autocomplete-list" id="acListDocked"></div>
+    </div>
+    <button id="guessBtnDocked">Guess</button>
+  </div>
 </div>
 
 <!-- HELP MODAL -->
@@ -476,11 +527,11 @@
         <tr><td>FRANCH &mdash; franchise (abbr.)</td><td>15</td><td>20</td><td>30</td></tr>
         <tr><td>WAR &mdash; career WAR</td><td>15</td><td>20</td><td>30</td></tr>
         <tr><td>BORN &mdash; birth year</td><td>20</td><td>25</td><td>40</td></tr>
-        <tr><td>AWDS &mdash; awards (AS, ROY, MVP, CY, HOF)</td><td>20</td><td>25</td><td>35</td></tr>
+        <tr><td>BLING &mdash; awards (AS, ROY, MVP, CY, HOF)</td><td>20</td><td>25</td><td>35</td></tr>
         <tr><td>TOP 3 &mdash; 3 most similar players</td><td>30</td><td>40</td><td>N/A</td></tr>
       </tbody>
     </table>
-    <p style="margin-top:0.6rem;font-size:0.82rem;color:var(--text-dim)">Hard mode: max 2 hints of your choice, TOP 3 not available. All other hints including AWDS are available.</p>
+    <p style="margin-top:0.6rem;font-size:0.82rem;color:var(--text-dim)">Hard mode: max 2 hints of your choice, TOP 3 not available. All other hints including BLING are available.</p>
 
     <h3>Similarity Score</h3>
     <p>Based on the similarity score method created by Bill James and used by Baseball Reference. Scores start at 1000 and are reduced by differences in career stats. Position players are compared on counting stats (G, AB, R, H, 2B, 3B, HR, RBI, BB, SO, SB) and rate stats (BA, OBP, SLG). Pitchers are compared on W, L, SV, IP, K, BB, and ERA. All stats as of Opening Day 2026.</p>
@@ -695,7 +746,7 @@
           <span class="hint-label">BORN</span><span class="hint-cost" id="costYear"></span>
         </button>
         <button class="hint-btn" id="hintAwards" data-hint="awards">
-          <span class="hint-label">AWDS</span><span class="hint-cost" id="costAwards"></span>
+          <span class="hint-label">BLING</span><span class="hint-cost" id="costAwards"></span>
         </button>
         <button class="hint-btn" id="hintTop3" data-hint="top3">
           <span class="hint-label">TOP 3</span><span class="hint-cost" id="costTop3"></span>
@@ -709,7 +760,9 @@
       <span style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-dim)" id="guessCountLabel">0 guesses</span>
       <div style="display:flex;gap:0.25rem">
         <button class="sort-btn active" id="sortByScore" title="Sort by similarity score">Best first</button>
-        <button class="sort-btn" id="sortByOrder" title="Sort by guess order">Guess order</button>
+        <button class="sort-btn" id="sortByScoreAsc" title="Sort by similarity score ascending">Worst first</button>
+        <button class="sort-btn" id="sortByOrder" title="Sort by guess order, newest first">Newest first</button>
+        <button class="sort-btn" id="sortByOrderAsc" title="Sort by guess order, oldest first">Oldest first</button>
       </div>
     </div>
     <div class="guess-log" id="guessLog"></div>
@@ -1115,8 +1168,9 @@ function initGame(forceRandom) {
   const hdr = document.getElementById('guessLogHeader');
   if (hdr) hdr.style.display = 'none';
   sortMode = 'score';
-  document.getElementById('sortByScore').classList.add('active');
-  document.getElementById('sortByOrder').classList.remove('active');
+  ['sortByScore','sortByScoreAsc','sortByOrder','sortByOrderAsc'].forEach(b =>
+    document.getElementById(b).classList.toggle('active', b === 'sortByScore')
+  );
 
   document.querySelectorAll('.hint-btn').forEach(b => {
     b.disabled = false;
@@ -1326,9 +1380,12 @@ function submitGuess() {
 function renderGuessLog() {
   const log = document.getElementById('guessLog');
   log.innerHTML = '';
-  const sorted = [...guesses].sort((a, b) =>
-    sortMode === 'score' ? b.det.score - a.det.score : a.guessNum - b.guessNum
-  );
+  const sorted = [...guesses].sort((a, b) => {
+    if (sortMode === 'score')     return b.det.score - a.det.score;
+    if (sortMode === 'scoreAsc')  return a.det.score - b.det.score;
+    if (sortMode === 'orderAsc')  return a.guessNum - b.guessNum;
+    return b.guessNum - a.guessNum; // 'order' = newest first
+  });
   sorted.forEach(g => {
     const card = document.createElement('div');
     card.className = 'guess-card';
@@ -1388,7 +1445,7 @@ const HINT_DEFS = [
   { key: 'team',     label: 'FRANCH', val: p => abbr(p.primaryTeam) || 'Unknown' },
   { key: 'war',      label: 'WAR',   val: p => p.WAR != null ? Number(p.WAR).toFixed(1) : 'N/A' },
   { key: 'year',     label: 'BORN',  val: p => p.birthYear  || 'Unknown' },
-  { key: 'awards',   label: 'AWDS',  val: p => {
+  { key: 'awards',   label: 'BLING',  val: p => {
       const parts = [];
       if (p.allStars > 0) parts.push('AS\u00d7' + p.allStars);
       if (p.roy > 0)      parts.push('ROY' + (p.roy > 1 ? '\u00d7' + p.roy : ''));
@@ -1754,17 +1811,14 @@ document.getElementById('diceBtn').addEventListener('click', function() {
 });
 
 // ── SORT TOGGLE ───────────────────────────────────────────────────────────────
-document.getElementById('sortByScore').addEventListener('click', function() {
-  sortMode = 'score';
-  this.classList.add('active');
-  document.getElementById('sortByOrder').classList.remove('active');
-  renderGuessLog();
-});
-document.getElementById('sortByOrder').addEventListener('click', function() {
-  sortMode = 'order';
-  this.classList.add('active');
-  document.getElementById('sortByScore').classList.remove('active');
-  renderGuessLog();
+['sortByScore','sortByScoreAsc','sortByOrder','sortByOrderAsc'].forEach(id => {
+  document.getElementById(id).addEventListener('click', function() {
+    sortMode = { sortByScore:'score', sortByScoreAsc:'scoreAsc', sortByOrder:'order', sortByOrderAsc:'orderAsc' }[id];
+    ['sortByScore','sortByScoreAsc','sortByOrder','sortByOrderAsc'].forEach(b =>
+      document.getElementById(b).classList.toggle('active', b === id)
+    );
+    renderGuessLog();
+  });
 });
 
 // ── DAILY MODE PERSISTENCE (infrastructure) ───────────────────────────────────
@@ -1802,22 +1856,92 @@ function loadDailyResult() {
 }
 
 // Hook saveDailyResult into endGame
-// (called directly inside endGame after gameOver is set)
-
-// ── SCROLL LOGO ANIMATION ─────────────────────────────────────────────────────
+// ── SCROLL: logo fade + guess bar docking ─────────────────────────────────────
 (function() {
-  const header = document.querySelector('header');
+  const header     = document.querySelector('header');
+  const stickyBar  = document.getElementById('stickyBar');
   const stickyLogo = document.getElementById('stickyLogo');
-  let scrolled = false;
+  const guessArea  = document.getElementById('guessArea');
+
+  let logoVisible  = false;
+  let guessDocked  = false;
+
+  // Sync docked input <-> main input (shared selectedId dataset)
+  const mainInput   = document.getElementById('guessInput');
+  const dockedInput = document.getElementById('guessInputDocked');
+
+  dockedInput.addEventListener('input', function() {
+    delete mainInput.dataset.selectedId;
+    delete dockedInput.dataset.selectedId;
+    buildACDocked(this.value.trim());
+  });
+  dockedInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); document.getElementById('guessBtnDocked').click(); }
+  });
+  dockedInput.addEventListener('blur', function() {
+    setTimeout(() => { document.getElementById('acListDocked').innerHTML = ''; dockedAcIndex = -1; }, 150);
+  });
+
+  document.getElementById('guessBtnDocked').addEventListener('click', function() {
+    // Copy selected state to main input then fire main guess
+    mainInput.value = dockedInput.value;
+    if (dockedInput.dataset.selectedId) mainInput.dataset.selectedId = dockedInput.dataset.selectedId;
+    document.getElementById('guessBtn').click();
+    dockedInput.value = '';
+    delete dockedInput.dataset.selectedId;
+    document.getElementById('acListDocked').innerHTML = '';
+  });
+
   window.addEventListener('scroll', function() {
-    const headerBottom = header.getBoundingClientRect().bottom;
-    const shouldShow = headerBottom < 10;
-    if (shouldShow !== scrolled) {
-      scrolled = shouldShow;
-      stickyLogo.classList.toggle('visible', scrolled);
+    const headerBottom  = header.getBoundingClientRect().bottom;
+    const guessBottom   = guessArea.getBoundingClientRect().bottom;
+    const shouldShowLogo  = headerBottom < 10;
+    const shouldDock      = guessBottom < 48; // guess bar scrolled behind sticky bar
+
+    if (shouldShowLogo !== logoVisible) {
+      logoVisible = shouldShowLogo;
+      stickyLogo.classList.toggle('visible', logoVisible && !shouldDock);
+    }
+    if (shouldDock !== guessDocked) {
+      guessDocked = shouldDock;
+      stickyBar.classList.toggle('guess-docked', guessDocked);
+      // Keep logo showing faintly as watermark when docked
+      if (guessDocked) stickyLogo.classList.remove('visible');
+      else stickyLogo.classList.toggle('visible', logoVisible);
     }
   }, { passive: true });
 })();
+
+// ── DOCKED AUTOCOMPLETE ───────────────────────────────────────────────────────
+let dockedAcIndex = -1;
+function buildACDocked(query) {
+  const list = document.getElementById('acListDocked');
+  list.innerHTML = ''; dockedAcIndex = -1;
+  if (!query || query.length < 2) return;
+  const q = norm(query);
+  const matches = ALL_PLAYERS.filter(p => norm(p.name).includes(q)).slice(0, 12);
+  list._matches = matches;
+  matches.forEach(p => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;align-items:center;gap:0.6rem';
+    div.innerHTML = '<span>' + p.name + '</span><span class="ac-meta">' + (p.primaryPos||'?') + ' &middot; ' + (p.birthYear||'?') + '</span>';
+    div.addEventListener('mousedown', e => {
+      e.preventDefault();
+      document.getElementById('guessInputDocked').value = p.name;
+      document.getElementById('guessInputDocked').dataset.selectedId = p.id;
+      list.innerHTML = '';
+    });
+    list.appendChild(div);
+  });
+}
+
+// After a guess is submitted, clear docked input too
+const _origClearInput = function() {
+  document.getElementById('guessInputDocked').value = '';
+  delete document.getElementById('guessInputDocked').dataset.selectedId;
+  document.getElementById('acListDocked').innerHTML = '';
+};
+document.getElementById('guessBtn').addEventListener('click', _origClearInput, true);
 
 // ── DEFAULT SETTINGS ──────────────────────────────────────────────────────────
 const DEFAULTS_KEY = 'simball_defaults';

@@ -182,6 +182,89 @@ if len(missing_war):
     pool = pool.drop(columns=["WAR_bat_fb","WAR_pit_fb"], errors="ignore")
     print("WAR fallback applied to {} players".format(len(missing_war)))
 
+# Fallback: stripped playerID match (handles apostrophes/periods in IDs)
+# e.g. oneilpa01 vs o'neipa01, sabatcc01 vs sabatc.01
+missing_war2 = pool[pool["WAR_bat"].isna() & pool["WAR_pit"].isna()].copy()
+if len(missing_war2):
+    def strip_id(pid):
+        import re
+        return re.sub(r'[^a-z0-9]', '', str(pid).lower())
+
+    # Build stripped ID -> WAR lookup from both war files
+    bat_war_strip = war_bat.groupby("player_ID")["WAR"].sum().reset_index()
+    bat_war_strip.columns = ["player_ID", "WAR_bat"]
+    bat_war_strip["id_stripped"] = bat_war_strip["player_ID"].apply(strip_id)
+
+    pit_war_strip = war_pit.groupby("player_ID")["WAR"].sum().reset_index()
+    pit_war_strip.columns = ["player_ID", "WAR_pit"]
+    pit_war_strip["id_stripped"] = pit_war_strip["player_ID"].apply(strip_id)
+
+    # Add stripped ID to missing players
+    missing_war2["id_stripped"] = missing_war2["playerID"].apply(strip_id)
+
+    fb2_bat = missing_war2[["playerID","id_stripped"]].merge(
+        bat_war_strip[["id_stripped","WAR_bat"]], on="id_stripped", how="left"
+    ).drop_duplicates("playerID")
+    fb2_pit = missing_war2[["playerID","id_stripped"]].merge(
+        pit_war_strip[["id_stripped","WAR_pit"]], on="id_stripped", how="left"
+    ).drop_duplicates("playerID")
+
+    fb2 = fb2_bat[["playerID","WAR_bat"]].merge(
+        fb2_pit[["playerID","WAR_pit"]], on="playerID", how="outer"
+    )
+    fb2.columns = ["playerID","WAR_bat_fb2","WAR_pit_fb2"]
+
+    pool = pool.merge(fb2, on="playerID", how="left")
+    pool["WAR_bat"] = pool["WAR_bat"].combine_first(pool["WAR_bat_fb2"])
+    pool["WAR_pit"] = pool["WAR_pit"].combine_first(pool["WAR_pit_fb2"])
+    pool = pool.drop(columns=["WAR_bat_fb2","WAR_pit_fb2"], errors="ignore")
+
+    recovered2 = pool[pool["WAR_bat"].notna() | pool["WAR_pit"].notna()]["playerID"].isin(missing_war2["playerID"]).sum()
+    print("WAR stripped-ID fallback recovered: {}".format(recovered2))
+
+# Fallback: truncated ID match (handles BBref's period-truncation convention)
+# e.g. Lahman burneaj01 -> trunc burnea01, BBref burnea.01 -> trunc burnea01
+missing_war3 = pool[pool["WAR_bat"].isna() & pool["WAR_pit"].isna()].copy()
+if len(missing_war3):
+    import re
+
+    def trunc_id(pid):
+        pid = str(pid).lower()
+        clean = re.sub(r'[^a-z0-9]', '', pid)
+        alpha = re.sub(r'\d', '', clean)
+        digits = re.sub(r'[a-z]', '', clean)
+        return alpha[:6] + digits[-2:]
+
+    bat_war_trunc = war_bat.groupby("player_ID")["WAR"].sum().reset_index()
+    bat_war_trunc.columns = ["player_ID", "WAR_bat"]
+    bat_war_trunc["id_trunc"] = bat_war_trunc["player_ID"].apply(trunc_id)
+
+    pit_war_trunc = war_pit.groupby("player_ID")["WAR"].sum().reset_index()
+    pit_war_trunc.columns = ["player_ID", "WAR_pit"]
+    pit_war_trunc["id_trunc"] = pit_war_trunc["player_ID"].apply(trunc_id)
+
+    missing_war3["id_trunc"] = missing_war3["playerID"].apply(trunc_id)
+
+    fb3_bat = missing_war3[["playerID","id_trunc"]].merge(
+        bat_war_trunc[["id_trunc","WAR_bat"]], on="id_trunc", how="left"
+    ).drop_duplicates("playerID")
+    fb3_pit = missing_war3[["playerID","id_trunc"]].merge(
+        pit_war_trunc[["id_trunc","WAR_pit"]], on="id_trunc", how="left"
+    ).drop_duplicates("playerID")
+
+    fb3 = fb3_bat[["playerID","WAR_bat"]].merge(
+        fb3_pit[["playerID","WAR_pit"]], on="playerID", how="outer"
+    )
+    fb3.columns = ["playerID","WAR_bat_fb3","WAR_pit_fb3"]
+
+    pool = pool.merge(fb3, on="playerID", how="left")
+    pool["WAR_bat"] = pool["WAR_bat"].combine_first(pool["WAR_bat_fb3"])
+    pool["WAR_pit"] = pool["WAR_pit"].combine_first(pool["WAR_pit_fb3"])
+    pool = pool.drop(columns=["WAR_bat_fb3","WAR_pit_fb3"], errors="ignore")
+
+    recovered3 = pool[pool["WAR_bat"].notna() | pool["WAR_pit"].notna()]["playerID"].isin(missing_war3["playerID"]).sum()
+    print("WAR truncated-ID fallback recovered: {}".format(recovered3))
+
 def pick_war(row):
     # Use role from pool directly -- avoids pitcher_ids set scope issues
     if row["role"] in ("starter","reliever"):
@@ -193,6 +276,25 @@ def pick_war(row):
 
 pool["WAR"] = pool.apply(pick_war, axis=1)
 pool = pool.drop(columns=["WAR_bat","WAR_pit"])
+
+# ── MANUAL WAR OVERRIDES ──────────────────────────────────────────────────────
+# Players whose Lahman/BBref IDs don't reconcile via any fallback
+MANUAL_WAR = {
+    "drewjd01":  44.9,  # J.D. Drew
+    "snowjt01":  11.0,  # J.T. Snow
+    "ryanbj01":  11.6,  # B.J. Ryan
+    "garcifr02": 34.2,  # Freddy Garcia (Mariners, b.1976)
+    "harriwi02":  7.7,  # Will Harris (Astros reliever, b.1984)
+    "hensleg01": 16.8,  # Eggie/Logan Hensley (BBref: hensllo01)
+    "graydo02":  23.2,  # Sam Gray (Browns, b.1897; BBref: graysa01)
+}
+for pid, war in MANUAL_WAR.items():
+    mask = pool["playerID"] == pid
+    if mask.any():
+        pool.loc[mask, "WAR"] = war
+        print("Manual WAR override: {} -> {}".format(pid, war))
+    else:
+        print("WARNING: {} not found in pool for manual WAR override".format(pid))
 
 # ── PRIMARY POSITION + POSITIONS PLAYED ──────────────────────────────────────
 field = fielding.copy()
