@@ -56,39 +56,6 @@
     overflow: visible;
     transition: padding 0.2s ease;
   }
-  /* When guess bar is docked into sticky bar */
-  .sticky-bar.guess-docked {
-    flex-wrap: wrap;
-    padding-bottom: 0.45rem;
-  }
-  .sticky-bar.guess-docked .sticky-guess-row {
-    display: flex;
-  }
-  .sticky-guess-row {
-    display: none;
-    width: 100%; gap: 0.4rem; align-items: center;
-    position: relative;
-  }
-  .sticky-guess-row .guess-input-inner {
-    position: relative; flex: 1;
-  }
-  .sticky-guess-row #guessInputDocked {
-    width: 100%; background: rgba(28,35,48,0.85); border: 1px solid var(--night-border);
-    border-radius: 5px; color: var(--text-main);
-    font-family: 'IBM Plex Sans', sans-serif; font-size: 0.88rem;
-    padding: 0.4rem 2.2rem 0.4rem 0.75rem; outline: none;
-    transition: border-color 0.15s;
-  }
-  .sticky-guess-row #guessInputDocked:focus { border-color: var(--green-light); }
-  .sticky-guess-row #guessBtnDocked {
-    background: var(--green); border: none; border-radius: 5px; color: var(--chalk);
-    font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; letter-spacing: 0.1em;
-    padding: 0.35rem 1rem; cursor: pointer; transition: background 0.15s; flex-shrink: 0;
-  }
-  .sticky-guess-row #guessBtnDocked:hover { background: var(--green-light); color: var(--night); }
-  .sticky-guess-row .autocomplete-list {
-    top: 100%; left: 0; right: 0;
-  }
   .sticky-score-wrap { display: flex; align-items: baseline; gap: 0.25rem; }
   .sticky-score { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--yellow); letter-spacing: 0.1em; line-height: 1; }
   .sticky-divider { width: 1px; height: 20px; background: var(--night-border); flex-shrink: 0; }
@@ -107,15 +74,6 @@
     white-space: nowrap;
   }
   .sticky-logo.visible { opacity: 1; }
-  /* When guess is docked, logo becomes a subtle watermark behind the input row */
-  .sticky-bar.guess-docked .sticky-logo {
-    font-size: 1.6rem;
-    opacity: 0.07;
-    bottom: 0.3rem; top: auto;
-    transform: translateX(-50%);
-    letter-spacing: 0.25em;
-    pointer-events: none;
-  }
   .sticky-icon-btn {
     width: 28px; height: 28px; border-radius: 5px;
     border: 1px solid var(--night-border); background: var(--night-card); color: var(--text-dim);
@@ -260,7 +218,15 @@
   .toggle-btn.active { border-color: var(--green); color: var(--green-light); background: rgba(45,106,79,0.15); }
 
   /* GUESS INPUT */
-  .guess-area { position: relative; margin-bottom: 1rem; }
+  .guess-area {
+    position: sticky;
+    top: 48px; /* height of sticky bar */
+    z-index: 500;
+    background: var(--night);
+    padding: 0.5rem 0 0.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--night-border);
+  }
   .guess-input-wrap { display: flex; gap: 0.5rem; }
   .guess-input-inner { position: relative; flex: 1; }
   #guessInput {
@@ -470,14 +436,6 @@
     <button class="sticky-new-btn" id="newGameBtn">&#8635; New</button>
     <button class="sticky-icon-btn" id="filterToggleBtn" title="Filters">&#9881;</button>
     <button class="sticky-icon-btn" id="helpBtn" title="How to play">?</button>
-  </div>
-  <!-- Docked guess row (shown when scrolled past main guess bar) -->
-  <div class="sticky-guess-row" id="stickyGuessRow">
-    <div class="guess-input-inner">
-      <input type="text" id="guessInputDocked" placeholder="Type a player name..." autocomplete="off">
-      <div class="autocomplete-list" id="acListDocked"></div>
-    </div>
-    <button id="guessBtnDocked">Guess</button>
   </div>
 </div>
 
@@ -1856,92 +1814,21 @@ function loadDailyResult() {
 }
 
 // Hook saveDailyResult into endGame
-// ── SCROLL: logo fade + guess bar docking ─────────────────────────────────────
+
+// ── SCROLL LOGO ANIMATION ─────────────────────────────────────────────────────
 (function() {
-  const header     = document.querySelector('header');
-  const stickyBar  = document.getElementById('stickyBar');
+  const header = document.querySelector('header');
   const stickyLogo = document.getElementById('stickyLogo');
-  const guessArea  = document.getElementById('guessArea');
-
-  let logoVisible  = false;
-  let guessDocked  = false;
-
-  // Sync docked input <-> main input (shared selectedId dataset)
-  const mainInput   = document.getElementById('guessInput');
-  const dockedInput = document.getElementById('guessInputDocked');
-
-  dockedInput.addEventListener('input', function() {
-    delete mainInput.dataset.selectedId;
-    delete dockedInput.dataset.selectedId;
-    buildACDocked(this.value.trim());
-  });
-  dockedInput.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') { e.preventDefault(); document.getElementById('guessBtnDocked').click(); }
-  });
-  dockedInput.addEventListener('blur', function() {
-    setTimeout(() => { document.getElementById('acListDocked').innerHTML = ''; dockedAcIndex = -1; }, 150);
-  });
-
-  document.getElementById('guessBtnDocked').addEventListener('click', function() {
-    // Copy selected state to main input then fire main guess
-    mainInput.value = dockedInput.value;
-    if (dockedInput.dataset.selectedId) mainInput.dataset.selectedId = dockedInput.dataset.selectedId;
-    document.getElementById('guessBtn').click();
-    dockedInput.value = '';
-    delete dockedInput.dataset.selectedId;
-    document.getElementById('acListDocked').innerHTML = '';
-  });
-
+  let scrolled = false;
   window.addEventListener('scroll', function() {
-    const headerBottom  = header.getBoundingClientRect().bottom;
-    const guessBottom   = guessArea.getBoundingClientRect().bottom;
-    const shouldShowLogo  = headerBottom < 10;
-    const shouldDock      = guessBottom < 48; // guess bar scrolled behind sticky bar
-
-    if (shouldShowLogo !== logoVisible) {
-      logoVisible = shouldShowLogo;
-      stickyLogo.classList.toggle('visible', logoVisible && !shouldDock);
-    }
-    if (shouldDock !== guessDocked) {
-      guessDocked = shouldDock;
-      stickyBar.classList.toggle('guess-docked', guessDocked);
-      // Keep logo showing faintly as watermark when docked
-      if (guessDocked) stickyLogo.classList.remove('visible');
-      else stickyLogo.classList.toggle('visible', logoVisible);
+    const headerBottom = header.getBoundingClientRect().bottom;
+    const shouldShow = headerBottom < 10;
+    if (shouldShow !== scrolled) {
+      scrolled = shouldShow;
+      stickyLogo.classList.toggle('visible', scrolled);
     }
   }, { passive: true });
 })();
-
-// ── DOCKED AUTOCOMPLETE ───────────────────────────────────────────────────────
-let dockedAcIndex = -1;
-function buildACDocked(query) {
-  const list = document.getElementById('acListDocked');
-  list.innerHTML = ''; dockedAcIndex = -1;
-  if (!query || query.length < 2) return;
-  const q = norm(query);
-  const matches = ALL_PLAYERS.filter(p => norm(p.name).includes(q)).slice(0, 12);
-  list._matches = matches;
-  matches.forEach(p => {
-    const div = document.createElement('div');
-    div.style.cssText = 'display:flex;align-items:center;gap:0.6rem';
-    div.innerHTML = '<span>' + p.name + '</span><span class="ac-meta">' + (p.primaryPos||'?') + ' &middot; ' + (p.birthYear||'?') + '</span>';
-    div.addEventListener('mousedown', e => {
-      e.preventDefault();
-      document.getElementById('guessInputDocked').value = p.name;
-      document.getElementById('guessInputDocked').dataset.selectedId = p.id;
-      list.innerHTML = '';
-    });
-    list.appendChild(div);
-  });
-}
-
-// After a guess is submitted, clear docked input too
-const _origClearInput = function() {
-  document.getElementById('guessInputDocked').value = '';
-  delete document.getElementById('guessInputDocked').dataset.selectedId;
-  document.getElementById('acListDocked').innerHTML = '';
-};
-document.getElementById('guessBtn').addEventListener('click', _origClearInput, true);
 
 // ── DEFAULT SETTINGS ──────────────────────────────────────────────────────────
 const DEFAULTS_KEY = 'simball_defaults';
