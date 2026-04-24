@@ -719,14 +719,14 @@
 
     <!-- GUESS LOG -->
     <div id="guessLogHeader" style="display:none;margin-bottom:0.35rem">
-      <div style="display:flex;align-items:center;padding:0 0.75rem">
-        <button id="sortByOrder" class="col-sort-btn" style="width:1.2rem;padding:0;justify-content:flex-end" title="Sort by guess number">
-          <span class="col-sort-label">Guess</span><span class="col-sort-arrow" id="arrowOrder"></span>
+      <div style="display:flex;align-items:center;padding:0 0.75rem;gap:0.65rem">
+        <button id="sortByOrder" class="col-sort-btn" style="width:1.2rem;flex-shrink:0;justify-content:center;padding:0" title="Sort by guess number">
+          <span class="col-sort-label" style="white-space:nowrap">Guess</span><span class="col-sort-arrow" id="arrowOrder"></span>
         </button>
         <div style="flex:1;text-align:center">
           <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-dim)" id="guessCountLabel">0 guesses</span>
         </div>
-        <button id="sortByScore" class="col-sort-btn" style="min-width:3rem;padding:0;justify-content:flex-end" title="Sort by similarity score">
+        <button id="sortByScore" class="col-sort-btn" style="min-width:3rem;flex-shrink:0;justify-content:flex-end;padding:0" title="Sort by similarity score">
           <span class="col-sort-arrow" id="arrowScore">↓</span><span class="col-sort-label">SIM</span>
         </button>
       </div>
@@ -1271,40 +1271,43 @@ document.getElementById('guessInput').addEventListener('input', function() {
   delete this.dataset.selectedId; buildAC(this.value);
 });
 document.getElementById('guessInput').addEventListener('keydown', function(e) {
+  if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'Enter' && e.key !== 'Escape') return;
+
   const list  = document.getElementById('acList');
-  const items = list.querySelectorAll('div');
+  const matches = list._matches || [];
+  const items = Array.from(list.querySelectorAll('div'));
+  const n = items.length;
 
   if (e.key === 'ArrowDown') {
     e.preventDefault();
-    if (!items.length) return;
-    acIndex = Math.min(acIndex + 1, items.length - 1);
+    if (!n) return;
+    acIndex = (acIndex < n - 1) ? acIndex + 1 : acIndex;
     items.forEach((el, i) => el.classList.toggle('active', i === acIndex));
-    // Scroll highlighted item into view
     if (items[acIndex]) items[acIndex].scrollIntoView({ block: 'nearest' });
-    // Do NOT set value or selectedId yet -- just visual highlight
 
   } else if (e.key === 'ArrowUp') {
     e.preventDefault();
-    if (!items.length) return;
-    acIndex = Math.max(acIndex - 1, -1);
+    if (!n) return;
+    acIndex = (acIndex > 0) ? acIndex - 1 : 0;
     items.forEach((el, i) => el.classList.toggle('active', i === acIndex));
-    if (acIndex >= 0 && items[acIndex]) items[acIndex].scrollIntoView({ block: 'nearest' });
+    if (items[acIndex]) items[acIndex].scrollIntoView({ block: 'nearest' });
 
   } else if (e.key === 'Enter') {
     e.preventDefault();
-    // If a dropdown item is highlighted, confirm that selection first
-    if (acIndex >= 0 && list._matches && list._matches[acIndex]) {
-      selectAC(list._matches[acIndex]);
-      return; // don't submit yet -- user hits Enter again to guess
+    // Highlighted item in dropdown -- confirm selection, don't submit yet
+    if (acIndex >= 0 && matches[acIndex]) {
+      selectAC(matches[acIndex]);
+      return;
     }
-    // No highlight: if exactly one result, auto-select and submit
-    if (!this.dataset.selectedId && list._matches && list._matches.length === 1) {
-      selectAC(list._matches[0]);
+    // Single result -- auto-select and submit in one Enter
+    if (!this.dataset.selectedId && matches.length === 1) {
+      selectAC(matches[0]);
     }
     submitGuess();
 
   } else if (e.key === 'Escape') {
     list.innerHTML = '';
+    list._matches = null;
     acIndex = -1;
   }
 });
