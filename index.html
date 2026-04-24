@@ -299,13 +299,17 @@
   .status-msg { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--red); min-height: 1.2rem; margin-bottom: 0.5rem; padding-left: 0.25rem; }
 
   /* GUESS LOG SORT */
-  .sort-btn {
-    background: transparent; border: 1px solid var(--night-border); border-radius: 4px;
-    color: var(--text-dim); font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
-    letter-spacing: 0.06em; padding: 0.18rem 0.5rem; cursor: pointer; transition: all 0.15s;
+  .col-sort-btn {
+    background: none; border: none; cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-dim); padding: 0.2rem 0.25rem;
+    display: inline-flex; align-items: center; gap: 0.2rem;
+    transition: color 0.15s;
   }
-  .sort-btn:hover { border-color: var(--green-light); color: var(--green-light); }
-  .sort-btn.active { border-color: var(--green); color: var(--green-light); background: rgba(45,106,79,0.15); }
+  .col-sort-btn:hover { color: var(--green-light); }
+  .col-sort-btn.active { color: var(--green-light); }
+  .col-sort-arrow { font-size: 0.75rem; line-height: 1; }
 
   /* GUESS LOG */
   .guess-log { display: flex; flex-direction: column; gap: 0.75rem; }
@@ -714,13 +718,17 @@
     </div>
 
     <!-- GUESS LOG -->
-    <div id="guessLogHeader" style="display:none;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-dim)" id="guessCountLabel">0 guesses</span>
-      <div style="display:flex;gap:0.25rem">
-        <button class="sort-btn active" id="sortByScore" title="Sort by similarity score">Best first</button>
-        <button class="sort-btn" id="sortByScoreAsc" title="Sort by similarity score ascending">Worst first</button>
-        <button class="sort-btn" id="sortByOrder" title="Sort by guess order, newest first">Newest first</button>
-        <button class="sort-btn" id="sortByOrderAsc" title="Sort by guess order, oldest first">Oldest first</button>
+    <div id="guessLogHeader" style="display:none;margin-bottom:0.35rem">
+      <div style="display:flex;align-items:center;padding:0 0.25rem">
+        <button id="sortByOrder" class="col-sort-btn" style="min-width:3rem;text-align:left" title="Sort by guess number">
+          <span class="col-sort-label">Guess</span><span class="col-sort-arrow" id="arrowOrder"></span>
+        </button>
+        <div style="flex:1;text-align:center">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-dim)" id="guessCountLabel">0 guesses</span>
+        </div>
+        <button id="sortByScore" class="col-sort-btn" style="min-width:3rem;text-align:right" title="Sort by similarity score">
+          <span class="col-sort-arrow" id="arrowScore">↓</span><span class="col-sort-label">SIM</span>
+        </button>
       </div>
     </div>
     <div class="guess-log" id="guessLog"></div>
@@ -1126,9 +1134,7 @@ function initGame(forceRandom) {
   const hdr = document.getElementById('guessLogHeader');
   if (hdr) hdr.style.display = 'none';
   sortMode = 'score';
-  ['sortByScore','sortByScoreAsc','sortByOrder','sortByOrderAsc'].forEach(b =>
-    document.getElementById(b).classList.toggle('active', b === 'sortByScore')
-  );
+  if (document.getElementById('arrowScore')) updateSortArrows();
 
   document.querySelectorAll('.hint-btn').forEach(b => {
     b.disabled = false;
@@ -1261,24 +1267,42 @@ document.getElementById('guessInput').addEventListener('input', function() {
   delete this.dataset.selectedId; buildAC(this.value);
 });
 document.getElementById('guessInput').addEventListener('keydown', function(e) {
-  const list = document.getElementById('acList');
+  const list  = document.getElementById('acList');
   const items = list.querySelectorAll('div');
+
   if (e.key === 'ArrowDown') {
     e.preventDefault();
+    if (!items.length) return;
     acIndex = Math.min(acIndex + 1, items.length - 1);
     items.forEach((el, i) => el.classList.toggle('active', i === acIndex));
-    if (items[acIndex] && list._matches) { this.value = list._matches[acIndex].name; this.dataset.selectedId = list._matches[acIndex].id; }
+    // Scroll highlighted item into view
+    if (items[acIndex]) items[acIndex].scrollIntoView({ block: 'nearest' });
+    // Do NOT set value or selectedId yet -- just visual highlight
+
   } else if (e.key === 'ArrowUp') {
     e.preventDefault();
+    if (!items.length) return;
     acIndex = Math.max(acIndex - 1, -1);
     items.forEach((el, i) => el.classList.toggle('active', i === acIndex));
+    if (acIndex >= 0 && items[acIndex]) items[acIndex].scrollIntoView({ block: 'nearest' });
+
   } else if (e.key === 'Enter') {
-    // If no selection yet but exactly one AC result, auto-select it
+    e.preventDefault();
+    // If a dropdown item is highlighted, confirm that selection first
+    if (acIndex >= 0 && list._matches && list._matches[acIndex]) {
+      selectAC(list._matches[acIndex]);
+      return; // don't submit yet -- user hits Enter again to guess
+    }
+    // No highlight: if exactly one result, auto-select and submit
     if (!this.dataset.selectedId && list._matches && list._matches.length === 1) {
       selectAC(list._matches[0]);
     }
     submitGuess();
-  } else if (e.key === 'Escape') { list.innerHTML = ''; }
+
+  } else if (e.key === 'Escape') {
+    list.innerHTML = '';
+    acIndex = -1;
+  }
 });
 document.getElementById('guessInput').addEventListener('blur', function() {
   setTimeout(() => { document.getElementById('acList').innerHTML = ''; }, 150);
@@ -1769,14 +1793,32 @@ document.getElementById('diceBtn').addEventListener('click', function() {
 });
 
 // ── SORT TOGGLE ───────────────────────────────────────────────────────────────
-['sortByScore','sortByScoreAsc','sortByOrder','sortByOrderAsc'].forEach(id => {
-  document.getElementById(id).addEventListener('click', function() {
-    sortMode = { sortByScore:'score', sortByScoreAsc:'scoreAsc', sortByOrder:'order', sortByOrderAsc:'orderAsc' }[id];
-    ['sortByScore','sortByScoreAsc','sortByOrder','sortByOrderAsc'].forEach(b =>
-      document.getElementById(b).classList.toggle('active', b === id)
-    );
-    renderGuessLog();
-  });
+// sortMode: 'score' (↓ best first), 'scoreAsc' (↑ worst first),
+//           'order' (↓ newest first), 'orderAsc' (↑ oldest first)
+function updateSortArrows() {
+  const arrowScore = document.getElementById('arrowScore');
+  const arrowOrder = document.getElementById('arrowOrder');
+  const btnScore   = document.getElementById('sortByScore');
+  const btnOrder   = document.getElementById('sortByOrder');
+  arrowScore.textContent = '';
+  arrowOrder.textContent = '';
+  btnScore.classList.remove('active');
+  btnOrder.classList.remove('active');
+  if (sortMode === 'score')    { arrowScore.textContent = '↓'; btnScore.classList.add('active'); }
+  if (sortMode === 'scoreAsc') { arrowScore.textContent = '↑'; btnScore.classList.add('active'); }
+  if (sortMode === 'order')    { arrowOrder.textContent = '↓'; btnOrder.classList.add('active'); }
+  if (sortMode === 'orderAsc') { arrowOrder.textContent = '↑'; btnOrder.classList.add('active'); }
+}
+
+document.getElementById('sortByScore').addEventListener('click', function() {
+  sortMode = sortMode === 'score' ? 'scoreAsc' : 'score';
+  updateSortArrows();
+  renderGuessLog();
+});
+document.getElementById('sortByOrder').addEventListener('click', function() {
+  sortMode = sortMode === 'order' ? 'orderAsc' : 'order';
+  updateSortArrows();
+  renderGuessLog();
 });
 
 // ── DAILY MODE PERSISTENCE (infrastructure) ───────────────────────────────────
