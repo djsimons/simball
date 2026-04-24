@@ -719,14 +719,14 @@
 
     <!-- GUESS LOG -->
     <div id="guessLogHeader" style="display:none;margin-bottom:0.35rem">
-      <div style="display:flex;align-items:center;padding:0 0.25rem">
-        <button id="sortByOrder" class="col-sort-btn" style="min-width:3rem;text-align:left" title="Sort by guess number">
+      <div style="display:flex;align-items:center;padding:0 0.75rem">
+        <button id="sortByOrder" class="col-sort-btn" style="width:1.2rem;padding:0;justify-content:flex-end" title="Sort by guess number">
           <span class="col-sort-label">Guess</span><span class="col-sort-arrow" id="arrowOrder"></span>
         </button>
         <div style="flex:1;text-align:center">
           <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-dim)" id="guessCountLabel">0 guesses</span>
         </div>
-        <button id="sortByScore" class="col-sort-btn" style="min-width:3rem;text-align:right" title="Sort by similarity score">
+        <button id="sortByScore" class="col-sort-btn" style="min-width:3rem;padding:0;justify-content:flex-end" title="Sort by similarity score">
           <span class="col-sort-arrow" id="arrowScore">↓</span><span class="col-sort-label">SIM</span>
         </button>
       </div>
@@ -1259,9 +1259,13 @@ function buildAC(query) {
   list._matches = matches;
 }
 function selectAC(p) {
-  document.getElementById('guessInput').value = p.name;
-  document.getElementById('acList').innerHTML = '';
-  document.getElementById('guessInput').dataset.selectedId = p.id;
+  const input = document.getElementById('guessInput');
+  const list  = document.getElementById('acList');
+  input.value = p.name;
+  input.dataset.selectedId = p.id;
+  list.innerHTML = '';
+  list._matches = null;
+  acIndex = -1;
 }
 document.getElementById('guessInput').addEventListener('input', function() {
   delete this.dataset.selectedId; buildAC(this.value);
