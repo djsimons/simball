@@ -325,8 +325,8 @@
   .guess-num { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--text-dim); width: 1.2rem; text-align: right; flex-shrink: 0; }
   .guess-thumb { width: 36px; height: 36px; border-radius: 5px; object-fit: cover; flex-shrink: 0; background: var(--night-border); }
   .guess-thumb-placeholder { width: 36px; height: 36px; border-radius: 5px; flex-shrink: 0; background: var(--night-border); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: var(--text-dim); }
-  .guess-name { font-size: 0.9rem; font-weight: 500; flex-shrink: 0; min-width: 100px; max-width: 155px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .guess-badges { display: flex; gap: 0.25rem; flex-wrap: wrap; flex: 1; }
+  .guess-name { font-size: 0.9rem; font-weight: 500; white-space: nowrap; }
+  .guess-badges { display: flex; gap: 0.25rem; flex-wrap: wrap; justify-content: flex-end; }
   .badge {
     font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem;
     padding: 0.12rem 0.35rem; border-radius: 3px;
@@ -706,11 +706,10 @@
     <!-- GUESS LOG -->
     <div id="guessLogHeader" style="display:none;align-items:center;padding:0 0.75rem;margin-bottom:0.35rem">
       <button id="sortByOrder" class="col-sort-btn" style="padding:0;flex-shrink:0" title="Sort by guess number">
-        <span class="col-sort-arrow" id="arrowOrder"></span>
+        <span class="col-sort-label">Guess</span><span class="col-sort-arrow" id="arrowOrder"></span>
       </button>
-      <span id="guessCountLabel" style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;color:var(--text-dim);padding:0 0.3rem;flex:1">0 guesses</span>
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--text-dim)">&middot;</span>
-      <button id="sortByScore" class="col-sort-btn" style="padding:0 0.2rem;flex-shrink:0" title="Sort by similarity score">
+      <span id="guessCountLabel" style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;color:var(--text-dim);padding:0 0.3rem;flex:1;text-align:center">0 guesses</span>
+      <button id="sortByScore" class="col-sort-btn" style="padding:0;flex-shrink:0" title="Sort by similarity score">
         <span class="col-sort-arrow" id="arrowScore">↓</span><span class="col-sort-label">SIM</span>
       </button>
     </div>
@@ -1359,22 +1358,16 @@ function renderGuessLog() {
     main.innerHTML =
       '<span class="guess-num">' + g.guessNum + '</span>' +
       thumbHtml(g.player, 36) +
-      '<span class="guess-name">' + g.player.name + '</span>' +
-      '<div class="guess-badges">' + badgeHtml + '</div>' +
+      '<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:0.15rem">' +
+        '<span class="guess-name">' + g.player.name + '</span>' +
+        '<div class="guess-badges">' + badgeHtml + '</div>' +
+      '</div>' +
       '<div class="sim-wrap">' +
         (g.det.crossRole
           ? '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:0.6rem;color:var(--text-dim);text-align:right">Wrong<br>role</span>'
           : '<span class="sim-score ' + cls + '">' + sim + '</span>') +
       '</div>';
     card.appendChild(main);
-    if (difficulty !== 'hard' && !g.det.crossRole && g.det.best) {
-      const bd = document.createElement('div');
-      bd.className = 'sim-breakdown';
-      bd.innerHTML =
-        '<div class="sim-best"><span class="sl">Hot</span><span class="sv">' + g.det.best + '</span></div>' +
-        '<div class="sim-worst"><span class="sl">Cold</span><span class="sv">' + g.det.worst + '</span></div>';
-      card.appendChild(bd);
-    }
     log.appendChild(card);
   });
 }
