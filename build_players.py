@@ -141,7 +141,56 @@ if len(missing_mlb):
     recovered = pool["mlbID"].notna().sum() - (len(pool) - missing_mlb["mlbID"].isna().sum())
     print("mlbID fallback recovered: {}".format(recovered))
 
-# ── WAR: assign by role from pool, not from pitcher_ids set ──────────────────
+# ── mlbID TRUNCATED-ID FALLBACK ───────────────────────────────────────────────
+missing_mlb2 = pool[pool["mlbID"].isna()].copy()
+if len(missing_mlb2):
+    import re
+    def trunc_id(pid):
+        pid = str(pid).lower()
+        clean = re.sub(r'[^a-z0-9]', '', pid)
+        alpha = re.sub(r'\d', '', clean)
+        digits = re.sub(r'[a-z]', '', clean)
+        return alpha[:6] + digits[-2:]
+
+    all_war_ids = pd.concat([
+        war_bat[["player_ID","mlb_ID"]].dropna(subset=["mlb_ID"]),
+        war_pit[["player_ID","mlb_ID"]].dropna(subset=["mlb_ID"]),
+    ]).drop_duplicates("player_ID")
+    all_war_ids["id_trunc"] = all_war_ids["player_ID"].apply(trunc_id)
+    all_war_ids["mlb_ID"] = all_war_ids["mlb_ID"].astype(int)
+
+    missing_mlb2["id_trunc"] = missing_mlb2["playerID"].apply(trunc_id)
+    fb_mlb = missing_mlb2[["playerID","id_trunc"]].merge(
+        all_war_ids[["id_trunc","mlb_ID"]], on="id_trunc", how="left"
+    ).drop_duplicates("playerID")
+    fb_mlb = fb_mlb[["playerID","mlb_ID"]].rename(columns={"mlb_ID":"mlbID_trunc"})
+    fb_mlb = fb_mlb[fb_mlb["mlbID_trunc"].notna()]
+
+    pool = pool.merge(fb_mlb, on="playerID", how="left")
+    pool["mlbID"] = pool["mlbID"].combine_first(pool["mlbID_trunc"])
+    pool = pool.drop(columns=["mlbID_trunc"], errors="ignore")
+    recovered2 = pool["mlbID"].notna().sum() - (len(pool) - missing_mlb2["mlbID"].isna().sum())
+    print("mlbID truncated-ID fallback recovered: {}".format(recovered2))
+
+# ── mlbID MANUAL OVERRIDES ────────────────────────────────────────────────────
+# Players whose IDs don't match via any automatic method
+MANUAL_MLB_IDS = {
+    "drewjd01":  136770,  # J.D. Drew
+    "ryanbj01":  124805,  # B.J. Ryan
+    "snowjt01":  122497,  # J.T. Snow
+    "garcifr02": 114587,  # Freddy Garcia (Mariners, b.1976)
+    "lopezro01": 150438,  # Rodrigo Lopez (lopezro02 in BBref)
+    "ortizra01": 150009,  # Ramon Ortiz (ortizra02 in BBref)
+}
+for pid, mlb_id in MANUAL_MLB_IDS.items():
+    mask = pool["playerID"] == pid
+    if mask.any():
+        pool.loc[mask, "mlbID"] = mlb_id
+        print("Manual mlbID override: {} -> {}".format(pid, mlb_id))
+    else:
+        print("WARNING: {} not found for manual mlbID override".format(pid))
+
+
 # Build WAR lookup by playerID first, then fall back to name+birthYear
 bat_war = war_bat.groupby("player_ID")["WAR"].sum().reset_index()
 bat_war.columns = ["playerID","WAR_bat"]
