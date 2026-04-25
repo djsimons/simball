@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SIMBALL</title>
+<title>SIMBALL · build 2025-04-24c</title>
 <meta property="og:title" content="You've been challenged!">
 <meta property="og:description" content="Can you guess the mystery MLB player? Play SIMBALL to find out.">
 <meta property="og:url" content="https://djsimons.github.io/simball/">
@@ -737,7 +737,7 @@
     <script>
       const d = new Date(document.lastModified);
       document.getElementById('lastUpdated').textContent =
-        'Last updated ' + d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+        'Last updated ' + d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) + ' ' + d.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
     </script>
 
   </div>
