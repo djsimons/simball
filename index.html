@@ -416,25 +416,10 @@
     <span class="sticky-score" id="stickyScore">101</span>
     <span style="font-size:0.65rem;color:var(--text-dim)">pts</span>
   </div>
-  <div class="sticky-divider"></div>
-  <div class="sticky-setting">
-    <div class="sticky-setting-val" id="stickyEra" style="line-height:1.1"></div>
-  </div>
-  <div class="sticky-divider"></div>
-  <div class="sticky-setting">
-    <div class="sticky-setting-val" id="stickyMode">Easy &middot; Unlim</div>
-    <div class="sticky-setting-lbl">mode</div>
-  </div>
-  <div class="sticky-divider"></div>
-  <div class="sticky-setting">
-    <div class="sticky-setting-val" id="stickyTeam">All</div>
-    <div class="sticky-setting-lbl">franch</div>
-  </div>
   <div class="sticky-spacer"></div>
   <div class="sticky-actions">
-    <button class="sticky-giveup-btn" id="giveUpBtn">Give Up</button>
     <div class="giveup-confirm" id="giveupConfirm">
-      Sure? <button class="giveup-yes" id="giveupYes">Yes</button>
+      Give up? <button class="giveup-yes" id="giveupYes">Yes</button>
       <button class="giveup-no" id="giveupNo">No</button>
     </div>
     <button class="sticky-new-btn" id="newGameBtn">&#8635; New</button>
@@ -683,7 +668,8 @@
     <div class="hints-section">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">
         <div class="hints-header" id="hintsHeader">Hints</div>
-        <button id="challengeBtn" style="background:none;border:none;color:var(--dirt-dark);font-family:'IBM Plex Mono',monospace;font-size:0.62rem;cursor:pointer;letter-spacing:0.06em;padding:0" onmouseover="this.style.color='var(--dirt)'" onmouseout="this.style.color='var(--dirt-dark)'">&#127381; challenge</button>
+        <span id="modePill" style="font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--text-dim);letter-spacing:0.04em;text-align:center;flex:1;padding:0 0.5rem"></span>
+        <button id="challengeBtn" style="background:none;border:none;color:var(--dirt-dark);font-family:'IBM Plex Mono',monospace;font-size:0.62rem;cursor:pointer;letter-spacing:0.06em;padding:0;flex-shrink:0" onmouseover="this.style.color='var(--dirt)'" onmouseout="this.style.color='var(--dirt-dark)'">&#127381; challenge</button>
       </div>
       <div class="hints-row" id="hintsRow">
         <button class="hint-btn cheap" id="hintCountry" data-hint="country">
@@ -1054,26 +1040,11 @@ function thumbHtml(p, size) {
 // ── STICKY BAR UPDATE ─────────────────────────────────────────────────────────
 function updateStickyBar() {
   document.getElementById('stickyScore').textContent = Math.max(0, score);
-
-  const eraEl = document.getElementById('stickyEra');
-  if (negroLeagueMode) {
-    eraEl.innerHTML = 'Negro Lg<span style="display:block;font-size:0.58rem;color:var(--text-dim);line-height:1">1920\u20131948</span>';
-  } else {
-    const active = document.querySelector('.era-preset.active-preset');
-    const label = active ? active.dataset.label : null;
-    if (label && !active.dataset.negro) {
-      const yearsStr = eraStart === eraEnd ? String(eraStart) : eraStart + '\u2013' + eraEnd;
-      eraEl.innerHTML = label + '<span style="display:block;font-size:0.58rem;color:var(--text-dim);line-height:1">' + yearsStr + '</span>';
-    } else {
-      eraEl.textContent = eraStart + '\u2013' + eraEnd;
-    }
-  }
-
+  const eraLabel  = negroLeagueMode ? '1920\u20132025' : (eraStart === eraEnd ? String(eraStart) : eraStart + '\u2013' + eraEnd);
   const diffLabel = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
   const modeLabel = dailyMode ? 'Daily' : 'Unlim';
-  document.getElementById('stickyMode').textContent = diffLabel + ' \u00b7 ' + modeLabel;
-
-  document.getElementById('stickyTeam').textContent = teamFilter ? abbr(teamFilter) : 'All';
+  const pill = document.getElementById('modePill');
+  if (pill) pill.textContent = eraLabel + ' | ' + diffLabel + ' | ' + modeLabel;
 }
 
 // ── HINT COST DISPLAY ─────────────────────────────────────────────────────────
@@ -1124,9 +1095,7 @@ function initGame(forceRandom) {
   document.getElementById('guessArea').style.display = 'block';
   document.getElementById('guessInput').disabled   = false;
   document.getElementById('guessBtn').disabled     = false;
-  document.getElementById('diceBtn').disabled      = false;
-  document.getElementById('giveUpBtn').disabled    = false;
-  document.getElementById('giveUpBtn').style.display = '';
+  document.getElementById('diceBtn').disabled = false;
   document.getElementById('giveupConfirm').classList.remove('visible');
   const hdr = document.getElementById('guessLogHeader');
   if (hdr) hdr.style.display = 'none';
@@ -1398,6 +1367,14 @@ function renderGuessLog() {
           : '<span class="sim-score ' + cls + '">' + sim + '</span>') +
       '</div>';
     card.appendChild(main);
+    if (difficulty !== 'hard' && !g.det.crossRole && g.det.best) {
+      const bd = document.createElement('div');
+      bd.className = 'sim-breakdown';
+      bd.innerHTML =
+        '<div class="sim-best"><span class="sl">Hot</span><span class="sv">' + g.det.best + '</span></div>' +
+        '<div class="sim-worst"><span class="sl">Cold</span><span class="sv">' + g.det.worst + '</span></div>';
+      card.appendChild(bd);
+    }
     log.appendChild(card);
   });
 }
@@ -1558,11 +1535,11 @@ function buildClosestGuessBox() {
 // ── END GAME ──────────────────────────────────────────────────────────────────
 function endGame(didWin, gaveUp) {
   gameOver = true; won = didWin;
+  if (didWin || gaveUp) window.scrollTo({ top: 0, behavior: 'smooth' });
   document.getElementById('guessArea').style.display = 'none';
   document.querySelectorAll('.hint-btn').forEach(b => b.disabled = true);
   document.getElementById('diceBtn').disabled = true;
   document.getElementById('giveupConfirm').classList.remove('visible');
-  document.getElementById('giveUpBtn').style.display = 'none';
 
   const panel = document.getElementById('endPanel');
   panel.classList.add('visible', didWin ? 'won' : 'lost');
@@ -1606,25 +1583,24 @@ function endGame(didWin, gaveUp) {
 }
 
 // ── GIVE UP ───────────────────────────────────────────────────────────────────
-document.getElementById('giveUpBtn').addEventListener('click', function() {
-  if (gameOver || !secretPlayer) return;
-  this.style.display = 'none';
-  document.getElementById('giveupConfirm').classList.add('visible');
+// ── NEW / GIVE UP ─────────────────────────────────────────────────────────────
+document.getElementById('newGameBtn').addEventListener('click', function() {
+  if (gameOver || !secretPlayer) {
+    document.getElementById('giveupConfirm').classList.remove('visible');
+    negroLeagueMode = false;
+    document.getElementById('filterPanel').classList.remove('open');
+    document.getElementById('filterToggleBtn').classList.remove('active');
+    initGame(true);
+    return;
+  }
+  document.getElementById('giveupConfirm').classList.toggle('visible');
 });
 document.getElementById('giveupNo').addEventListener('click', function() {
   document.getElementById('giveupConfirm').classList.remove('visible');
-  document.getElementById('giveUpBtn').style.display = '';
 });
 document.getElementById('giveupYes').addEventListener('click', function() {
+  document.getElementById('giveupConfirm').classList.remove('visible');
   endGame(false, true);
-});
-
-// ── NEW GAME ──────────────────────────────────────────────────────────────────
-document.getElementById('newGameBtn').addEventListener('click', () => {
-  negroLeagueMode = false;
-  document.getElementById('filterPanel').classList.remove('open');
-  document.getElementById('filterToggleBtn').classList.remove('active');
-  initGame(true);
 });
 
 // ── SHARE ─────────────────────────────────────────────────────────────────────
@@ -1633,7 +1609,7 @@ document.getElementById('shareBtn').addEventListener('click', function() {
   const dateStr = d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
   const diffLabel = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
 
-  let eraLabel = document.getElementById('stickyEra').textContent;
+  let eraLabel = negroLeagueMode ? '1920\u20132025' : (eraStart === eraEnd ? String(eraStart) : eraStart + '\u2013' + eraEnd);
 
   const scoreStr = won ? Math.max(0, score) + '/100' : 'X/100';
   const hintStr  = hintsUsed.length > 0 ? ' \u00b7 ' + hintsUsed.length + ' hint' + (hintsUsed.length !== 1 ? 's' : '') : '';
