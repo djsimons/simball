@@ -331,7 +331,13 @@
     font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem;
     padding: 0.12rem 0.35rem; border-radius: 3px;
     border: 1px solid var(--night-border); color: var(--text-dim); white-space: nowrap; line-height: 1.4;
+    text-align: center; display: inline-block;
   }
+  .badge-pos  { min-width: 2.1rem; }
+  .badge-team { min-width: 2.1rem; }
+  .badge-year { min-width: 2.6rem; }
+  .badge-war  { min-width: 4.4rem; }
+  .badge-ctry { min-width: 2.1rem; }
   .badge.green { border-color: var(--green-light); color: var(--green-light); background: rgba(82,183,136,0.12); }
   .badge.yellow { border-color: var(--yellow); color: var(--yellow); background: rgba(244,196,48,0.1); }
   .sim-wrap { display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
@@ -1212,6 +1218,7 @@ function buildAC(query) {
   const matches = ALL_PLAYERS.filter(p => norm(p.name).includes(q)).slice(0, 12);
   matches.forEach(p => {
     const div = document.createElement('div');
+    div.className = 'ac-item';
     div.style.display = 'flex';
     div.style.alignItems = 'center';
     div.style.gap = '0.6rem';
@@ -1242,7 +1249,7 @@ document.getElementById('guessInput').addEventListener('keydown', function(e) {
 
   const list    = document.getElementById('acList');
   const matches = list._matches || [];
-  const items   = Array.from(list.querySelectorAll('div'));
+  const items   = Array.from(list.querySelectorAll('.ac-item'));
   const n       = items.length;
 
   if (e.key === 'ArrowDown') {
@@ -1350,9 +1357,10 @@ function renderGuessLog() {
     const sim = g.det.score;
     const cls = scoreClass(sim);
     const badges = buildBadges(g.player, secretPlayer);
-    const badgeHtml = badges.map(b =>
-      '<span class="badge ' + b.level + '">' + b.text + '</span>'
-    ).join('');
+    const badgeHtml = badges.map((b, i) => {
+      const typeClass = ['badge-pos','badge-team','badge-year','badge-war','badge-ctry'][i] || '';
+      return '<span class="badge ' + b.level + ' ' + typeClass + '">' + b.text + '</span>';
+    }).join('');
     const main = document.createElement('div');
     main.className = 'guess-main';
     main.innerHTML =
