@@ -710,16 +710,14 @@
     </div>
 
     <!-- GUESS LOG -->
-    <div id="guessLogHeader" style="display:none;margin-bottom:0.35rem">
-      <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:0 0.75rem;height:1.4rem">
-        <button id="sortByOrder" class="col-sort-btn" style="position:absolute;left:0.75rem;padding:0" title="Sort by guess number">
-          <span class="col-sort-label">Guess</span><span class="col-sort-arrow" id="arrowOrder"></span>
-        </button>
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-dim)" id="guessCountLabel">0 guesses</span>
-        <button id="sortByScore" class="col-sort-btn" style="position:absolute;right:0.75rem;padding:0" title="Sort by similarity score">
-          <span class="col-sort-arrow" id="arrowScore">↓</span><span class="col-sort-label">SIM</span>
-        </button>
-      </div>
+    <div id="guessLogHeader" style="display:none;align-items:center;padding:0 0.75rem;margin-bottom:0.35rem">
+      <button id="sortByOrder" class="col-sort-btn" style="padding:0;flex-shrink:0" title="Sort by guess number">
+        <span class="col-sort-label">Guess</span><span class="col-sort-arrow" id="arrowOrder"></span>
+      </button>
+      <span style="flex:1;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-dim)" id="guessCountLabel">0 guesses</span>
+      <button id="sortByScore" class="col-sort-btn" style="padding:0;flex-shrink:0;min-width:3rem;justify-content:flex-end" title="Sort by similarity score">
+        <span class="col-sort-arrow" id="arrowScore">↓</span><span class="col-sort-label">SIM</span>
+      </button>
     </div>
     <div class="guess-log" id="guessLog"></div>
 
