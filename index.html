@@ -719,14 +719,12 @@
 
     <!-- GUESS LOG -->
     <div id="guessLogHeader" style="display:none;margin-bottom:0.35rem">
-      <div style="display:flex;align-items:center;padding:0 0.75rem;gap:0.65rem">
-        <button id="sortByOrder" class="col-sort-btn" style="width:1.2rem;flex-shrink:0;justify-content:center;padding:0" title="Sort by guess number">
-          <span class="col-sort-label" style="white-space:nowrap">Guess</span><span class="col-sort-arrow" id="arrowOrder"></span>
+      <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:0 0.75rem;height:1.4rem">
+        <button id="sortByOrder" class="col-sort-btn" style="position:absolute;left:0.75rem;padding:0" title="Sort by guess number">
+          <span class="col-sort-label">Guess</span><span class="col-sort-arrow" id="arrowOrder"></span>
         </button>
-        <div style="flex:1;text-align:center">
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-dim)" id="guessCountLabel">0 guesses</span>
-        </div>
-        <button id="sortByScore" class="col-sort-btn" style="min-width:3rem;flex-shrink:0;justify-content:flex-end;padding:0" title="Sort by similarity score">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-dim)" id="guessCountLabel">0 guesses</span>
+        <button id="sortByScore" class="col-sort-btn" style="position:absolute;right:0.75rem;padding:0" title="Sort by similarity score">
           <span class="col-sort-arrow" id="arrowScore">↓</span><span class="col-sort-label">SIM</span>
         </button>
       </div>
@@ -1267,39 +1265,43 @@ function selectAC(p) {
   list._matches = null;
   acIndex = -1;
 }
+let acNavigating = false;
 document.getElementById('guessInput').addEventListener('input', function() {
+  if (acNavigating) return;
   delete this.dataset.selectedId; buildAC(this.value);
 });
 document.getElementById('guessInput').addEventListener('keydown', function(e) {
   if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'Enter' && e.key !== 'Escape') return;
 
-  const list  = document.getElementById('acList');
+  const list    = document.getElementById('acList');
   const matches = list._matches || [];
-  const items = Array.from(list.querySelectorAll('div'));
-  const n = items.length;
+  const items   = Array.from(list.querySelectorAll('div'));
+  const n       = items.length;
 
   if (e.key === 'ArrowDown') {
     e.preventDefault();
-    if (!n) return;
-    acIndex = (acIndex < n - 1) ? acIndex + 1 : acIndex;
+    acNavigating = true;
+    if (!n) { acNavigating = false; return; }
+    acIndex = (acIndex < n - 1) ? acIndex + 1 : n - 1;
     items.forEach((el, i) => el.classList.toggle('active', i === acIndex));
     if (items[acIndex]) items[acIndex].scrollIntoView({ block: 'nearest' });
+    acNavigating = false;
 
   } else if (e.key === 'ArrowUp') {
     e.preventDefault();
-    if (!n) return;
+    acNavigating = true;
+    if (!n) { acNavigating = false; return; }
     acIndex = (acIndex > 0) ? acIndex - 1 : 0;
     items.forEach((el, i) => el.classList.toggle('active', i === acIndex));
     if (items[acIndex]) items[acIndex].scrollIntoView({ block: 'nearest' });
+    acNavigating = false;
 
   } else if (e.key === 'Enter') {
     e.preventDefault();
-    // Highlighted item in dropdown -- confirm selection, don't submit yet
     if (acIndex >= 0 && matches[acIndex]) {
       selectAC(matches[acIndex]);
       return;
     }
-    // Single result -- auto-select and submit in one Enter
     if (!this.dataset.selectedId && matches.length === 1) {
       selectAC(matches[0]);
     }
