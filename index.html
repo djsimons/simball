@@ -59,13 +59,9 @@
   .sticky-score-wrap { display: flex; align-items: baseline; gap: 0.25rem; }
   .sticky-score { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--yellow); letter-spacing: 0.1em; line-height: 1; }
   .sticky-divider { width: 1px; height: 20px; background: var(--night-border); flex-shrink: 0; }
-  .sticky-pill {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.62rem; color: var(--text-dim);
-    letter-spacing: 0.06em;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    max-width: 22ch;
-  }
+  .sticky-setting { display: flex; flex-direction: column; gap: 1px; }
+  .sticky-setting-val { font-size: 0.72rem; color: var(--text-main); line-height: 1.2; }
+  .sticky-setting-lbl { font-size: 0.58rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; line-height: 1; }
   .sticky-spacer { flex: 1; }
   /* Logo centered absolutely so it doesn't affect flex layout */
   .sticky-logo {
@@ -101,20 +97,21 @@
   }
   .sticky-giveup-btn:hover { border-color: var(--red); color: var(--red); }
   .giveup-confirm {
-    display: none; gap: 0.4rem; align-items: center;
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--red);
-    position: absolute; right: 100%; margin-right: 0.4rem; white-space: nowrap;
-    background: var(--night); border: 1px solid var(--night-border);
-    border-radius: 5px; padding: 0.2rem 0.6rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+    border-bottom: 1px solid var(--night-border);
+    padding: 0.3rem 0 0.4rem; margin-bottom: 0.35rem;
   }
-  .giveup-confirm.visible { display: flex; }
-  .giveup-confirm button {
-    border: 1px solid currentColor; border-radius: 3px; background: transparent;
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; padding: 0.15rem 0.45rem; cursor: pointer;
+  .giveup-yes {
+    border: 1px solid var(--red); border-radius: 4px; background: transparent;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.06em;
+    color: var(--red); padding: 0.2rem 0.6rem; cursor: pointer;
   }
-  .giveup-yes { color: var(--red); }
   .giveup-yes:hover { background: var(--red); color: var(--night); }
-  .giveup-no  { color: var(--text-dim); }
+  .giveup-no {
+    border: 1px solid #444; border-radius: 4px; background: transparent;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.06em;
+    color: var(--text-dim); padding: 0.2rem 0.6rem; cursor: pointer;
+  }
   .giveup-no:hover { background: var(--night-border); color: var(--chalk); }
 
   main { max-width: 700px; margin: 0 auto; padding: 1rem 1rem 4rem; }
@@ -224,7 +221,7 @@
   /* GUESS INPUT */
   .guess-area {
     position: sticky;
-    top: 48px; /* updated dynamically by JS */
+    top: 48px; /* height of sticky bar */
     z-index: 500;
     background: var(--night);
     padding: 0.5rem 0 0.5rem;
@@ -329,7 +326,7 @@
   .guess-num { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--text-dim); width: 1.2rem; text-align: right; flex-shrink: 0; }
   .guess-thumb { width: 36px; height: 36px; border-radius: 5px; object-fit: cover; flex-shrink: 0; background: var(--night-border); }
   .guess-thumb-placeholder { width: 36px; height: 36px; border-radius: 5px; flex-shrink: 0; background: var(--night-border); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: var(--text-dim); }
-  .guess-name { font-size: 0.9rem; font-weight: 500; min-width: 0; white-space: normal; overflow: visible; word-break: break-word; }
+  .guess-name { font-size: 0.9rem; font-weight: 500; flex-shrink: 0; min-width: 100px; max-width: 155px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .guess-badges { display: flex; gap: 0.25rem; flex-wrap: wrap; flex: 1; }
   .badge {
     font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem;
@@ -422,11 +419,6 @@
   </div>
   <div class="sticky-spacer"></div>
   <div class="sticky-actions">
-    <button class="sticky-giveup-btn" id="giveUpBtn">Give Up</button>
-    <div class="giveup-confirm" id="giveupConfirm">
-      Sure? <button class="giveup-yes" id="giveupYes">Yes</button>
-      <button class="giveup-no" id="giveupNo">No</button>
-    </div>
     <button class="sticky-new-btn" id="newGameBtn">&#8635; New</button>
     <button class="sticky-icon-btn" id="filterToggleBtn" title="Filters">&#9881;</button>
     <button class="sticky-icon-btn" id="helpBtn" title="How to play">?</button>
@@ -648,7 +640,13 @@
 
     <!-- GUESS INPUT -->
     <div class="guess-area" id="guessArea">
+      <div id="giveupConfirm" style="display:none;align-items:center;gap:0.5rem;padding:0 0 0.4rem">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--text-dim);letter-spacing:0.05em">Give up?</span>
+        <button class="giveup-no" id="giveupNo" style="margin-left:0.5rem">No</button>
+        <button class="giveup-yes" id="giveupYes" style="margin-left:auto">Yes, give up</button>
+      </div>
       <div class="guess-input-wrap">
+        <button class="sticky-giveup-btn" id="giveUpBtn" style="flex-shrink:0">Give Up</button>
         <div class="guess-input-inner">
           <input type="text" id="guessInput" placeholder="Type a player name..." autocomplete="off">
           <button id="diceBtn" title="Random guess from eligible pool">
@@ -716,11 +714,10 @@
         <span class="col-sort-arrow" id="arrowOrder"></span>
       </button>
       <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;color:var(--text-dim);padding:0 0.3rem" id="guessCountLabel">0 guesses</span>
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--text-dim);padding:0 0.1rem">&middot;</span>
-      <button id="sortByScore" class="col-sort-btn" style="padding:0 0.1rem;flex-shrink:0" title="Sort by similarity score">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--text-dim)">&middot;</span>
+      <button id="sortByScore" class="col-sort-btn" style="padding:0 0.2rem;flex-shrink:0" title="Sort by similarity score">
         <span class="col-sort-arrow" id="arrowScore">↓</span><span class="col-sort-label">SIM</span>
       </button>
-      <div style="flex:1"></div>
     </div>
     <div class="guess-log" id="guessLog"></div>
 
@@ -1051,21 +1048,15 @@ function updateStickyBar() {
 
   let eraLabel;
   if (negroLeagueMode) {
-    eraLabel = 'Negro Lg';
+    eraLabel = '1920\u20131948';
   } else {
-    const active = document.querySelector('.era-preset.active-preset');
-    const label = active ? active.dataset.label : null;
-    if (label && !active.dataset.negro) {
-      eraLabel = label;
-    } else {
-      eraLabel = eraStart + '\u2013' + eraEnd;
-    }
+    eraLabel = eraStart === eraEnd ? String(eraStart) : eraStart + '\u2013' + eraEnd;
   }
-  const diffLabel = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
-  const modeLabel = dailyMode ? 'Daily' : 'Unlim';
-  const teamLabel = teamFilter ? abbr(teamFilter) : 'All';
-  document.getElementById('stickyPill').textContent =
-    eraLabel + ' \u00b7 ' + diffLabel + ' \u00b7 ' + teamLabel + ' \u00b7 ' + modeLabel;
+  const diffLabel  = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+  const modeLabel  = dailyMode ? 'Daily' : 'Unlim';
+  const teamLabel  = teamFilter ? abbr(teamFilter) : 'All';
+  const pillEl = document.getElementById('stickyPill');
+  if (pillEl) pillEl.textContent = eraLabel + ' \u00b7 ' + diffLabel + ' \u00b7 ' + teamLabel + ' \u00b7 ' + modeLabel;
 }
 
 // ── HINT COST DISPLAY ─────────────────────────────────────────────────────────
@@ -1119,7 +1110,7 @@ function initGame(forceRandom) {
   document.getElementById('diceBtn').disabled      = false;
   document.getElementById('giveUpBtn').disabled    = false;
   document.getElementById('giveUpBtn').style.display = '';
-  document.getElementById('giveupConfirm').classList.remove('visible');
+  document.getElementById('giveupConfirm').style.display = 'none';
   const hdr = document.getElementById('guessLogHeader');
   if (hdr) hdr.style.display = 'none';
   sortMode = 'score';
@@ -1382,10 +1373,8 @@ function renderGuessLog() {
     main.innerHTML =
       '<span class="guess-num">' + g.guessNum + '</span>' +
       thumbHtml(g.player, 36) +
-      '<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:0.2rem">' +
-        '<span class="guess-name">' + g.player.name + '</span>' +
-        '<div class="guess-badges">' + badgeHtml + '</div>' +
-      '</div>' +
+      '<span class="guess-name">' + g.player.name + '</span>' +
+      '<div class="guess-badges">' + badgeHtml + '</div>' +
       '<div class="sim-wrap">' +
         (g.det.crossRole
           ? '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:0.6rem;color:var(--text-dim);text-align:right">Wrong<br>role</span>'
@@ -1560,11 +1549,10 @@ function buildClosestGuessBox() {
 // ── END GAME ──────────────────────────────────────────────────────────────────
 function endGame(didWin, gaveUp) {
   gameOver = true; won = didWin;
-  if (didWin) window.scrollTo({ top: 0, behavior: 'smooth' });
   document.getElementById('guessArea').style.display = 'none';
   document.querySelectorAll('.hint-btn').forEach(b => b.disabled = true);
   document.getElementById('diceBtn').disabled = true;
-  document.getElementById('giveupConfirm').classList.remove('visible');
+  document.getElementById('giveupConfirm').style.display = 'none';
   document.getElementById('giveUpBtn').style.display = 'none';
 
   const panel = document.getElementById('endPanel');
@@ -1612,10 +1600,10 @@ function endGame(didWin, gaveUp) {
 document.getElementById('giveUpBtn').addEventListener('click', function() {
   if (gameOver || !secretPlayer) return;
   this.style.display = 'none';
-  document.getElementById('giveupConfirm').classList.add('visible');
+  document.getElementById('giveupConfirm').style.display = 'flex';
 });
 document.getElementById('giveupNo').addEventListener('click', function() {
-  document.getElementById('giveupConfirm').classList.remove('visible');
+  document.getElementById('giveupConfirm').style.display = 'none';
   document.getElementById('giveUpBtn').style.display = '';
 });
 document.getElementById('giveupYes').addEventListener('click', function() {
@@ -1636,7 +1624,7 @@ document.getElementById('shareBtn').addEventListener('click', function() {
   const dateStr = d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
   const diffLabel = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
 
-  let eraLabel = document.getElementById('stickyEra').textContent;
+  let eraLabel = negroLeagueMode ? '1920\u20131948' : (eraStart === eraEnd ? String(eraStart) : eraStart + '\u2013' + eraEnd);
 
   const scoreStr = won ? Math.max(0, score) + '/100' : 'X/100';
   const hintStr  = hintsUsed.length > 0 ? ' \u00b7 ' + hintsUsed.length + ' hint' + (hintsUsed.length !== 1 ? 's' : '') : '';
@@ -1860,20 +1848,7 @@ function loadDailyResult() {
 
 // Hook saveDailyResult into endGame
 
-// ── DYNAMIC STICKY BAR OFFSET ─────────────────────────────────────────────────
-function updateGuessAreaTop() {
-  const bar = document.getElementById('stickyBar');
-  const area = document.getElementById('guessArea');
-  if (bar && area) {
-    const h = bar.offsetHeight;
-    area.style.top = h + 'px';
-    document.body.style.paddingTop = h + 'px';
-  }
-}
-updateGuessAreaTop();
-window.addEventListener('resize', updateGuessAreaTop);
-// Also update after any content change that might resize the bar
-new ResizeObserver(updateGuessAreaTop).observe(document.getElementById('stickyBar'));
+// ── SCROLL LOGO ANIMATION ─────────────────────────────────────────────────────
 (function() {
   const header = document.querySelector('header');
   const stickyLogo = document.getElementById('stickyLogo');
