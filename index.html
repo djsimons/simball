@@ -59,9 +59,13 @@
   .sticky-score-wrap { display: flex; align-items: baseline; gap: 0.25rem; }
   .sticky-score { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--yellow); letter-spacing: 0.1em; line-height: 1; }
   .sticky-divider { width: 1px; height: 20px; background: var(--night-border); flex-shrink: 0; }
-  .sticky-setting { display: flex; flex-direction: column; gap: 1px; }
-  .sticky-setting-val { font-size: 0.72rem; color: var(--text-main); line-height: 1.2; }
-  .sticky-setting-lbl { font-size: 0.58rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; line-height: 1; }
+  .sticky-pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem; color: var(--text-dim);
+    letter-spacing: 0.06em;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    max-width: 22ch;
+  }
   .sticky-spacer { flex: 1; }
   /* Logo centered absolutely so it doesn't affect flex layout */
   .sticky-logo {
@@ -220,7 +224,7 @@
   /* GUESS INPUT */
   .guess-area {
     position: sticky;
-    top: 48px; /* height of sticky bar */
+    top: 48px; /* updated dynamically by JS */
     z-index: 500;
     background: var(--night);
     padding: 0.5rem 0 0.5rem;
@@ -417,19 +421,7 @@
     <span style="font-size:0.65rem;color:var(--text-dim)">pts</span>
   </div>
   <div class="sticky-divider"></div>
-  <div class="sticky-setting">
-    <div class="sticky-setting-val" id="stickyEra" style="line-height:1.1"></div>
-  </div>
-  <div class="sticky-divider"></div>
-  <div class="sticky-setting">
-    <div class="sticky-setting-val" id="stickyMode">Easy &middot; Unlim</div>
-    <div class="sticky-setting-lbl">mode</div>
-  </div>
-  <div class="sticky-divider"></div>
-  <div class="sticky-setting">
-    <div class="sticky-setting-val" id="stickyTeam">All</div>
-    <div class="sticky-setting-lbl">franch</div>
-  </div>
+  <div class="sticky-pill" id="stickyPill">Wild Card &middot; Easy &middot; All</div>
   <div class="sticky-spacer"></div>
   <div class="sticky-actions">
     <button class="sticky-giveup-btn" id="giveUpBtn">Give Up</button>
@@ -718,14 +710,16 @@
     </div>
 
     <!-- GUESS LOG -->
-    <div id="guessLogHeader" style="display:none;align-items:center;padding:0 0.75rem;margin-bottom:0.35rem">
-      <button id="sortByOrder" class="col-sort-btn" style="padding:0;flex-shrink:0" title="Sort by guess number">
-        <span class="col-sort-label">Guess</span><span class="col-sort-arrow" id="arrowOrder"></span>
-      </button>
-      <span style="flex:1;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-dim)" id="guessCountLabel">0 guesses</span>
-      <button id="sortByScore" class="col-sort-btn" style="padding:0;flex-shrink:0;min-width:3rem;justify-content:flex-end" title="Sort by similarity score">
-        <span class="col-sort-arrow" id="arrowScore">↓</span><span class="col-sort-label">SIM</span>
-      </button>
+    <div id="guessLogHeader" style="display:none;margin-bottom:0.35rem">
+      <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:0 0.75rem;height:1.4rem">
+        <button id="sortByOrder" class="col-sort-btn" style="position:absolute;left:0.75rem;padding:0" title="Sort by guess number">
+          <span class="col-sort-label">Guess</span><span class="col-sort-arrow" id="arrowOrder"></span>
+        </button>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-dim)" id="guessCountLabel">0 guesses</span>
+        <button id="sortByScore" class="col-sort-btn" style="position:absolute;right:0.75rem;padding:0" title="Sort by similarity score">
+          <span class="col-sort-arrow" id="arrowScore">↓</span><span class="col-sort-label">SIM</span>
+        </button>
+      </div>
     </div>
     <div class="guess-log" id="guessLog"></div>
 
@@ -1054,25 +1048,23 @@ function thumbHtml(p, size) {
 function updateStickyBar() {
   document.getElementById('stickyScore').textContent = Math.max(0, score);
 
-  const eraEl = document.getElementById('stickyEra');
+  let eraLabel;
   if (negroLeagueMode) {
-    eraEl.innerHTML = 'Negro Lg<span style="display:block;font-size:0.58rem;color:var(--text-dim);line-height:1">1920\u20131948</span>';
+    eraLabel = 'Negro Lg';
   } else {
     const active = document.querySelector('.era-preset.active-preset');
     const label = active ? active.dataset.label : null;
     if (label && !active.dataset.negro) {
-      const yearsStr = eraStart === eraEnd ? String(eraStart) : eraStart + '\u2013' + eraEnd;
-      eraEl.innerHTML = label + '<span style="display:block;font-size:0.58rem;color:var(--text-dim);line-height:1">' + yearsStr + '</span>';
+      eraLabel = label;
     } else {
-      eraEl.textContent = eraStart + '\u2013' + eraEnd;
+      eraLabel = eraStart + '\u2013' + eraEnd;
     }
   }
-
   const diffLabel = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
   const modeLabel = dailyMode ? 'Daily' : 'Unlim';
-  document.getElementById('stickyMode').textContent = diffLabel + ' \u00b7 ' + modeLabel;
-
-  document.getElementById('stickyTeam').textContent = teamFilter ? abbr(teamFilter) : 'All';
+  const teamLabel = teamFilter ? abbr(teamFilter) : 'All';
+  document.getElementById('stickyPill').textContent =
+    eraLabel + ' \u00b7 ' + diffLabel + ' \u00b7 ' + teamLabel + ' \u00b7 ' + modeLabel;
 }
 
 // ── HINT COST DISPLAY ─────────────────────────────────────────────────────────
@@ -1243,7 +1235,6 @@ function buildAC(query) {
   const matches = ALL_PLAYERS.filter(p => norm(p.name).includes(q)).slice(0, 12);
   matches.forEach(p => {
     const div = document.createElement('div');
-    div.className = 'ac-item';
     div.style.display = 'flex';
     div.style.alignItems = 'center';
     div.style.gap = '0.6rem';
@@ -1274,7 +1265,7 @@ document.getElementById('guessInput').addEventListener('keydown', function(e) {
 
   const list    = document.getElementById('acList');
   const matches = list._matches || [];
-  const items   = Array.from(list.querySelectorAll('.ac-item'));
+  const items   = Array.from(list.querySelectorAll('div'));
   const n       = items.length;
 
   if (e.key === 'ArrowDown') {
@@ -1566,6 +1557,7 @@ function buildClosestGuessBox() {
 // ── END GAME ──────────────────────────────────────────────────────────────────
 function endGame(didWin, gaveUp) {
   gameOver = true; won = didWin;
+  if (didWin) window.scrollTo({ top: 0, behavior: 'smooth' });
   document.getElementById('guessArea').style.display = 'none';
   document.querySelectorAll('.hint-btn').forEach(b => b.disabled = true);
   document.getElementById('diceBtn').disabled = true;
@@ -1865,7 +1857,20 @@ function loadDailyResult() {
 
 // Hook saveDailyResult into endGame
 
-// ── SCROLL LOGO ANIMATION ─────────────────────────────────────────────────────
+// ── DYNAMIC STICKY BAR OFFSET ─────────────────────────────────────────────────
+function updateGuessAreaTop() {
+  const bar = document.getElementById('stickyBar');
+  const area = document.getElementById('guessArea');
+  if (bar && area) {
+    const h = bar.offsetHeight;
+    area.style.top = h + 'px';
+    document.body.style.paddingTop = h + 'px';
+  }
+}
+updateGuessAreaTop();
+window.addEventListener('resize', updateGuessAreaTop);
+// Also update after any content change that might resize the bar
+new ResizeObserver(updateGuessAreaTop).observe(document.getElementById('stickyBar'));
 (function() {
   const header = document.querySelector('header');
   const stickyLogo = document.getElementById('stickyLogo');
