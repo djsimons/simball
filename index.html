@@ -98,8 +98,10 @@
   .sticky-giveup-btn:hover { border-color: var(--red); color: var(--red); }
   .giveup-confirm {
     display: none; gap: 0.4rem; align-items: center;
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--text-dim);
-    white-space: nowrap;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--red);
+    position: absolute; right: 100%; margin-right: 0.4rem; white-space: nowrap;
+    background: var(--night); border: 1px solid var(--night-border);
+    border-radius: 5px; padding: 0.2rem 0.6rem;
   }
   .giveup-confirm.visible { display: flex; }
   .giveup-confirm button {
@@ -417,10 +419,10 @@
   <div class="sticky-spacer"></div>
   <div class="sticky-actions">
     <div class="giveup-confirm" id="giveupConfirm">
-      Sure? <button class="giveup-yes" id="giveupYes">Yes</button>
+      Give up? <button class="giveup-yes" id="giveupYes">Yes</button>
       <button class="giveup-no" id="giveupNo">No</button>
     </div>
-    <button class="sticky-giveup-btn" id="newGameBtn">&#8635; New</button>
+    <button class="sticky-new-btn" id="newGameBtn">&#8635; New</button>
     <button class="sticky-icon-btn" id="filterToggleBtn" title="Filters">&#9881;</button>
     <button class="sticky-icon-btn" id="helpBtn" title="How to play">?</button>
   </div>
@@ -666,10 +668,8 @@
     <div class="hints-section">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">
         <div class="hints-header" id="hintsHeader">Hints</div>
-        <div style="display:flex;align-items:center;gap:0.75rem">
-          <span id="modePill" style="font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--text-dim);letter-spacing:0.05em;white-space:nowrap"></span>
-          <button id="challengeBtn" style="background:none;border:none;color:var(--dirt-dark);font-family:'IBM Plex Mono',monospace;font-size:0.62rem;cursor:pointer;letter-spacing:0.06em;padding:0;flex-shrink:0" onmouseover="this.style.color='var(--dirt)'" onmouseout="this.style.color='var(--dirt-dark)'">&#127381; challenge</button>
-        </div>
+        <span id="modePill" style="font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--text-dim);letter-spacing:0.04em;text-align:center;flex:1;padding:0 0.5rem"></span>
+        <button id="challengeBtn" style="background:none;border:none;color:var(--dirt-dark);font-family:'IBM Plex Mono',monospace;font-size:0.62rem;cursor:pointer;letter-spacing:0.06em;padding:0;flex-shrink:0" onmouseover="this.style.color='var(--dirt)'" onmouseout="this.style.color='var(--dirt-dark)'">&#127381; challenge</button>
       </div>
       <div class="hints-row" id="hintsRow">
         <button class="hint-btn cheap" id="hintCountry" data-hint="country">
@@ -1040,14 +1040,11 @@ function thumbHtml(p, size) {
 // ── STICKY BAR UPDATE ─────────────────────────────────────────────────────────
 function updateStickyBar() {
   document.getElementById('stickyScore').textContent = Math.max(0, score);
-
-  const eraLabel = negroLeagueMode ? '1920\u20132025' : (eraStart === eraEnd ? String(eraStart) : eraStart + '\u2013' + eraEnd);
+  const eraLabel  = negroLeagueMode ? '1920\u20132025' : (eraStart === eraEnd ? String(eraStart) : eraStart + '\u2013' + eraEnd);
   const diffLabel = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
   const modeLabel = dailyMode ? 'Daily' : 'Unlim';
-  const pillText  = eraLabel + ' | ' + diffLabel + ' | ' + modeLabel;
-
   const pill = document.getElementById('modePill');
-  if (pill) pill.textContent = pillText;
+  if (pill) pill.textContent = eraLabel + ' | ' + diffLabel + ' | ' + modeLabel;
 }
 
 // ── HINT COST DISPLAY ─────────────────────────────────────────────────────────
@@ -1099,10 +1096,6 @@ function initGame(forceRandom) {
   document.getElementById('guessInput').disabled   = false;
   document.getElementById('guessBtn').disabled     = false;
   document.getElementById('diceBtn').disabled = false;
-  const btn = document.getElementById('newGameBtn');
-  btn.textContent = '\u8635 New';
-  btn.onclick = null;
-  btn.addEventListener('click', startNewGame);
   document.getElementById('giveupConfirm').classList.remove('visible');
   const hdr = document.getElementById('guessLogHeader');
   if (hdr) hdr.style.display = 'none';
@@ -1331,14 +1324,6 @@ function submitGuess() {
   updateStickyBar();
   renderGuessLog();
 
-  // Switch button to Give Up after first guess
-  if (guesses.length === 1) {
-    const btn = document.getElementById('newGameBtn');
-    btn.textContent = 'Give Up';
-    btn.onclick = null;
-    btn.addEventListener('click', handleGiveUp);
-  }
-
   // Show sort header once there's at least one guess
   const hdr = document.getElementById('guessLogHeader');
   if (hdr) {
@@ -1550,14 +1535,11 @@ function buildClosestGuessBox() {
 // ── END GAME ──────────────────────────────────────────────────────────────────
 function endGame(didWin, gaveUp) {
   gameOver = true; won = didWin;
+  if (didWin || gaveUp) window.scrollTo({ top: 0, behavior: 'smooth' });
   document.getElementById('guessArea').style.display = 'none';
   document.querySelectorAll('.hint-btn').forEach(b => b.disabled = true);
   document.getElementById('diceBtn').disabled = true;
   document.getElementById('giveupConfirm').classList.remove('visible');
-  const btn = document.getElementById('newGameBtn');
-  btn.textContent = '\u8635 New';
-  btn.onclick = null;
-  btn.addEventListener('click', startNewGame);
 
   const panel = document.getElementById('endPanel');
   panel.classList.add('visible', didWin ? 'won' : 'lost');
@@ -1600,18 +1582,21 @@ function endGame(didWin, gaveUp) {
   saveDailyResult();
 }
 
-// ── GIVE UP / NEW GAME ────────────────────────────────────────────────────────
-function handleGiveUp() {
-  if (gameOver || !secretPlayer) return;
-  document.getElementById('giveupConfirm').classList.add('visible');
-}
-function startNewGame() {
-  negroLeagueMode = false;
-  document.getElementById('filterPanel').classList.remove('open');
-  document.getElementById('filterToggleBtn').classList.remove('active');
-  initGame(true);
-}
-document.getElementById('newGameBtn').addEventListener('click', startNewGame);
+// ── GIVE UP ───────────────────────────────────────────────────────────────────
+// ── GIVE UP / NEW ─────────────────────────────────────────────────────────────
+document.getElementById('newGameBtn').addEventListener('click', function() {
+  // If game is over (won or gave up), just start new game immediately
+  if (gameOver || !secretPlayer) {
+    document.getElementById('giveupConfirm').classList.remove('visible');
+    negroLeagueMode = false;
+    document.getElementById('filterPanel').classList.remove('open');
+    document.getElementById('filterToggleBtn').classList.remove('active');
+    initGame(true);
+    return;
+  }
+  // Mid-game: show confirm
+  document.getElementById('giveupConfirm').classList.toggle('visible');
+});
 document.getElementById('giveupNo').addEventListener('click', function() {
   document.getElementById('giveupConfirm').classList.remove('visible');
 });
